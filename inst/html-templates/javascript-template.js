@@ -1477,7 +1477,9 @@ for (i = 0; i < list_items.length; i++) {
       img_dims = adh_svg.get_plot_size(undefined, selector = '.adherence_plot.index' + GraphIndex); adh_svg.default_svg_width = (img_dims.w === undefined) ? "auto" : img_dims.w; adh_svg.default_svg_height = (img_dims.h === undefined) ? "auto" : img_dims.h; // default SVG size
 
     }
-  }, false) 
+  }, false);
+
+  document.querySelectorAll(".wrapper .sidebar ul li a")[2].click();
 }
 
 }

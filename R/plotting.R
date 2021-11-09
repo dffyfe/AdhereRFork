@@ -53,12 +53,12 @@
   gray.colors(n, start=0, end=0.5);
 }
 
-# Colourblind colors palette: 
-.cb.colors <- function(n)
-{
-cbcols <- c("#88CCEE", "#CC6677", "#117733", "#332288", "#AA4499", "#44AA99", "#999933", "#882255", "#661100", "#6699CC", "#888888");
-cbcols[1:n];
-}
+# Colourblind colors palette:
+# .cb.colors <- function(n)
+# {
+# cbcols <- c("#88CCEE", "#CC6677", "#117733", "#332288", "#AA4499", "#44AA99", "#999933", "#882255", "#661100", "#6699CC", "#888888");
+# cbcols[1:n];
+# }
 
 ## SVG special functions and constants ####
 
@@ -141,7 +141,7 @@ cbcols[1:n];
 
   if(!is.na(tooltip)) tooltip <- .SVG.specialchars.2.XMLentities(tooltip); # make sure special chars in tooltip are treated correctly
   if(!is.na(js_tooltip) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
-  
+
   # Process lty first:
   if( !is.na(lty) )
   {
@@ -341,7 +341,7 @@ cbcols[1:n];
 
   if(!is.na(tooltip)) tooltip <- .SVG.specialchars.2.XMLentities(tooltip); # make sure special chars in tooltip are treated correctly
   if(!is.na(js_tooltip) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
-  
+
   # Make sure the point attributes are correctly distributed:
   if( length(pch) != length(x) ) pch <- rep(pch[1], length(x));
   if( length(col) != length(x) )
@@ -422,7 +422,7 @@ cbcols[1:n];
 
   if(!is.na(tooltip)) tooltip <- .SVG.specialchars.2.XMLentities(tooltip); # make sure special chars in tooltip are treated correctly
   if(!is.na(js_tooltip) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
-  
+
   # Make sure the attributes are correctly distributed:
   if( length(col) != length(x) ) col <- rep(col[1], length(x));
   if( length(font) != length(x) ) font <- rep(font[1], length(x));
@@ -439,7 +439,7 @@ cbcols[1:n];
     if( return_string ) return ("") else return (NULL);
   }
   x <- x[s]; y <- y[s]; col <- col[s]; font <- font[s]; font_size <- font_size[s]; h.align <- h.align[s]; v.align <- v.align[s]; rotate <- rotate[s]; # Keep only the non-missing points
-  
+
   r <-  list(# The initial comment (if any):
     if(!is.na(comment)) .SVG.comment(comment),
 
@@ -472,10 +472,10 @@ cbcols[1:n];
         if(!is.na(other_params)) other_params,
         # js tooltip
         if(!is.na(js_tooltip)) c('onmousemove="adh_svg.show_tooltip(evt, \'', js_tooltip, '\');" onmouseout="adh_svg.hide_tooltip();"'),
-        
+
         # Close the tag:
         '> ',
-        
+
         # The text:
         as.character(.SVG.specialchars.2.XMLentities(text[i])),
 
@@ -1068,7 +1068,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                        custom.logo.height = 70,         # CSS style height for custom logo in pixels
                        ...
 )
-{ 
+{
   # What sorts of plots to generate (use short names for short if statements):
   .do.R <- generate.R.plot; .do.SVG <- (!is.null(export.formats) && any(c("svg", "html", "jpg", "png", "webp", "ps", "pdf") %in% export.formats));
   if( !.do.R && !.do.SVG )
@@ -1076,7 +1076,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     # Nothing to plot!
     return (invisible(NULL));
   }
- 
+
 
   #
   # Initialize the SVG file content ####
@@ -1117,22 +1117,22 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
 
   # Overriding dangerous or aesthetic defaults:
   if( force.draw.text && !suppress.warnings ) .report.ewms("Forcing drawing of text elements even if too big or ugly!\n", "warning", ".plot.CMAs", "AdhereR");
-  
+
   # Throw error for html.plot.number > total.plots.in.html
   if( html.plot.number > total.plots.in.html ) .report.ewms("html.plot.number must be less than or equal to total.plots.in.html!\n", "error", ".plot.CMAs", "AdhereR");
-  
+
   # Throw error if html.plot.number or total.plots.in.html aren't numbers
   if( !is.numeric(html.plot.number) || !is.numeric(total.plots.in.html) ) .report.ewms("Both 'html.plot.number' and 'total.plots.in.html' must be numbers!", "error", ".plot.CMAs", "AdhereR");
-  
+
   # Throw error if number of custom plot names > 10
   if( use.custom.plots==TRUE && length(custom.plot.names)>10 ) .report.ewms("html template can only currently accommodate up to 10 custom plots.", "error", ".plot.CMAs", "AdhereR");
-  
+
   # Throw error if logo file doesn't exist in specified directory
   if( logo.to.use != 'AdhereR' && !file.exists(paste0(export.formats.directory, '/', logo.to.use))) .report.ewms("Logo file doesn't exist in the specified 'export.formats.directory', please try removing '/' from 'export.formats.directory' or 'logo.to.use' or both!", 'error', ".plot.CMAs", "AdhereR");
-  
+
   # Throw an error if logo dimensions aren't numbers
   if( logo.to.use != 'AdhereR' && (!is.numeric(custom.logo.width) || !is.numeric(custom.logo.height))) .report.ewms("'custom.logo.width' and 'custom.logo.height' must both be numeric!", "error", ".plot.CMAs", "AdhereR")
-  
+
   # Throw error is length(custom.plot.names) != total.plots.in.html
   if( use.custom.plots==TRUE && length(custom.plot.names) != total.plots.in.html) .report.ewms("Lenght of custom.plot.names does not equal total.plots.in.html", "error", ".plot.CMAs", "AdhereR")
 
@@ -2518,7 +2518,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   # Grayscale plotting:
   if( bw.plot )
   {
-      cat("bw line run");  
+      cat("bw line run");
       if( is.function(col.cats) ) col.cats <- .bw.colors else col.cats <- gray(0.1);
       followup.window.col <- "black";
       observation.window.col <- gray(0.3);
@@ -2555,7 +2555,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   # } else {
   #   .report.ewms("col.cats must be either 'Rainbow' or 'ColorBlind', if using ColorBlind there should be less than 12 categories per patient\n", "error", ".plot.CMAs", "AdhereR")
   # }
-  
+
   if( is.na(categories[1]) )
   {
     if( is.function(col.cats) ) cols <- c(col.na, col.cats(length(categories)-1)) else cols <- c(col.na, rep(col.cats,length(categories)-1));
@@ -2924,7 +2924,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     svg.str[[length(svg.str)+1]] <- list(
         # Predefined things to be used in the drawing:
         '<defs>\n',
-  
+
         # The point symbols (pch) used for events etc:
         # (we use explicit tag closing as otherwise Internet Explorer generates warning HTML1500)
         # pch 0:
@@ -2979,7 +2979,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         '</defs>\n',
         '\n');
     }
-  
+
 
 
   #
@@ -3193,10 +3193,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       "total.plots.in.html"=total.plots.in.html,
       "use.custom.plots"=use.custom.plots,
       "custom.plot.names"=custom.plot.names,
-      "html.plot.colnames"=html.plot.colnames,         
+      "html.plot.colnames"=html.plot.colnames,
       "logo.to.use"=logo.to.use,
-      "custom.logo.width"=custom.logo.width,         
-      "custom.logo.height"=custom.logo.height, 
+      "custom.logo.width"=custom.logo.width,
+      "custom.logo.height"=custom.logo.height,
 
       # Computed things:
       "x"=0, "y"=0,
@@ -3237,8 +3237,8 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       "id.labels"=id.labels, "date.labels"=date.labels, "x.label"=x.label, "y.label"=y.label,
       "vert.space.cmas"=vert.space.cmas
     );
-    
-    
+
+
     if(plot.dose || print.dose)
     {
       .last.cma.plot.info$SVG$dose.range <- dose.range;
@@ -3831,13 +3831,13 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       col <- .map.category.to.color(cma$data[i,cma$medication.class.colname]);
       if( .do.SVG ) med.class.svg <- .map.category.to.class(med.class.svg.name <- cma$data[i,cma$medication.class.colname]);
     }
-    
+
     # Make a variable for js_toolip
     if( is.na(cma$js.tooltip.colname) || !(cma$js.tooltip.colname %in% names(cma$data)) ) {
       if( .do.SVG ){ js.tooltip.svg <- ""}
     } else {
       js.tooltip.svg <- cma$data[i,cma$js.tooltip.colname]
-    } 
+    }
 
     if( .do.R ) # Rplot:
     {
@@ -4019,7 +4019,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                    connected=FALSE,
                    stroke=col, stroke_width=seg.lwd,
                    class=paste0("event-segment",if(!is.na(med.class.svg)) paste0("-",med.class.svg)),
-                   js_tooltip=js.tooltip.svg, 
+                   js_tooltip=js.tooltip.svg,
                    suppress.warnings=suppress.warnings);
     }
 
@@ -4108,6 +4108,8 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                      connected=TRUE,
                      stroke=col.continuation, stroke_width=lwd.continuation, lty=lty.continuation,
                      class=paste0("continuation-line",if(!is.na(med.class.svg)) paste0("-",med.class.svg)),
+                     #tooltip showing how much is carried over to the next event before and in the OW, carryover after the OW will show NA
+                     js_tooltip=if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10")) .last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"],
                      suppress.warnings=suppress.warnings);
       }
     } else
@@ -4198,7 +4200,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                       "y.partial.end"=.scale.y.to.SVG.plot(ys + 0.10)));
               svg.str[[length(svg.str)+1]] <- .SVG.comment("Partial CMAs as stacked bars:", newpara=TRUE);
 
-              
+
               for( j in 1:nrow(ppts) )
               {
                 svg.str[[length(svg.str)+1]] <- list(
@@ -4222,7 +4224,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                   }
                 );
               }
-              
+
             }
 
             # Advance to next patient:
@@ -5072,7 +5074,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                              tempfile(export.formats.fileprefix, fileext=".html"),
                              file.path(export.formats.directory, paste0(export.formats.fileprefix,".html")) );
         exported.file.names <- c(exported.file.names, file.html);
-        
+
 
         # Load the CSS template:
         if( !is.null(export.formats.html.css) )
@@ -5090,7 +5092,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         if( is.null(export.formats.html.css) )
         {
           # Load the default CSS template:
-          css.template.path <- system.file('html-templates/css-template.css', package='AdhereR');
+          css.template.path <- system.file('html-templates/css-template.css', package='AdhereRFork');
           if( is.null(css.template.path) || css.template.path=="" )
           {
             if( !suppress.warnings ) .report.ewms("Cannot load the CSS template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
@@ -5120,7 +5122,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         if( is.null(export.formats.html.javascript) )
         {
           # Load the default JavaScript template:
-          js.template.path <- system.file('html-templates/javascript-template.js', package='AdhereR');
+          js.template.path <- system.file('html-templates/javascript-template.js', package='AdhereRFork');
           if( is.null(js.template.path) || js.template.path=="" )
           {
             if( !suppress.warnings ) .report.ewms("Cannot load the JavaScript template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
@@ -5133,7 +5135,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             return (invisible(NULL));
           }
         }
-        
+
         if(html.plot.number==1) {
         # Read the templates:
         css.template <- readLines(css.template.path);
@@ -5146,7 +5148,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                          paste0('  "',names(categories.to.classes),'" : "',categories.to.classes,'"',collapse=",\n"),
                          '\n};\n');
         }
-        
+
         if(logo.to.use != "AdhereR" && file.exists(paste0(export.formats.directory, '/', logo.to.use))) {
           js.template <- sub('//<!--Hide logo placeholder-->',
                              'document.getElementById("adherer_logo").style.display = "none";',
@@ -5167,7 +5169,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                             paste0('  "', custom.plot.names, '" : "', 1:length(custom.plot.names),'"',collapse=',\n'),
                             '\n};\n')
         }
-        
+
 
         if( export.formats.save.svg.placeholder )
         {
@@ -5271,7 +5273,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         if( is.null(export.formats.html.template) && html.plot.number == 1) #load in the base html template if first/only plot in the block
         {
           # Load the default HTML template:
-          html.template.path <- system.file('html-templates/html-template.html', package='AdhereR');
+          html.template.path <- system.file('html-templates/html-template.html', package='AdhereRFork');
           if( is.null(html.template.path) || html.template.path=="" )
           {
             if( !suppress.warnings ) .report.ewms("Cannot load the HTML template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
@@ -5284,13 +5286,13 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             return (invisible(NULL));
           }
         }
-        
+
         if( is.null(export.formats.html.template) && html.plot.number > 1) # if not the first plot in the block load in the html temp file
         {
           #Load the HTML tempfile from the last plot round:
           html.template.path <- paste0(tempdir(), '\\html-for-plot-', html.plot.number-1, '-.html')
         }
-        
+
         # Load it:
         html.template <- readLines(html.template.path);
         # Check place-holders and replace them with the actual values:
@@ -5318,7 +5320,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                            generate.R.plot=FALSE);
             return (invisible(NULL));
           }
-        
+
           html.template <- sub('<script type="text/javascript" src="PATH-TO-JS">',
                                paste0('<script type="text/javascript">\n', paste0(js.template, collapse="\n"), '\n'),
                                html.template, fixed=TRUE); # JavaScript
@@ -5335,18 +5337,18 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           #                      'adh_svg["plot_names"] = {\n',
           #                      paste0('  "', custom.plot.names, '" : "', 1:length(custom.plot.names),'"',collapse=',\n'),
           #                      '\n};\n'),
-          #                      html.template, fixed=TRUE);  
+          #                      html.template, fixed=TRUE);
           # }
           html.template <- sub('<link rel="stylesheet" href="PATH-TO-CSS">',
                                paste0('<style>\n', paste0(css.template, collapse="\n"), '\n</style>'),
                                html.template, fixed=TRUE); # CSS
-          
+
           if(logo.to.use != 'AdhereR' && file.exists(paste0(export.formats.directory, '/', logo.to.use))) {
           html.template <- sub('<!--Alternative image placeholder-->',
                                paste0('<img id="adherer_logo_custom" style="width:', custom.logo.width, 'px; height:', custom.logo.height, 'px;" src="', logo.to.use, '">'),
                                html.template, fixed=TRUE); # Add users own logo instead of base AdhereR logo
           }
-          
+
         } else if (html.plot.number > 1) {
           html.template <- sub(paste0('//<!--Med Groups ',html.plot.number,' placeholder-->'), #sub the medication classes for this plot number
                                paste0('adh_svg["medication_classes_Graph',html.plot.number,'"] = {\n',
@@ -5354,14 +5356,14 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                '\n};\n'),
                                html.template, fixed=TRUE);
         }
-        
+
         html.template <- sub(paste0('//<!--Plot Size ', html.plot.number, ' placeholder-->'), # sub the plot sizes/viewbox for this plot number
                              paste0('adh_svg["plot',html.plot.number,'_size"] = {\n',
                              paste0('  "viewBox" : "0 0 ',dims.total.width,' ',dims.total.height,'",\n'),
                              paste0('  "width" : "',dims.plot.width / dims.chr.std,'"\n'),
                              '\n};\n'),
                              html.template, fixed=TRUE);
-        
+
         #Add an html table for the columns in cma$data selected
         if (!is.na(html.plot.colnames) && html.plot.colnames %in% colnames(cma$data)) {
           cma$data[html.plot.colnames] <- lapply(cma$data[html.plot.colnames], function(x) if(is.numeric(x)) {prettyNum(x)} else{x})
@@ -5400,7 +5402,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                paste0(paste0(svg.str.embedded, collapse=""), "\n"),
                                html.template, fixed=TRUE);
         }
-          
+
         # Export the self-contained HTML document or save as a temp file if not the final plot:
         if (html.plot.number == total.plots.in.html) { #if last graph in html then save to file.html, otherwise save to temp file
           writeLines(html.template, file.html, sep="\n");
@@ -5408,7 +5410,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           writeLines(html.template, paste0(tempdir(), '\\html-for-plot-', html.plot.number, '-.html'), sep ="\n");
 
         }
-        
+
         if (html.plot.number > 1) unlink(paste0(tempdir(), '\\html-for-plot-', html.plot.number-1, '-.html')) # waste disposal of above temp file
       }
 
@@ -5608,7 +5610,7 @@ plot.CMA.error <- function(cma=NA, patients.to.plot=NULL,
         exported.file.names <- c(exported.file.names, file.html);
 
         # Load the CSS and JavaScript templates:
-        css.template.path <- system.file('html-templates/css-template.css', package='AdhereR');
+        css.template.path <- system.file('html-templates/css-template.css', package='AdhereRFork');
         if( is.null(css.template.path) || css.template.path=="" )
         {
           if( !suppress.warnings ) .report.ewms("Cannot load the CSS template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
@@ -5620,7 +5622,7 @@ plot.CMA.error <- function(cma=NA, patients.to.plot=NULL,
                          generate.R.plot=FALSE);
           return (invisible(NULL));
         }
-        js.template.path <- system.file('html-templates/javascript-template.js', package='AdhereR');
+        js.template.path <- system.file('html-templates/javascript-template.js', package='AdhereRFork');
         if( is.null(js.template.path) || js.template.path=="" )
         {
           if( !suppress.warnings ) .report.ewms("Cannot load the JavaScript template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
@@ -5636,7 +5638,7 @@ plot.CMA.error <- function(cma=NA, patients.to.plot=NULL,
         js.template  <- readLines(js.template.path);
 
         # Load the HTML template and replace generics by their actual values before saving it in the desired location:
-        html.template.path <- system.file('html-templates/html-template.html', package='AdhereR');
+        html.template.path <- system.file('html-templates/html-template.html', package='AdhereRFork');
         if( is.null(html.template.path) || html.template.path=="" )
         {
           if( !suppress.warnings ) .report.ewms("Cannot load the HTML template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
