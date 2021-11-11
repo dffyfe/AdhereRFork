@@ -12,6 +12,7 @@
 \alias{print.CMA8}
 \alias{print.CMA9}
 \alias{print.CMA10}
+\alias{print.CMA11}
 \alias{print.CMA_per_episode}
 \alias{print.CMA_sliding_window}
 \title{Print CMA0 (and derived) objects.}
@@ -47,6 +48,8 @@
 \method{print}{CMA9}(...)
 
 \method{print}{CMA10}(...)
+
+\method{print}{CMA11}(...)
 
 \method{print}{CMA_per_episode}(
   x,

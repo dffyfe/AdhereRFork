@@ -2173,8 +2173,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     cmas <- cbind(cmas[,1:3], "gap.days"=NA, "duration"=cma$sliding.window.duration, cmas[,4:ncol(cmas)]);
     if (ncol(cmas) == 7) {
       names(cmas)[2:7] <- c("WND.ID", "start", "gap.days", "duration", "end", "CMA"); # avoid possible conflict with patients being called "ID"
-    } else if (ncol(cmas) == 8) {
+    } else if (ncol(cmas) == 8 && "Gaps" %in% names(cmas)) {
       names(cmas)[2:8] <- c("WND.ID", "start", "gap.days", "duration", "end", "Gaps", "CMA"); # avoid possible conflict with patients being called "ID"
+    } else if (ncol(cmas) == 8 && "Leftover" %in% names(cmas)) {
+      names(cmas)[2:8] <- c("WND.ID", "start", "gap.days", "duration", "end", "Leftover", "CMA"); # avoid possible conflict with patients being called "ID"
     }
     # Remove the participants without CMA estimates:
     patids.no.events.to.plot <- setdiff(unique(cma$data[,col.patid]), unique(cmas[,col.patid]));
@@ -4109,7 +4111,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                      stroke=col.continuation, stroke_width=lwd.continuation, lty=lty.continuation,
                      class=paste0("continuation-line",if(!is.na(med.class.svg)) paste0("-",med.class.svg)),
                      #tooltip showing how much is carried over to the next event before and in the OW, carryover after the OW will show NA
-                     js_tooltip=if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10")) .last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"],
+                     js_tooltip=if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10")) sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"]),
                      suppress.warnings=suppress.warnings);
       }
     } else
@@ -4137,10 +4139,12 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                              "end"  =as.numeric(cmas$end[s.cmas]   - earliest.date),
                              "x"    =NA,
                              "y"    =cmas$CMA[s.cmas],
-                             "text" =if(is.null(cmas$Gaps)) {
+                             "text" =if(is.null(cmas$Gaps) && is.null(cmas$Leftover)) {
                                         ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?");
-                                     } else {
+                                     } else if (is.null(cmas$Leftover)) {
                                         paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Gaps[s.cmas]), " gaps)");
+                                     } else {
+                                        paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Leftover[s.cmas]), " days supply at end of OW)");
                                      }
                             );
           ppts$x <- (ppts$start + ppts$end)/2;

@@ -11,6 +11,7 @@
 \alias{plot.CMA8}
 \alias{plot.CMA9}
 \alias{plot.CMA10}
+\alias{plot.CMA11}
 \title{Plot CMA0-derived objects.}
 \usage{
 \method{plot}{CMA1}(
@@ -117,6 +118,8 @@
 \method{plot}{CMA9}(...)
 
 \method{plot}{CMA10}(...)
+
+\method{plot}{CMA11}(...)
 }
 \arguments{
 \item{x}{A \emph{\code{CMA0}} or derived object, representing the CMA to
