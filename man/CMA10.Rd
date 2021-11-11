@@ -48,6 +48,9 @@ and duration, and might also contain the daily dosage and medication type
 \item{ID.colname}{A \emph{string}, the name of the column in \code{data}
 containing the unique patient ID; must be present.}
 
+\item{js.tooltip.colname}{A \emph{string}, the name of the column in the \code{data}
+to show as a javascript tooltip in the html and svg output.}
+
 \item{event.date.colname}{A \emph{string}, the name of the column in
 \code{data} containing the start date of the event (in the format given in
 the \code{date.format} parameter); must be present.}
@@ -172,12 +175,6 @@ and pre-defined valuesfor which a warning should be thrown if passed to the
 function.}
 
 \item{...}{other possible parameters}
-
-\item{carry.only.for.same.medication}{\emph{Logical}, if \code{TRUE}, the
-carry-over applies only across medication of the same type.}
-
-\item{consider.dosage.change}{\emph{Logical}, if \code{TRUE}, the carry-over
-is adjusted to also reflect changes in dosage.}
 }
 \value{
 An \code{S3} object of class \code{CMA7} (derived from \code{CMA0})
@@ -187,6 +184,8 @@ with the following fields:
  parameter.
  \item \code{ID.colname} the name of the column in \code{data} containing the
  unique patient ID, as given by the \code{ID.colname} parameter.
+ \item \code{js.tooltip.colname} the name of the column in the \code{data} containing
+ the desired javascript tooltip to be shown on svg and html outputs.
  \item \code{event.date.colname} the name of the column in \code{data}
  containing the start date of the event (in the format given in the
  \code{date.format} parameter), as given by the \code{event.date.colname}
@@ -200,12 +199,6 @@ with the following fields:
  \item \code{medication.class.colname} the name of the column in \code{data}
  containing the classes/types/groups of medication, as given by the
  \code{medication.class.colname} parameter.
- \item \code{carry.only.for.same.medication} whether the carry-over applies
- only across medication of the same type, as given by the
- \code{carry.only.for.same.medication} parameter.
- \item \code{consider.dosage.change} whether the carry-over is adjusted to
- reflect changes in dosage, as given by the \code{consider.dosage.change}
- parameter.
  \item \code{followup.window.start} the beginning of the follow-up window,
  as given by the \code{followup.window.start} parameter.
  \item \code{followup.window.start.unit} the time unit of the
@@ -241,42 +234,27 @@ event.info corresponding to a single medication group (the element's name).
 }
 \description{
 Constructs a CMA (continuous multiple-interval measures of medication
-availability/gaps) type 7 object.
+availability/gaps) type 10 object.
 }
 \details{
-\code{CMA10} assumes that, within and before the observation window, the
-medication is used as prescribed and new medication is "banked" until needed
-(oversupply from previous events is used first, followed new medication
-supply).
-It computes days of theoretical use by extracting the total number of gap
-days from the total time interval between the start and the end of the
-observation window, accounting for carry over for all medication events
-within and before the observation window. All medication events in the
-follow up window before observation window are considered for carry-over
-calculation.
-Thus, it accounts for timing within and before the observation window, and
-excludes the remaining supply at the end of the observation window.
+\code{CMA10} works off the assumption that all medication prescribed/dispensed within the observation
+window (with the exception of the final event) is used in it's entirety. If the final event
+extends past the final day of the OW it is trimmed to the number of days between the event and
+the end of the OW. Similarly to CMA7, events prior to the start of the observation window are
+considered for carryover purposes.
+
+CMA10 will also output the number of gap days (as calculated in cma7) and will be shown in
+cma_sliding_window plot if no. of windows = 1.
 
 The formula is
-\deqn{(number of days of theoretical use) / (start to end of observation
+\deqn{(days carryover from before OW + days supply within OW with final event trimmed if > OW) / (start to end of observation
  window)}
-
-Observations:
-\itemize{
- \item the \code{carry.only.for.same.medication} parameter controls the
- transmission of carry-over across medication changes, producing a "standard"
- \code{CMA10} (default value is FALSE)
- \item the \code{consider.dosage.change} parameter controls if dosage
- changes are taken into account, i.e. if set as TRUE and a new medication
- event has a different daily dosage recommendation, carry-over is recomputed
- assuming medication use according to the new prescribed dosage (default
- value is FALSE).
-}
 }
 \examples{
 cma10 <- CMA10(data=med.events,
              ID.colname="PATIENT_ID",
              event.date.colname="DATE",
+             js.tooltip.colname="CATEGORY",
              event.duration.colname="DURATION",
              event.daily.dose.colname="PERDAY",
              medication.class.colname="CATEGORY",
@@ -287,7 +265,4 @@ cma10 <- CMA10(data=med.events,
              observation.window.duration=365,
              date.format="\%m/\%d/\%Y"
             );
-}
-\seealso{
-CMAs 1 to 8 are defined in:
 }

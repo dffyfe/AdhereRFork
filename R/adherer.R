@@ -1090,8 +1090,8 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
                       export.formats.html.template=NULL, export.formats.html.javascript=NULL, export.formats.html.css=NULL, # HTML, JavaScript and CSS templates for exporting HTML+SVG
                       export.formats.directory=NA,           # if exporting, which directory to export to (if not give, creates files in the temporary directory)
                       generate.R.plot=TRUE,                  # generate standard (base R) plot for plotting within R?
-                      html.plot.number=1,              # Is this the first plot in the HTML build, defaults to 1 if only plot in build?
-                      total.plots.in.html=1,           # How many plots in total are in the build?
+                      html.plot.number=1,              # Is this the first plot in the HTML build, defaults to 1 if only plot in build
+                      total.plots.in.html=1,           # How many plots in total are in the build (upto 10)?
                       use.custom.plots=FALSE,             # Use the plot names built into custom.plot.names parameter?
                       custom.plot.names = c("CustomPlot1", "CustomPlot2", "CustomPlot3", "CustomPlot4", "CustomPlot5", "CustomPlot6", "CustomPlot7", "CustomPlot8", "CustomPlot9", "CustomPlot10"), #Default custom plot names
                       html.plot.colnames=NA, # Vector of column names to be displayed in an html table in the html output (if any)
@@ -1489,7 +1489,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
                               # - all consistency checks have been already been done in the caller (except for the parallel procssing params: these are checked here)
                               data=NULL, # this is a per-event *data.table* already keyed by patient ID and event date!
                               ID.colname=NULL, # the name of the column containing the unique patient ID
-                              js.tooltip.colname=NULL, # the name of the column of the data to be shown as a tooltip for the plotted points
+                              js.tooltip.colname=NULL, # the name of the column of the data to be shown as a tooltip for the plotted evnets
                               event.date.colname=NULL, # the start date of the event in the date.format format
                               event.duration.colname=NULL, # the event duration in days
                               event.daily.dose.colname=NULL, # the prescribed daily dose
@@ -3091,6 +3091,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
     }
     setnames(tmp$CMA, c(ID.colname, "CMA")); ret.val[["CMA"]] <- as.data.frame(tmp$CMA);
     ret.val[["event.info"]] <- as.data.frame(tmp$event.info);
+    # Adding Gaps/Leftover to output
     if(!is.null(tmp$Gaps))
     {
       setnames(tmp$Gaps, c(ID.colname, "Gaps"));
@@ -4606,11 +4607,6 @@ print.CMA2 <- function(...) print.CMA0(...)
 #' @export
 plot.CMA2 <- function(...) .plot.CMA1plus(...)
 
-
-
-
-
-
 #' @rdname CMA1
 #' @export
 CMA3 <- function( data=NULL, # the data used to compute the CMA on
@@ -6107,7 +6103,6 @@ CMA7 <- function( data=NULL, # the data used to compute the CMA on
       } else
       {
         # for all other situations compute the gap days for the last event in the observation window
-        event.after.obs.window <- which(data4ID$.EVENT.STARTS.AFTER.OBS.WINDOW); # the events after the obsevration window
         gap.days.obswin.last.event <- gap.days.column[slast];
 
         # Compute the gap days within the observation window but before the first event:
@@ -7251,36 +7246,20 @@ plot.CMA9 <- function(...) .plot.CMA1plus(...)
 #' CMA10 constructor.
 #'
 #' Constructs a CMA (continuous multiple-interval measures of medication
-#' availability/gaps) type 7 object.
+#' availability/gaps) type 10 object.
 #'
-#' \code{CMA10} assumes that, within and before the observation window, the
-#' medication is used as prescribed and new medication is "banked" until needed
-#' (oversupply from previous events is used first, followed new medication
-#' supply).
-#' It computes days of theoretical use by extracting the total number of gap
-#' days from the total time interval between the start and the end of the
-#' observation window, accounting for carry over for all medication events
-#' within and before the observation window. All medication events in the
-#' follow up window before observation window are considered for carry-over
-#' calculation.
-#' Thus, it accounts for timing within and before the observation window, and
-#' excludes the remaining supply at the end of the observation window.
+#' \code{CMA10} works off the assumption that all medication prescribed/dispensed within the observation
+#' window (with the exception of the final event) is used in it's entirety. If the final event
+#' extends past the final day of the OW it is trimmed to the number of days between the event and
+#' the end of the OW. Similarly to CMA7, events prior to the start of the observation window are
+#' considered for carryover purposes.
+#'
+#' CMA10 will also output the number of gap days (as calculated in cma7) and will be shown in
+#' cma_sliding_window plot if no. of windows = 1.
 #'
 #' The formula is
-#' \deqn{(number of days of theoretical use) / (start to end of observation
+#' \deqn{(days carryover from before OW + days supply within OW with final event trimmed if > OW) / (start to end of observation
 #'  window)}
-#'
-#' Observations:
-#' \itemize{
-#'  \item the \code{carry.only.for.same.medication} parameter controls the
-#'  transmission of carry-over across medication changes, producing a "standard"
-#'  \code{CMA10} (default value is FALSE)
-#'  \item the \code{consider.dosage.change} parameter controls if dosage
-#'  changes are taken into account, i.e. if set as TRUE and a new medication
-#'  event has a different daily dosage recommendation, carry-over is recomputed
-#'  assuming medication use according to the new prescribed dosage (default
-#'  value is FALSE).
-#' }
 #'
 #' @param data A \emph{\code{data.frame}} containing the events used to compute
 #' the CMA. Must contain, at a minimum, the patient unique ID, the event date
@@ -7288,6 +7267,8 @@ plot.CMA9 <- function(...) .plot.CMA1plus(...)
 #' (the actual column names are defined in the following four parameters).
 #' @param ID.colname A \emph{string}, the name of the column in \code{data}
 #' containing the unique patient ID; must be present.
+#' @param js.tooltip.colname A \emph{string}, the name of the column in the \code{data}
+#' to show as a javascript tooltip in the html and svg output.
 #' @param event.date.colname A \emph{string}, the name of the column in
 #' \code{data} containing the start date of the event (in the format given in
 #' the \code{date.format} parameter); must be present.
@@ -7319,10 +7300,6 @@ plot.CMA9 <- function(...) .plot.CMA1plus(...)
 #' @param medication.groups.colname a \emph{string} (defaults to ".MED_GROUP_ID")
 #' giving the name of the column storing the group name when
 #' \code{flatten.medication.groups} is \code{TRUE}.
-#' @param carry.only.for.same.medication \emph{Logical}, if \code{TRUE}, the
-#' carry-over applies only across medication of the same type.
-#' @param consider.dosage.change \emph{Logical}, if \code{TRUE}, the carry-over
-#' is adjusted to also reflect changes in dosage.
 #' @param followup.window.start If a \emph{\code{Date}} object, it represents
 #' the actual start date of the follow-up window; if a \emph{string} it is the
 #' name of the column in \code{data} containing the start date of the follow-up
@@ -7401,6 +7378,8 @@ plot.CMA9 <- function(...) .plot.CMA1plus(...)
 #'  parameter.
 #'  \item \code{ID.colname} the name of the column in \code{data} containing the
 #'  unique patient ID, as given by the \code{ID.colname} parameter.
+#'  \item \code{js.tooltip.colname} the name of the column in the \code{data} containing
+#'  the desired javascript tooltip to be shown on svg and html outputs.
 #'  \item \code{event.date.colname} the name of the column in \code{data}
 #'  containing the start date of the event (in the format given in the
 #'  \code{date.format} parameter), as given by the \code{event.date.colname}
@@ -7414,12 +7393,6 @@ plot.CMA9 <- function(...) .plot.CMA1plus(...)
 #'  \item \code{medication.class.colname} the name of the column in \code{data}
 #'  containing the classes/types/groups of medication, as given by the
 #'  \code{medication.class.colname} parameter.
-#'  \item \code{carry.only.for.same.medication} whether the carry-over applies
-#'  only across medication of the same type, as given by the
-#'  \code{carry.only.for.same.medication} parameter.
-#'  \item \code{consider.dosage.change} whether the carry-over is adjusted to
-#'  reflect changes in dosage, as given by the \code{consider.dosage.change}
-#'  parameter.
 #'  \item \code{followup.window.start} the beginning of the follow-up window,
 #'  as given by the \code{followup.window.start} parameter.
 #'  \item \code{followup.window.start.unit} the time unit of the
@@ -7452,13 +7425,12 @@ plot.CMA9 <- function(...) .plot.CMA1plus(...)
 #' Please note that if \code{medication.groups} are defined, then the \code{CMA}
 #' and \code{event.info} are named lists, each element containing the CMA and
 #' event.info corresponding to a single medication group (the element's name).
-#' @seealso CMAs 1 to 8 are defined in:
-#'
 #'
 #' @examples
 #' cma10 <- CMA10(data=med.events,
 #'              ID.colname="PATIENT_ID",
 #'              event.date.colname="DATE",
+#'              js.tooltip.colname="CATEGORY",
 #'              event.duration.colname="DURATION",
 #'              event.daily.dose.colname="PERDAY",
 #'              medication.class.colname="CATEGORY",
@@ -7517,7 +7489,7 @@ CMA10 <- function( data=NULL, # the data used to compute the CMA on
 )
 {
   # The summary:
-  if( is.na(summary) ) summary <- "The ratio of days with medication available in the whole observation window; total number of gap days extracted from this time interval, then divided by the time interval, accounting for carry-over both before and within observation window and excluding remaining supply";
+  if( is.na(summary) ) summary <- "The total available supply including carryover from before the OW. No assumptions are made on the final event within the observation window if it extends beyond the last day of the OW.";
 
   # Arguments that should not have been passed:
   if( !suppress.warnings && !is.null(arguments.that.should.not.be.defined) )
@@ -7589,7 +7561,7 @@ CMA10 <- function( data=NULL, # the data used to compute the CMA on
                                   suppress.warnings=NULL
   )
   {
-    # Auxiliary internal function: Compute the Gap Number for a given patient:
+    # Auxiliary internal function: Compute the number of gap days for a given patient:
     .process.patient <- function(data4ID)
     {
       # Select the events within the observation window:
@@ -7603,26 +7575,25 @@ CMA10 <- function( data=NULL, # the data used to compute the CMA on
       {
         if ( sum(data4ID$.EVENT.STARTS.BEFORE.OBS.WINDOW)==0 )
         {
-          # If there are no prior events, CMA10 does not make sense:
+          # If there are no prior events, CMA10 gaps will be the duration of OW:
           return (as.numeric(difftime(data4ID$.OBS.END.DATE[1], data4ID$.OBS.START.DATE[1], units="days")));
         } else
         {
-          # Select the events that start before the observation window begins but continue within the observation window:
+          # Select the last event that starts before the observation window begins but continue within the observation window:
           event.start.before.continue.in <- max(which(data4ID$.EVENT.STARTS.BEFORE.OBS.WINDOW));
           if( data4ID$gap.days[event.start.before.continue.in] <= as.numeric(data4ID$.OBS.END.DATE[n.events] - data4ID$.OBS.START.DATE[n.events]) )
           {
-            # Otherwise, CMA10 is the gap of the last event entering the observation window minus any days between the end of observation window and date of next event or end of follow-up window, divided by the observation window:
+            # if there is an event that starts before and continues within OW and no events in OW then gaps on this event is equal to total gap days
             return (as.numeric(gap.days.column[event.start.before.continue.in]));
           } else
           {
-            # If there is no event before that enter into the observation window, CMA10 is 0:
+            # If there is no event before that enter into the observation window, CMA10 Gaps is length of OW:
             return (as.numeric(difftime(data4ID$.OBS.END.DATE[1], data4ID$.OBS.START.DATE[1], units="days")));
           }
         }
       } else
       {
         # for all other situations compute the gap days for the last event in the observation window
-        event.after.obs.window <- which(data4ID$.EVENT.STARTS.AFTER.OBS.WINDOW); # the events after the obsevration window
         gap.days.obswin.last.event <- gap.days.column[slast];
 
         # Compute the gap days within the observation window but before the first event:
@@ -7657,9 +7628,9 @@ CMA10 <- function( data=NULL, # the data used to compute the CMA on
 
       if ( sum(data4ID$.EVENT.STARTS.BEFORE.OBS.WINDOW) != 0 )
       {
-        last.event.before.obv.window <- max(which(data4ID$.EVENT.STARTS.BEFORE.OBS.WINDOW))
+        last.event.before.obv.window <- max(which(data4ID$.EVENT.STARTS.BEFORE.OBS.WINDOW));
         if ( data4ID$.DATE.as.Date[last.event.before.obv.window] + event.duration.column[last.event.before.obv.window] +
-             carry.over.column[last.event.before.obv.window] >= data4ID$.OBS.END.DATE[last.event.before.obv.window] )
+             carry.over.column[last.event.before.obv.window] >= data4ID$.OBS.END.DATE[last.event.before.obv.window] && slen == 0)
         {
           carried.from.follow.window <- as.numeric(difftime(data4ID$.OBS.END.DATE[last.event.before.obv.window], data4ID$.OBS.START.DATE[last.event.before.obv.window], units="days"))
         } else
@@ -8213,7 +8184,6 @@ CMA11 <- function( data=NULL, # the data used to compute the CMA on
       } else
       {
         # for all other situations compute the gap days for the last event in the observation window
-        event.after.obs.window <- which(data4ID$.EVENT.STARTS.AFTER.OBS.WINDOW); # the events after the obsevration window
         gap.days.obswin.last.event <- gap.days.column[slast];
 
         # Compute the gap days within the observation window but before the first event:
