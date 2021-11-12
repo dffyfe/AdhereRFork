@@ -58,6 +58,9 @@ and duration, and might also contain the daily dosage and medication type
 \item{ID.colname}{A \emph{string}, the name of the column in \code{data}
 containing the unique patient ID; must be present.}
 
+\item{js.tooltip.colname}{A \emph{string}, the name of the column in the \code{data}
+to show as a javascript tooltip in the html and svg output.}
+
 \item{event.date.colname}{A \emph{string}, the name of the column in
 \code{data} containing the start date of the event (in the format given in
 the \code{date.format} parameter); must be present.}
@@ -204,6 +207,8 @@ following fields:
  parameter.
  \item \code{ID.colname} the name of the column in \code{data} containing the
  unique patient ID, as given by the \code{ID.colname} parameter.
+ \item \code{js.tooltip.colname} the name of the column in the \code{data} containing
+ the desired javascript tooltip to be shown on svg and html outputs.
  \item \code{event.date.colname} the name of the column in \code{data}
  containing the start date of the event (in the format given in the
  \code{date.format} parameter), as given by the \code{event.date.colname}
@@ -275,7 +280,7 @@ CMA_sliding_window object.
 overlapping) sliding windows,
 each sliding to the right by a fixed timelag,
 and then, for each of them, it computes the given "simple" CMA.
-Thus, as opposed to the "simple" CMAs 1 to 9, it returns a set of CMAs, with
+Thus, as opposed to the "simple" CMAs 1 to 11, it returns a set of CMAs, with
 possibly more than one element.
 
 It is highly similar to \code{\link{CMA_per_episode}} which computes a CMA
@@ -311,7 +316,7 @@ CMA for each of the treatment episodes.
 The "simple" CMAs that can be computed comprise \code{\link{CMA1}},
 \code{\link{CMA2}}, \code{\link{CMA3}}, \code{\link{CMA4}},
 \code{\link{CMA5}}, \code{\link{CMA6}}, \code{\link{CMA7}},
-\code{\link{CMA8}}, \code{\link{CMA9}}, as well as user-defined classes
+\code{\link{CMA8}}, \code{\link{CMA9}}, \code{\link{CMA10}}, \code{\link{CMA11}} as well as user-defined classes
 derived from \code{\link{CMA0}} that have a \code{CMA} component giving the
 estimated CMA per patient as a \code{data.frame}.
 }

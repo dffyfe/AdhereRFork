@@ -5153,6 +5153,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                          '\n};\n');
         }
 
+        # sub in user defined logo from local file location, if not "AdhereR"
         if(logo.to.use != "AdhereR" && file.exists(paste0(export.formats.directory, '/', logo.to.use))) {
           js.template <- sub('//<!--Hide logo placeholder-->',
                              'document.getElementById("adherer_logo").style.display = "none";',
@@ -5370,6 +5371,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
 
         #Add an html table for the columns in cma$data selected
         if (!is.na(html.plot.colnames) && html.plot.colnames %in% colnames(cma$data)) {
+          # prettynum to turn into clean rounded number (as string) instead of scientific notation (depending on R options)
           cma$data[html.plot.colnames] <- lapply(cma$data[html.plot.colnames], function(x) if(is.numeric(x)) {prettyNum(x)} else{x})
           html.template <- sub(paste0('<!--Table ', html.plot.number, ' placeholder-->'), # sub the table for this plot number (if requested)
                                htmltools::tags$table(id=paste0("table", html.plot.number),

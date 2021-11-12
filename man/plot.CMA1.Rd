@@ -301,6 +301,33 @@ version are not guaranteed to be backwards compatible!}
 
 \item{generate.R.plot}{a \emph{logical}, if \code{TRUE} (the default),
 generate the standard (base \code{R}) plot for plotting within \code{R}.}
+
+\item{html.plot.number}{an \emph{integer}, html output can handle up to 10 AdhereR plots, defaults
+to \code{1}, which should be used if only plot in the html.}
+
+\item{total.plots.in.html}{an \emph{integer}, how many plots total will
+there be in html output, used to instruct R whether to clear
+temp files and close tags etc. Defaults to \code{1}.}
+
+\item{use.custom.plots}{a \emph{logical}, if \code{TRUE} AdhereR will use
+the vector of names stored in \code{custom.plot.names} to name the plots.
+Defaults to \code{FALSE}.}
+
+\item{custom.plot.names}{a \emph{vector} of names to be used in html output
+if \code{use.custom.plots} is set to \code{TRUE}.}
+
+\item{html.plot.colnames}{a \emph{vector} of columns to display in a data
+table in the html output. Colnames must be present in the data of the cma.}
+
+\item{logo.to.use}{a \emph{string}, logo to use in the html output, either
+\code{"AdhereR"} (the default) to use the AdhereR logo or a file path to
+another logo.}
+
+\item{custom.logo.width}{a \emph{double}, width of custom logo to be used
+in html output.}
+
+\item{custom.logo.height}{a \emph{double}, height of custom logo to be used
+in html output.}
 }
 \description{
 Plots the event data and estimated CMA encapsulated in objects derived from
