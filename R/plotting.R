@@ -4111,7 +4111,17 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                      stroke=col.continuation, stroke_width=lwd.continuation, lty=lty.continuation,
                      class=paste0("continuation-line",if(!is.na(med.class.svg)) paste0("-",med.class.svg)),
                      #tooltip showing how much is carried over to the next event before and in the OW, carryover after the OW will show NA
-                     js_tooltip=if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10")) sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"]),
+                     js_tooltip=if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW)
+                                  {
+                                    sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"])
+                                  #} else if (.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10"))
+                                  } else if (inherits(.last.cma.plot.info$SVG$cma, "CMA7") || inherits(.last.cma.plot.info$SVG$cma, "CMA10")  || inherits(.last.cma.plot.info$SVG$cma, "CMA11"))
+                                  {
+                                    sprintf("%.f",.last.cma.plot.info$SVG$event.info[i+1, ".CARRY.OVER.FROM.BEFORE"])
+                                  } else
+                                  {
+                                    NA
+                                  }, #is else NA needed?
                      suppress.warnings=suppress.warnings);
       }
     } else
@@ -4131,7 +4141,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       # Draw its sub-periods (if so requested, meaningful and possible):
       if( is.cma.TS.or.SW && has.estimated.CMA )
       {
-        if( length(s.cmas) > 0 && !all(is.na(cmas$CMA[s.cmas])) )
+        if( length(s.cmas) > 0 && !all(is.na(cmas$CMA[s.cmas])))
         {
           # We do have non-missing partial CMAs to plot:
           # Compute the start, end, location and string to display for these partial estimates:
@@ -4203,7 +4213,6 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                       "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end),
                                                                       "y.partial.end"=.scale.y.to.SVG.plot(ys + 0.10)));
               svg.str[[length(svg.str)+1]] <- .SVG.comment("Partial CMAs as stacked bars:", newpara=TRUE);
-
 
               for( j in 1:nrow(ppts) )
               {
@@ -4969,7 +4978,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                    y=dims.plot.y + rep(c(dims.plot.height + dims.adjust.for.tall.legend, 0), times=length(xs)),
                    connected=FALSE,
                    stroke="gray50", stroke_width=1, lty="dotted",
-                   js_tooltip=date.labels$string, # add a tooltip for the vertical date lines to accomodate long graphs
+                   js_tooltip=as.character(date.labels$string), # add a tooltip for the vertical date lines to accomodate long graphs
                    class="vertical-date-lines", suppress.warnings=suppress.warnings)
       );
 

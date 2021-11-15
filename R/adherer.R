@@ -8190,7 +8190,7 @@ CMA11 <- function( data=NULL, # the data used to compute the CMA on
         if ( sum(data4ID$.EVENT.STARTS.BEFORE.OBS.WINDOW)==0 )
         {
           # If there are no prior events, CMA7 does not make sense:
-          return (NA_real_);
+          return (0);
         } else
         {
           # Select the events that start before the observation window begins but continue within the observation window:
@@ -8203,7 +8203,7 @@ CMA11 <- function( data=NULL, # the data used to compute the CMA on
           } else
           {
             # If there is no event before that enter into the observation window, CMA7 is 0:
-            return (0.0);
+            return (0);
           }
         }
       } else
