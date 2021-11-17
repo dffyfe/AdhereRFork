@@ -9988,8 +9988,8 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
                                 medication.groups=NULL, # a named vector of medication group definitions, the name of a column in the data that defines the groups, or NULL
                                 flatten.medication.groups=FALSE, medication.groups.colname=".MED_GROUP_ID", # if medication.groups were defined, return CMAs and event.info as single data.frame?
                                 # Various types methods of computing gaps:
-                                carry.only.for.same.medication=NA, # if TRUE the carry-over applies only across medication of same type (NA = undefined)
-                                consider.dosage.change=NA, # if TRUE carry-over is adjusted to reflect changes in dosage (NA = undefined)
+                                #carry.only.for.same.medication=NA, # if TRUE the carry-over applies only across medication of same type (NA = undefined)
+                                #consider.dosage.change=NA, # if TRUE carry-over is adjusted to reflect changes in dosage (NA = undefined)
                                 # The follow-up window:
                                 followup.window.start=0, # if a number is the earliest event per participant date + number of units, or a Date object, or a column name in data (NA = undefined)
                                 followup.window.start.unit=c("days", "weeks", "months", "years")[1], # the time units; can be "days", "weeks", "months" or "years" (if months or years, using an actual calendar!) (NA = undefined)
@@ -10229,8 +10229,8 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
                      event.duration.colname=event.duration.colname,
                      event.daily.dose.colname=event.daily.dose.colname,
                      medication.class.colname=medication.class.colname,
-                     carry.only.for.same.medication=carry.only.for.same.medication,
-                     consider.dosage.change=consider.dosage.change,
+                     #carry.only.for.same.medication=carry.only.for.same.medication,
+                     #consider.dosage.change=consider.dosage.change,
                      followup.window.start=followup.window.start,
                      followup.window.start.unit=followup.window.start.unit,
                      followup.window.duration=followup.window.duration,
