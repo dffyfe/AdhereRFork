@@ -1131,10 +1131,22 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   if( logo.to.use != 'AdhereR' && !file.exists(paste0(export.formats.directory, '/', logo.to.use))) .report.ewms("Logo file doesn't exist in the specified 'export.formats.directory', please try removing '/' from 'export.formats.directory' or 'logo.to.use' or both!", 'error', ".plot.CMAs", "AdhereR");
 
   # Throw an error if logo dimensions aren't numbers
-  if( logo.to.use != 'AdhereR' && (!is.numeric(custom.logo.width) || !is.numeric(custom.logo.height))) .report.ewms("'custom.logo.width' and 'custom.logo.height' must both be numeric!", "error", ".plot.CMAs", "AdhereR")
+  if( logo.to.use != 'AdhereR' && (!is.numeric(custom.logo.width) || !is.numeric(custom.logo.height))) .report.ewms("'custom.logo.width' and 'custom.logo.height' must both be numeric!", "error", ".plot.CMAs", "AdhereR");
 
   # Throw error is length(custom.plot.names) != total.plots.in.html
-  if( use.custom.plots==TRUE && length(custom.plot.names) != total.plots.in.html) .report.ewms("Lenght of custom.plot.names does not equal total.plots.in.html", "error", ".plot.CMAs", "AdhereR")
+  if( use.custom.plots==TRUE && length(custom.plot.names) != total.plots.in.html) .report.ewms("Lenght of custom.plot.names does not equal total.plots.in.html", "error", ".plot.CMAs", "AdhereR");
+
+  # Throw an error if truing to use event intervals on a cma_sliding_window of greater than 1
+  if( show.event.intervals==TRUE && inherits(cma, "CMA_sliding_window") && (cma$sliding.window.no.steps != 1 || cma$sliding.window.step.duration/cma$sliding.window.duration != 1) ) .report.ewms("show.event.intervals must be FALSE on sliding window steps > 1 and on CMA0", "error", ".plot.CMAs", "AdhereR");
+
+  # Showing event intervals for single window sliding window
+  # if (inherits(cma, "CMA_sliding_window"))# && cma$computed.CMA %in% c())
+  # {
+  #   if(cma$sliding.window.no.steps == 1 && cma$sliding.window.step.duration/cma$sliding.window.duration == 1 && !(cma$computed.CMA == "CMA0"))
+  #   {
+  #     show.event.intervals <- TRUE
+  #   }
+  # };
 
   # SVG placeholder:
   if( export.formats.save.svg.placeholder && (length(export.formats.svg.placeholder.type) != 1 || !export.formats.svg.placeholder.type %in% c("jpg", "png", "webp")) )
@@ -2265,6 +2277,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         # For the patients without stuff to plot, replace their events by a fake single event:
         if( length(patids.no.events.to.plot) > 0 )
         {
+          cma$event.info <- cma$event.info[ !(cma$event.info[,col.patid] %in% patids.no.events.to.plot), ];
           cma$data <- cma$data[ !(cma$data[,col.patid] %in% patids.no.events.to.plot), ];
           #cma$data[ nrow(cma$data) + 1:length(patids.no.events.to.plot), col.patid ] <- patids.no.events.to.plot; # everything ese is NA except for the patient id
           if( !suppress.warnings ) .report.ewms(paste0("Patient",
@@ -2386,6 +2399,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     patids.no.events.to.plot <- setdiff(unique(cmas[, col.patid ]), unique(cmas[ !is.na(cmas$CMA), col.patid ]));
     if( length(patids.no.events.to.plot) > 0 )
     {
+      cma$event.info <- cma$event.info[ !(cma$event.info[,col.patid] %in% patids.no.events.to.plot), ];
       cma$data <- cma$data[ !(cma$data[,col.patid] %in% patids.no.events.to.plot), ];
       #cma$data[ nrow(cma$data) + 1:length(patids.no.events.to.plot), col.patid ] <- patids.no.events.to.plot; # everything else is NA except for the patient id
       cmas <- cmas[ !(cmas[,col.patid] %in% patids.no.events.to.plot),  ]
@@ -3891,6 +3905,12 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
 
 
     # Show event intervals as rectangles?
+    if(is.cma.TS.or.SW && show.event.intervals)
+    {
+      if (.do.SVG) evinfo <- .last.cma.plot.info$SVG$cma$event.info.cma;
+      if (.do.R) evinfo <- .last.cma.plot.info$baseR$cma$event.info.cma;
+    }
+
     if( show.event.intervals && !is.null(evinfo) && !is.na(evinfo$event.interval[i]) )
     {
       # The end of the prescription:
@@ -4117,7 +4137,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                   #} else if (.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10"))
                                   } else if (inherits(.last.cma.plot.info$SVG$cma, "CMA7") || inherits(.last.cma.plot.info$SVG$cma, "CMA10")  || inherits(.last.cma.plot.info$SVG$cma, "CMA11"))
                                   {
-                                    sprintf("%.f",.last.cma.plot.info$SVG$event.info[i+1, ".CARRY.OVER.FROM.BEFORE"])
+                                    sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info[i+1, ".CARRY.OVER.FROM.BEFORE"])
                                   } else
                                   {
                                     NA
@@ -5163,7 +5183,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         }
 
         # sub in user defined logo from local file location, if not "AdhereR"
-        if(logo.to.use != "AdhereR" && file.exists(paste0(export.formats.directory, '/', logo.to.use))) {
+        if(logo.to.use != "AdhereR" && file.exists(paste0(export.formats.directory, '/', logo.to.use)) && html.plot.number==1) {
           js.template <- sub('//<!--Hide logo placeholder-->',
                              'document.getElementById("adherer_logo").style.display = "none";',
                              js.template, fixed=TRUE);
@@ -5185,7 +5205,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         }
 
 
-        if( export.formats.save.svg.placeholder )
+        if( export.formats.save.svg.placeholder && html.plot.number==1 )
         {
           # Check that base64 exists:
           if( !requireNamespace("base64", quietly=TRUE) )

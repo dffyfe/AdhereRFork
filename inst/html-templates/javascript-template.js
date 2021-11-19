@@ -466,6 +466,34 @@ var adh_svg = { // begin namespace
     y = adh_svg._getElementsByClassName(svg, "axis-labels-y"); adh_svg.set_svg_attribute(y, "font-size", (sy === undefined) ? adh_svg.default_font_size_axis_labels["y"] : sy);
   },
 
+  /**
+   * Are there event intervals?
+   * @return {Boolean} true if there are event intervals
+   */
+  exists_event_intervals : function() {
+    x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
+    return !(!x || x.length < 1);
+  },
+
+  /**
+   * Are the event visible?
+   * @return {Boolean} true if the event intervals are visible
+   */
+  is_visible_event_intervals : function() {
+    x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
+    if(!x || x.length < 1) return undefined;
+    return adh_svg.is_visible_svg_element(x);
+  },
+
+  /**
+   * Show/hide event intervals.
+   * @param {Boolean} show  show event intervals if true, otherwise hide them.
+   * @return {None}
+   */
+  show_event_intervals : function(show) {
+    x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
+    if(x) adh_svg.show_svg_element(x, show);
+  },
 
   /**
    * Does the legend exist?
@@ -1432,6 +1460,14 @@ for (i = 0; i < list_items.length; i++) {
         tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .label_toggle_title'); if(tmp) { tmp.disabled = true; tmp.style = adh_svg.label_style_disabled; }
       };
 
+      if(adh_svg.exists_event_intervals()) {
+        tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .button_toggle_event_intervals'); if(tmp) { tmp.disabled = false; tmp.checked = adh_svg.is_visible_event_intervals(); }
+        tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .label_toggle_event_intervals'); if(tmp) { tmp.disabled = false; tmp.style = adh_svg.label_style_default; }
+      } else {
+        tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .button_toggle_event_intervals'); if(tmp) { tmp.disabled = true; tmp.checked = false; }
+        tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .label_toggle_event_intervals'); if(tmp) { tmp.disabled = true; tmp.style = adh_svg.label_style_disabled; }
+      };
+
       if(adh_svg.exists_legend()) {
         tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .button_toggle_legend'); if(tmp) { tmp.disabled = false; tmp.checked = adh_svg.is_visible_legend(); }
         tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .label_toggle_legend'); if(tmp) { tmp.disabled = false; tmp.style = adh_svg.label_style_default; }
@@ -1479,9 +1515,9 @@ for (i = 0; i < list_items.length; i++) {
     }
   }, false);
 
-  document.querySelectorAll(".wrapper .sidebar ul li a")[2].click();
+  
 }
-
+  document.querySelectorAll(".wrapper .sidebar ul li a")[2].click();
 }
 
 

@@ -9584,6 +9584,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
                                  medication.groups.separator.show=TRUE, medication.groups.separator.lty="solid", medication.groups.separator.lwd=2, medication.groups.separator.color="blue", # group medication events by patient?
                                  medication.groups.allother.label="*",  # the label to use for the __ALL_OTHERS__ medication class (defaults to *)
                                  lty.event="solid", lwd.event=2, pch.start.event=15, pch.end.event=16, # event style
+                                 show.event.intervals=FALSE,             # show the actual rpescription intervals
                                  plot.events.vertically.displaced=TRUE, # display the events on different lines (vertical displacement) or not (defaults to TRUE)?
                                  print.dose=FALSE, cex.dose=0.75, print.dose.outline.col="white", print.dose.centered=FALSE, # print daily dose
                                  plot.dose=FALSE, lwd.event.max.dose=8, plot.dose.lwd.across.medication.classes=FALSE, # draw daily dose as line width
@@ -9663,7 +9664,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
              medication.groups.allother.label=medication.groups.allother.label,
              lty.event=lty.event,
              lwd.event=lwd.event,
-             show.event.intervals=FALSE, # per-episode and sliding windows might have overlapping intervals, so better not to show them at all
+             show.event.intervals=show.event.intervals,#FALSE, # per-episode and sliding windows might have overlapping intervals, so better not to show them at all
              plot.events.vertically.displaced=plot.events.vertically.displaced,
              pch.start.event=pch.start.event,
              pch.end.event=pch.end.event,
@@ -9988,8 +9989,8 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
                                 medication.groups=NULL, # a named vector of medication group definitions, the name of a column in the data that defines the groups, or NULL
                                 flatten.medication.groups=FALSE, medication.groups.colname=".MED_GROUP_ID", # if medication.groups were defined, return CMAs and event.info as single data.frame?
                                 # Various types methods of computing gaps:
-                                #carry.only.for.same.medication=NA, # if TRUE the carry-over applies only across medication of same type (NA = undefined)
-                                #consider.dosage.change=NA, # if TRUE carry-over is adjusted to reflect changes in dosage (NA = undefined)
+                                carry.only.for.same.medication=NA, # if TRUE the carry-over applies only across medication of same type (NA = undefined)
+                                consider.dosage.change=NA, # if TRUE carry-over is adjusted to reflect changes in dosage (NA = undefined)
                                 # The follow-up window:
                                 followup.window.start=0, # if a number is the earliest event per participant date + number of units, or a Date object, or a column name in data (NA = undefined)
                                 followup.window.start.unit=c("days", "weeks", "months", "years")[1], # the time units; can be "days", "weeks", "months" or "years" (if months or years, using an actual calendar!) (NA = undefined)
@@ -10119,7 +10120,10 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
   {
     carryover.into.obs.window <- carryover.within.obs.window <- TRUE;
     # fixing to appropriate cma10 use case.
-    carry.only.for.same.medication <- consider.dosage.change <- FALSE;
+    if( !is.na(carry.only.for.same.medication) && carry.only.for.same.medication && !suppress.warnings ) .report.ewms("'carry.only.for.same.medication' cannot be defined for CMA 10!\n", "warning", "CMA_sliding_window", "AdhereR");
+    carry.only.for.same.medication <- FALSE;
+    if( !is.na(consider.dosage.change) && consider.dosage.change && !suppress.warnings ) .report.ewms("'consider.dosage.change' cannot be defined for CMA 10!\n", "warning", "CMA_sliding_window", "AdhereR");
+    consider.dosage.change <- FALSE;
   } else
   {
     if( !suppress.warnings ) .report.ewms("I know how to do CMA sliding windows only for CMAs 1 to 11!\n", "error", "CMA_sliding_window", "AdhereR");
