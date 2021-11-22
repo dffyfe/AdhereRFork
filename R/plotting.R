@@ -202,7 +202,7 @@
   # Preconditions:
   if( length(x) != length(y) || length(x) < 2 || length(y) < 2 )
   {
-    if( !suppress.warnings ) .report.ewms("The line point coodinates must be of the same length >= 2.\n", "error", ".SVG.lines", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("The line point coodinates must be of the same length >= 2.\n", "error", ".SVG.lines", "AdhereRFork");
     if( return_string ) return ("") else return (NULL);
   }
 
@@ -268,7 +268,7 @@
     # Multiple 'line' elements:
     if( length(x) %% 2 != 0 )
     {
-      if( !suppress.warnings ) .report.ewms("For unconnected lines there must an even number of point coordinates.\n", "error", ".SVG.lines", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("For unconnected lines there must an even number of point coordinates.\n", "error", ".SVG.lines", "AdhereRFork");
       return (NULL);
     }
 
@@ -335,7 +335,7 @@
   # Preconditions:
   if( length(x) != length(y) || length(x) == 0 )
   {
-    if( !suppress.warnings ) .report.ewms("There must be at least on point.\n", "error", ".SVG.points", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("There must be at least on point.\n", "error", ".SVG.points", "AdhereRFork");
     return (NULL);
   }
 
@@ -416,7 +416,7 @@
   # Preconditions:
   if( length(x) != length(y) || length(x) != length(text) || length(x) == 0 )
   {
-    if( !suppress.warnings ) .report.ewms("There must be at least one text and the number of texts should matche the number of coordinates.\n", "error", ".SVG.text", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("There must be at least one text and the number of texts should matche the number of coordinates.\n", "error", ".SVG.text", "AdhereRFork");
     return (NULL);
   }
 
@@ -583,7 +583,7 @@
 #'      tmp$baseR$.map.event.y(nrow(tmp$baseR$cma$data)+0.5),
 #'      col=adjustcolor("red",alpha.f=0.5), border="blue");
 #' @export
-last.plot.get.info <- function() { return (get(".last.cma.plot.info", envir=.adherer.env)); }
+last.plot.get.info <- function() { return (get(".last.cma.plot.info", envir=.adhererfork.env)); }
 
 #' Map from event to plot coordinates.
 #'
@@ -651,7 +651,7 @@ map.event.coords.to.plot <- function(x=NA, y=NA, x.is.Date=FALSE, x.date.format=
   {
     if( is.null(lcpi) || is.null(lcpi$baseR) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R plot were generated!\n", "error", "map.event.coords.to.plot", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R plot were generated!\n", "error", "map.event.coords.to.plot", "AdhereRFork");
       return (NULL);
     } else
     {
@@ -684,7 +684,7 @@ map.event.coords.to.plot <- function(x=NA, y=NA, x.is.Date=FALSE, x.date.format=
   {
     if( is.null(lcpi) || is.null(lcpi$SVG) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "map.event.coords.to.plot", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "map.event.coords.to.plot", "AdhereRFork");
       return (NULL);
     } else
     {
@@ -703,7 +703,7 @@ map.event.coords.to.plot <- function(x=NA, y=NA, x.is.Date=FALSE, x.date.format=
     }
   } else
   {
-    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "map.event.coords.to.plot", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "map.event.coords.to.plot", "AdhereRFork");
     return (NULL);
   }
 }
@@ -730,7 +730,7 @@ get.event.plotting.area <- function(plot.type=c("baseR", "SVG")[1], suppress.war
   {
     if( is.null(lcpi) || is.null(lcpi$baseR) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.event.plotting.area", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.event.plotting.area", "AdhereRFork");
       return (NULL);
     } else
     {
@@ -740,7 +740,7 @@ get.event.plotting.area <- function(plot.type=c("baseR", "SVG")[1], suppress.war
   {
     if( is.null(lcpi) || is.null(lcpi$SVG) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.event.plotting.area", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.event.plotting.area", "AdhereRFork");
       return (NULL);
     } else
     {
@@ -748,7 +748,7 @@ get.event.plotting.area <- function(plot.type=c("baseR", "SVG")[1], suppress.war
     }
   } else
   {
-    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.event.plotting.area", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.event.plotting.area", "AdhereRFork");
     return (NULL);
   }
 }
@@ -777,7 +777,7 @@ get.legend.plotting.area <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   {
     if( is.null(lcpi) || is.null(lcpi$baseR) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.legend.plotting.area", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.legend.plotting.area", "AdhereRFork");
       return (NULL);
     } else
     {
@@ -793,7 +793,7 @@ get.legend.plotting.area <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   {
     if( is.null(lcpi) || is.null(lcpi$SVG) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.legend.plotting.area", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.legend.plotting.area", "AdhereRFork");
       return (NULL);
     } else
     {
@@ -807,7 +807,7 @@ get.legend.plotting.area <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     }
   } else
   {
-    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.legend.plotting.area", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.legend.plotting.area", "AdhereRFork");
     return (NULL);
   }
 }
@@ -886,13 +886,13 @@ get.plotted.events <- function(plot.type=c("baseR", "SVG")[1], suppress.warnings
   {
     if( is.null(lcpi) || is.null(lcpi$baseR) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.plotted.events", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.plotted.events", "AdhereRFork");
       return (NULL);
     } else
     {
       if( is.null(lcpi$baseR$cma) || is.null(lcpi$baseR$cma$data) )
       {
-        if( !suppress.warnings ) .report.ewms("No info about the plotted CMA!\n", "error", "get.plotted.events", "AdhereR");
+        if( !suppress.warnings ) .report.ewms("No info about the plotted CMA!\n", "error", "get.plotted.events", "AdhereRFork");
         return (NULL);
       } else
       {
@@ -903,13 +903,13 @@ get.plotted.events <- function(plot.type=c("baseR", "SVG")[1], suppress.warnings
   {
     if( is.null(lcpi) || is.null(lcpi$SVG) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.plotted.events", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.plotted.events", "AdhereRFork");
       return (NULL);
     } else
     {
       if( is.null(lcpi$SVG$cma) || is.null(lcpi$SVG$cma$data) )
       {
-        if( !suppress.warnings ) .report.ewms("No info about the plotted CMA!\n", "error", "get.plotted.events", "AdhereR");
+        if( !suppress.warnings ) .report.ewms("No info about the plotted CMA!\n", "error", "get.plotted.events", "AdhereRFork");
         return (NULL);
       } else
       {
@@ -918,7 +918,7 @@ get.plotted.events <- function(plot.type=c("baseR", "SVG")[1], suppress.warnings
     }
   } else
   {
-    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.plotted.events", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.plotted.events", "AdhereRFork");
     return (NULL);
   }
 }
@@ -960,13 +960,13 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   {
     if( is.null(lcpi) || is.null(lcpi$baseR) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.plotted.partial.cmas", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no base R was generated!\n", "error", "get.plotted.partial.cmas", "AdhereRFork");
       return (NULL);
     } else
     {
       if( is.null(lcpi$baseR$partialCMAs) )
       {
-        if( !suppress.warnings ) .report.ewms("No partial CMAs: are you sur this is the right type of CMA and that the partial CMAs were actually plotted?\n", "error", "get.plotted.partial.cmas", "AdhereR");
+        if( !suppress.warnings ) .report.ewms("No partial CMAs: are you sur this is the right type of CMA and that the partial CMAs were actually plotted?\n", "error", "get.plotted.partial.cmas", "AdhereRFork");
         return (NULL);
       } else
       {
@@ -977,13 +977,13 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   {
     if( is.null(lcpi) || is.null(lcpi$SVG) )
     {
-      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.plotted.partial.cmas", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No CMA plot or no SVG was generated!\n", "error", "get.plotted.partial.cmas", "AdhereRFork");
       return (NULL);
     } else
     {
       if( is.null(lcpi$SVG$partialCMAs) )
       {
-        if( !suppress.warnings ) .report.ewms("No partial CMAs: are you sur this is the right type of CMA and that the partial CMAs were actually plotted?\n", "error", "get.plotted.partial.cmas", "AdhereR");
+        if( !suppress.warnings ) .report.ewms("No partial CMAs: are you sur this is the right type of CMA and that the partial CMAs were actually plotted?\n", "error", "get.plotted.partial.cmas", "AdhereRFork");
         return (NULL);
       } else
       {
@@ -992,7 +992,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     }
   } else
   {
-    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.plotted.partial.cmas", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Unknown plot type!\n", "error", "get.plotted.partial.cmas", "AdhereRFork");
     return (NULL);
   }
 }
@@ -1107,7 +1107,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       is.na(cma$event.duration.colname) || !(cma$event.duration.colname %in% names(cma$data))                    # has a valid event duration column
   )
   {
-    if( !suppress.warnings ) .report.ewms("Can only plot a correctly specified CMA object (i.e., with valid data and column names)!\n", "error", ".plot.CMAs", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Can only plot a correctly specified CMA object (i.e., with valid data and column names)!\n", "error", ".plot.CMAs", "AdhereRFork");
     plot.CMA.error(export.formats=export.formats,
                    export.formats.fileprefix=export.formats.fileprefix,
                    export.formats.directory=export.formats.directory,
@@ -1116,28 +1116,32 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   }
 
   # Overriding dangerous or aesthetic defaults:
-  if( force.draw.text && !suppress.warnings ) .report.ewms("Forcing drawing of text elements even if too big or ugly!\n", "warning", ".plot.CMAs", "AdhereR");
+  if( force.draw.text && !suppress.warnings ) .report.ewms("Forcing drawing of text elements even if too big or ugly!\n", "warning", ".plot.CMAs", "AdhereRFork");
 
   # Throw error for html.plot.number > total.plots.in.html
-  if( html.plot.number > total.plots.in.html ) .report.ewms("html.plot.number must be less than or equal to total.plots.in.html!\n", "error", ".plot.CMAs", "AdhereR");
+  if( html.plot.number > total.plots.in.html ) .report.ewms("html.plot.number must be less than or equal to total.plots.in.html!\n", "error", ".plot.CMAs", "AdhereRFork", error.as.warning=FALSE);
 
   # Throw error if html.plot.number or total.plots.in.html aren't numbers
-  if( !is.numeric(html.plot.number) || !is.numeric(total.plots.in.html) ) .report.ewms("Both 'html.plot.number' and 'total.plots.in.html' must be numbers!", "error", ".plot.CMAs", "AdhereR");
+  if( !is.numeric(html.plot.number) || !is.numeric(total.plots.in.html) ) .report.ewms("Both 'html.plot.number' and 'total.plots.in.html' must be numbers!", "error", ".plot.CMAs", "AdhereRFork", error.as.warning=FALSE);
 
   # Throw error if number of custom plot names > 10
-  if( use.custom.plots==TRUE && length(custom.plot.names)>10 ) .report.ewms("html template can only currently accommodate up to 10 custom plots.", "error", ".plot.CMAs", "AdhereR");
+  if( use.custom.plots==TRUE && length(custom.plot.names)>10 ) .report.ewms("html template can only currently accommodate up to 10 custom plots.", "error", ".plot.CMAs", "AdhereRFork", error.as.warning=FALSE);
 
   # Throw error if logo file doesn't exist in specified directory
-  if( logo.to.use != 'AdhereR' && !file.exists(paste0(export.formats.directory, '/', logo.to.use))) .report.ewms("Logo file doesn't exist in the specified 'export.formats.directory', please try removing '/' from 'export.formats.directory' or 'logo.to.use' or both!", 'error', ".plot.CMAs", "AdhereR");
+  if( logo.to.use != 'AdhereR' && !file.exists(paste0(export.formats.directory, '/', logo.to.use))) .report.ewms("Logo file doesn't exist in the specified 'export.formats.directory', please try removing '/' from 'export.formats.directory' or 'logo.to.use' or both!", 'error', ".plot.CMAs", "AdhereRFork");
 
   # Throw an error if logo dimensions aren't numbers
-  if( logo.to.use != 'AdhereR' && (!is.numeric(custom.logo.width) || !is.numeric(custom.logo.height))) .report.ewms("'custom.logo.width' and 'custom.logo.height' must both be numeric!", "error", ".plot.CMAs", "AdhereR");
+  if( logo.to.use != 'AdhereR' && (!is.numeric(custom.logo.width) || !is.numeric(custom.logo.height))) .report.ewms("'custom.logo.width' and 'custom.logo.height' must both be numeric!", "error", ".plot.CMAs", "AdhereRFork");
 
   # Throw error is length(custom.plot.names) != total.plots.in.html
-  if( use.custom.plots==TRUE && length(custom.plot.names) != total.plots.in.html) .report.ewms("Lenght of custom.plot.names does not equal total.plots.in.html", "error", ".plot.CMAs", "AdhereR");
+  if( use.custom.plots==TRUE && length(custom.plot.names) != total.plots.in.html) .report.ewms("Lenght of custom.plot.names does not equal total.plots.in.html", "error", ".plot.CMAs", "AdhereRFork", error.as.warning=FALSE);
 
   # Throw an error if truing to use event intervals on a cma_sliding_window of greater than 1
-  if( show.event.intervals==TRUE && inherits(cma, "CMA_sliding_window") && (cma$sliding.window.no.steps != 1 || cma$sliding.window.step.duration/cma$sliding.window.duration != 1) ) .report.ewms("show.event.intervals must be FALSE on sliding window steps > 1 and on CMA0", "error", ".plot.CMAs", "AdhereR");
+  if( show.event.intervals==TRUE && inherits(cma, "CMA_sliding_window") && (cma$sliding.window.no.steps != 1 || cma$sliding.window.step.duration/cma$sliding.window.duration != 1) )
+  {
+    .report.ewms("show.event.intervals must be FALSE on sliding window steps > 1 and on CMA0", "error", ".plot.CMAs", "AdhereRFork");
+    show.event.intervals <- FALSE
+  }
 
   # Showing event intervals for single window sliding window
   # if (inherits(cma, "CMA_sliding_window"))# && cma$computed.CMA %in% c())
@@ -1151,7 +1155,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   # SVG placeholder:
   if( export.formats.save.svg.placeholder && (length(export.formats.svg.placeholder.type) != 1 || !export.formats.svg.placeholder.type %in% c("jpg", "png", "webp")) )
   {
-    if( !suppress.warnings ) .report.ewms("The SVG place holder can only be a jpg, png or webp!\n", "error", ".plot.CMAs", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("The SVG place holder can only be a jpg, png or webp!\n", "error", ".plot.CMAs", "AdhereRFork");
     plot.CMA.error(export.formats=export.formats,
                    export.formats.fileprefix=export.formats.fileprefix,
                    export.formats.directory=export.formats.directory,
@@ -1942,7 +1946,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   if( inherits(cma$data, "data.table") ) cma$data <- as.data.frame(cma$data);
 
   # Check compatibility between subtypes of plots:
-  if( align.all.patients && show.period != "days" ){ show.period <- "days"; if( !suppress.warnings ) .report.ewms("When aligning all patients, cannot show actual dates: showing days instead!\n", "warning", ".plot.CMAs", "AdhereR"); }
+  if( align.all.patients && show.period != "days" ){ show.period <- "days"; if( !suppress.warnings ) .report.ewms("When aligning all patients, cannot show actual dates: showing days instead!\n", "warning", ".plot.CMAs", "AdhereRFork"); }
 
   #
   # Cache useful column names ####
@@ -2009,7 +2013,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     if( is.null(patmgids) || nrow(patmgids) == 0 )
     {
       # Nothing to plot!
-      if( !suppress.warnings ) .report.ewms("No patients to plot!\n", "error", ".plot.CMAs", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No patients to plot!\n", "error", ".plot.CMAs", "AdhereRFork");
       plot.CMA.error(export.formats=export.formats,
                      export.formats.fileprefix=export.formats.fileprefix,
                      export.formats.directory=export.formats.directory,
@@ -2075,7 +2079,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   if( !is.null(patients.to.plot) ) patids <- intersect(patids, as.character(patients.to.plot));
   if( length(patids) == 0 )
   {
-    if( !suppress.warnings ) .report.ewms("No patients to plot!\n", "error", ".plot.CMAs", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("No patients to plot!\n", "error", ".plot.CMAs", "AdhereRFork");
     plot.CMA.error(export.formats=export.formats,
                    export.formats.fileprefix=export.formats.fileprefix,
                    export.formats.directory=export.formats.directory,
@@ -2085,7 +2089,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   {
     if( !suppress.warnings ) .report.ewms(paste0("Too many patients to plot (",length(patids),
                                             ")! If this is the desired outcome, please change the 'max.patients.to.plot' parameter value (now set at ",
-                                            max.patients.to.plot,") to at least ',length(patids),'!\n"), "error", ".plot.CMAs", "AdhereR");
+                                            max.patients.to.plot,") to at least ',length(patids),'!\n"), "error", ".plot.CMAs", "AdhereRFork");
     plot.CMA.error(export.formats=export.formats,
                    export.formats.fileprefix=export.formats.fileprefix,
                    export.formats.directory=export.formats.directory,
@@ -2151,7 +2155,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     non_missing_cmas <- cmas[ !is.na(cmas[,"CMA"]), ]; non_missing_cma_patids <- unique(as.character(non_missing_cmas[,col.patid]));
     if( is.null(non_missing_cma_patids) || length(non_missing_cma_patids) == 0 )
     {
-      if( !suppress.warnings ) .report.ewms("No patients with CMA estimates: nothing to plot!\n", "error", ".plot.CMAs", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("No patients with CMA estimates: nothing to plot!\n", "error", ".plot.CMAs", "AdhereRFork");
       plot.CMA.error(export.formats=export.formats,
                      export.formats.fileprefix=export.formats.fileprefix,
                      export.formats.directory=export.formats.directory,
@@ -2178,7 +2182,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                    ifelse(length(patids.no.events.to.plot) > 1, "s ", " "),
                                                    paste0("'",patids.no.events.to.plot, "'", collapse=", "),
                                                    ifelse(length(patids.no.events.to.plot) > 1, " have ", " has "), " no events to plot!\n"),
-                                            "warning", ".plot.CMAs", "AdhereR");
+                                            "warning", ".plot.CMAs", "AdhereRFork");
     }
   } else if( inherits(cma, "CMA_sliding_window") )
   {
@@ -2200,7 +2204,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                    ifelse(length(patids.no.events.to.plot) > 1, "s ", " "),
                                                    paste0("'",patids.no.events.to.plot, "'", collapse=", "),
                                                    ifelse(length(patids.no.events.to.plot) > 1, " have ", " has "), " no events to plot!\n"),
-                                            "warning", ".plot.CMAs", "AdhereR");
+                                            "warning", ".plot.CMAs", "AdhereRFork");
     }
   } else if( inherits(cma, "CMA0") && is.null(cma$event.info) )
   {
@@ -2248,7 +2252,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         event.info <- event.info[ !(event.info$.DATE.as.Date.end < event.info$.FU.START.DATE | event.info$.DATE.as.Date > event.info$.FU.END.DATE), ];
         if( is.null(event.info) || nrow(event.info) == 0 )
         {
-          if( !suppress.warnings ) .report.ewms("No events in the follow-up window: nothing to plot!\n", "error", ".plot.CMAs", "AdhereR");
+          if( !suppress.warnings ) .report.ewms("No events in the follow-up window: nothing to plot!\n", "error", ".plot.CMAs", "AdhereRFork");
           plot.CMA.error(export.formats=export.formats,
                          export.formats.fileprefix=export.formats.fileprefix,
                          export.formats.directory=export.formats.directory,
@@ -2274,7 +2278,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         # Store the event.info data:
         cma$event.info <- event.info;
 
-        # For the patients without stuff to plot, replace their events by a fake single event:
+        #For the patients without stuff to plot, replace their events by a fake single event:
         if( length(patids.no.events.to.plot) > 0 )
         {
           cma$event.info <- cma$event.info[ !(cma$event.info[,col.patid] %in% patids.no.events.to.plot), ];
@@ -2284,11 +2288,11 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                        ifelse(length(patids.no.events.to.plot) > 1, "s ", " "),
                                                        paste0("'",patids.no.events.to.plot, "'", collapse=", "),
                                                        ifelse(length(patids.no.events.to.plot) > 1, " have ", " has "), " no events to plot!\n"),
-                                                "warning", ".plot.CMAs", "AdhereR");
+                                                "warning", ".plot.CMAs", "AdhereRFork");
         }
       } else
       {
-        if( !suppress.warnings ) .report.ewms("Error(s) concerning the follow-up and observation windows!\n", "error", ".plot.CMAs", "AdhereR");
+        if( !suppress.warnings ) .report.ewms("Error(s) concerning the follow-up and observation windows!\n", "error", ".plot.CMAs", "AdhereRFork");
         plot.CMA.error(export.formats=export.formats,
                        export.formats.fileprefix=export.formats.fileprefix,
                        export.formats.directory=export.formats.directory,
@@ -2407,7 +2411,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                    ifelse(length(patids.no.events.to.plot) > 1, "s ", " "),
                                                    paste0("'",patids.no.events.to.plot, "'", collapse=", "),
                                                    ifelse(length(patids.no.events.to.plot) > 1, " have ", " has "), " no events to plot!\n"),
-                                            "warning", ".plot.CMAs", "AdhereR");
+                                            "warning", ".plot.CMAs", "AdhereRFork");
     }
   }
 
@@ -2483,7 +2487,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   {
     if( is.na(cma$date.format) || is.null(cma$date.format) || length(cma$date.format) != 1 || !is.character(cma$date.format) )
     {
-      if( !suppress.warnings ) .report.ewms("The date format must be a single string: cannot continue plotting!\n", "error", ".plot.CMAs", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("The date format must be a single string: cannot continue plotting!\n", "error", ".plot.CMAs", "AdhereRFork");
       plot.CMA.error(export.formats=export.formats,
                      export.formats.fileprefix=export.formats.fileprefix,
                      export.formats.directory=export.formats.directory,
@@ -2495,7 +2499,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     cma$data$.DATE.as.Date <- as.Date(cma$data[,cma$event.date.colname], format=cma$date.format);
     if( anyNA(cma$data$.DATE.as.Date) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Not all entries in the event date \"",cma$event.date.colname,"\" column are valid dates or conform to the date format \"",cma$date.format,"\"; first issue occurs on row ",min(which(is.na(cma$data$.DATE.as.Date))),": cannot continue plotting!\n"), "error", ".plot.CMAs", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Not all entries in the event date \"",cma$event.date.colname,"\" column are valid dates or conform to the date format \"",cma$date.format,"\"; first issue occurs on row ",min(which(is.na(cma$data$.DATE.as.Date))),": cannot continue plotting!\n"), "error", ".plot.CMAs", "AdhereRFork");
       plot.CMA.error(export.formats=export.formats,
                      export.formats.fileprefix=export.formats.fileprefix,
                      export.formats.directory=export.formats.directory,
@@ -2787,7 +2791,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     {
       if( !suppress.warnings ) .report.ewms(paste0("The minimum vertical space for the timeseries plots (plot.partial.CMAs.as.timeseries.vspace) is 5 lines, but it currently is only ",
                                                    plot.partial.CMAs.as.timeseries.vspace,
-                                                   ": skipping timeseries plots...\n"), "warning", ".plot.CMAs", "AdhereR");
+                                                   ": skipping timeseries plots...\n"), "warning", ".plot.CMAs", "AdhereRFork");
       plot.partial.CMAs.as <- plot.partial.CMAs.as[ plot.partial.CMAs.as != "timeseries" ];
     }
 
@@ -3021,7 +3025,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                 "try-error"))
     {
       # Some error occurred when creating the plot...
-      if( !suppress.warnings ) .report.ewms(msg, "error", ".plot.CMAs", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(msg, "error", ".plot.CMAs", "AdhereRFork");
       try(par(old.par), silent=TRUE); # restore graphical params
       #assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
       plot.CMA.error(export.formats=export.formats,
@@ -3052,7 +3056,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                    " x ",
                                                    round(abs(par("usr")[4] - par("usr")[3]) / (char.height * (vert.space.events +
                                                                                                                 ifelse(is.cma.TS.or.SW && has.estimated.CMA, nrow(cmas), 0))),1),
-                                                   ")!\n"), "error", ".plot.CMAs", "AdhereR");
+                                                   ")!\n"), "error", ".plot.CMAs", "AdhereRFork");
       par(old.par); # restore graphical params
       #assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
       plot.CMA.error(export.formats=export.formats,
@@ -3062,8 +3066,8 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       return (invisible(NULL));
     }
 
-    if( abs(par("usr")[2] - par("usr")[1]) / duration.total < 1.0 && !suppress.warnings ) .report.ewms("The horizontal plotting space might be too small!", "warning", ".plot.CMAs", "AdhereR");
-    if( abs(par("usr")[4] - par("usr")[3]) / (vert.space.events + ifelse(is.cma.TS.or.SW && has.estimated.CMA, nrow(cmas), 0)) < 1.0 && !suppress.warnings ) .report.ewms("The vertical plotting space might be too small!", "warning", ".plot.CMAs", "AdhereR");
+    if( abs(par("usr")[2] - par("usr")[1]) / duration.total < 1.0 && !suppress.warnings ) .report.ewms("The horizontal plotting space might be too small!", "warning", ".plot.CMAs", "AdhereRFork");
+    if( abs(par("usr")[4] - par("usr")[3]) / (vert.space.events + ifelse(is.cma.TS.or.SW && has.estimated.CMA, nrow(cmas), 0)) < 1.0 && !suppress.warnings ) .report.ewms("The vertical plotting space might be too small!", "warning", ".plot.CMAs", "AdhereRFork");
 
     # Save plot info:
     .last.cma.plot.info$baseR <- list(
@@ -4161,7 +4165,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       # Draw its sub-periods (if so requested, meaningful and possible):
       if( is.cma.TS.or.SW && has.estimated.CMA )
       {
-        if( length(s.cmas) > 0 && !all(is.na(cmas$CMA[s.cmas])))
+        if( length(s.cmas) > 0 )#&& !all(is.na(cmas$CMA[s.cmas])))
         {
           # We do have non-missing partial CMAs to plot:
           # Compute the start, end, location and string to display for these partial estimates:
@@ -4186,8 +4190,15 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           x.start.min <- min(ppts$start,na.rm=TRUE);
           x.end.max   <- max(ppts$end,  na.rm=TRUE);
           corrected.x.text <- (corrected.x + ppts$x);
-          min.y <- min(ppts$y,na.rm=TRUE);
-          max.y <- max(ppts$y,na.rm=TRUE);
+          if(all(is.na(ppts$y))) # guard against warnings when talking the min and max of only NAs
+          {
+            min.y <- NA;
+            max.y <- NA;
+          } else
+          {
+            min.y <- min(ppts$y,na.rm=TRUE);
+            max.y <- max(ppts$y,na.rm=TRUE);
+          };
 
           # Plotting type:
           if( "stacked" %in% plot.partial.CMAs.as )
@@ -4267,7 +4278,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           if( "overlapping" %in% plot.partial.CMAs.as )
           {
             # Show subperiods as overlapping segments:
-            if( !((range.y <- (max.y - min.y)) > 0) ) range.y <- 1; # avoid division by 0 if there's only one value
+            if( is.na(range.y <- (max.y - min.y)) || range.y <= 0 ) range.y <- 1; # avoid division by 0 if there's only one value or if there's none
             ppts$y.norm <- (ppts$y - min.y)/range.y;
 
             if( .do.SVG ) # SVG:
@@ -4367,7 +4378,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             # Show subperiods as a time series
             if( plot.partial.CMAs.as.timeseries.start.from.zero ) min.y <- min(min.y,0,na.rm=TRUE);
 
-            if( !((range.y <- (max.y - min.y)) > 0) ) range.y <- 1; # avoid division by 0 if there's only one value
+            if( is.na(range.y <- (max.y - min.y)) || range.y <= 0 ) range.y <- 1; # avoid division by 0 if there's only one value or if there's none
             ppts$y.norm <- (y.cur + 1 + (plot.partial.CMAs.as.timeseries.vspace - 3) * (ppts$y - min.y)/range.y);
 
             if( .do.SVG ) # SVG:
@@ -4377,8 +4388,16 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             }
 
             # The axes:
-            min.y.norm <- min(ppts$y.norm,na.rm=TRUE);
-            max.y.norm <- max(ppts$y.norm,na.rm=TRUE);
+            if(all(is.na(ppts$y.norm))) # guard against warnings when talking the min and max of only NAs
+            {
+              min.y.norm <- NA;
+              max.y.norm <- NA;
+            } else
+            {
+              min.y.norm <- min(ppts$y.norm,na.rm=TRUE);
+              max.y.norm <- max(ppts$y.norm,na.rm=TRUE);
+            }
+
             if( .do.R ) # Rplot:
             {
               segments(corrected.x + x.start.min, y.cur + 0.5, corrected.x + x.end.max,   y.cur + 0.5, lty="solid", col="black"); # horizontal axis
@@ -4446,8 +4465,11 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             {
               if( print.CMA && (force.draw.text || char.height.CMA <= 0.80) )
               {
-                text(corrected.x + x.start.min, min.y.norm, sprintf("%.1f%%",100*min.y), pos=2, cex=CMA.cex, col="black");
-                text(corrected.x + x.start.min, max.y.norm, sprintf("%.1f%%",100*max.y), pos=2, cex=CMA.cex, col="black");
+                if( !is.na(min.y.norm) && !is.na(max.y.norm) )
+                {
+                  if(min.y.norm < max.y.norm) text(corrected.x + x.start.min, min.y.norm, sprintf("%.1f%%",100*min.y), pos=2, cex=CMA.cex, col="black"); # avoid collisions
+                  text(corrected.x + x.start.min, max.y.norm, sprintf("%.1f%%",100*max.y), pos=2, cex=CMA.cex, col="black");
+                }
                 if( plot.partial.CMAs.as.timeseries.show.0perc && y.for.0perc >= y.cur + 0.5 )
                 {
                   text(corrected.x + x.start.min, y.for.0perc, "0%", pos=2, cex=CMA.cex, col="red");
@@ -4489,6 +4511,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             }
 
             # The intervals:
+            if(all(is.na(ppts$y.norm))) ppts_y.norm_notna <- 1 else ppts_y.norm_notna <- !is.na(ppts$y.norm); # cache the non-NA ppts$y.norm and avoid crashing if all are NAs
             if( !is.na(plot.partial.CMAs.as.timeseries.col.interval) )
             {
               if( plot.partial.CMAs.as.timeseries.interval.type == "none" )
@@ -4502,10 +4525,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                             "y.region.start"=y.cur + 0.5,
                                                                             "x.region.end"=corrected.x + x.end.max,
                                                                             "y.region.end"=y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0,
-                                                                            "x.partial.start"=corrected.x.text[!is.na(ppts$y.norm)],
-                                                                            "y.partial.start"=ppts$y.norm[!is.na(ppts$y.norm)],
-                                                                            "x.partial.end"=corrected.x.text[!is.na(ppts$y.norm)],
-                                                                            "y.partial.end"=ppts$y.norm[!is.na(ppts$y.norm)]));
+                                                                            "x.partial.start"=corrected.x.text[ppts_y.norm_notna],
+                                                                            "y.partial.start"=ppts$y.norm[ppts_y.norm_notna],
+                                                                            "x.partial.end"=corrected.x.text[ppts_y.norm_notna],
+                                                                            "y.partial.end"=ppts$y.norm[ppts_y.norm_notna]));
                 }
                 if( .do.SVG )
                 {
@@ -4515,10 +4538,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                           "y.region.start"=.scale.y.to.SVG.plot(y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0),
                                                                           "x.region.end"=.scale.x.to.SVG.plot(corrected.x + x.end.max),
                                                                           "y.region.start"=.scale.y.to.SVG.plot(y.cur + 0.5),
-                                                                          "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.text[!is.na(ppts$y.norm)]),
-                                                                          "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)]),
-                                                                          "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.text[!is.na(ppts$y.norm)]),
-                                                                          "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)])));
+                                                                          "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.text[ppts_y.norm_notna]),
+                                                                          "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna]),
+                                                                          "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.text[ppts_y.norm_notna]),
+                                                                          "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna])));
                 }
               } else if( plot.partial.CMAs.as.timeseries.interval.type %in% c("segments", "arrows", "lines") )
               {
@@ -4540,10 +4563,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                               "y.region.start"=y.cur + 0.5,
                                                                               "x.region.end"=corrected.x + x.end.max,
                                                                               "y.region.end"=y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0,
-                                                                              "x.partial.start"=corrected.x.start[!is.na(ppts$y.norm)],
-                                                                              "y.partial.start"=ppts$y.norm[!is.na(ppts$y.norm)] - 0.2,
-                                                                              "x.partial.end"=corrected.x.end[!is.na(ppts$y.norm)],
-                                                                              "y.partial.end"=ppts$y.norm[!is.na(ppts$y.norm)] + 0.2));
+                                                                              "x.partial.start"=corrected.x.start[ppts_y.norm_notna],
+                                                                              "y.partial.start"=ppts$y.norm[ppts_y.norm_notna] - 0.2,
+                                                                              "x.partial.end"=corrected.x.end[ppts_y.norm_notna],
+                                                                              "y.partial.end"=ppts$y.norm[ppts_y.norm_notna] + 0.2));
                   } else if( plot.partial.CMAs.as.timeseries.interval.type == "arrows" )
                   {
                     # The arrow endings:
@@ -4562,10 +4585,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                               "y.region.start"=y.cur + 0.5,
                                                                               "x.region.end"=corrected.x + x.end.max,
                                                                               "y.region.end"=y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0,
-                                                                              "x.partial.start"=corrected.x.start[!is.na(ppts$y.norm)],
-                                                                              "y.partial.start"=ppts$y.norm[!is.na(ppts$y.norm)] - char.height/2,
-                                                                              "x.partial.end"=corrected.x.end[!is.na(ppts$y.norm)],
-                                                                              "y.partial.end"=ppts$y.norm[!is.na(ppts$y.norm)] + char.height/2));
+                                                                              "x.partial.start"=corrected.x.start[ppts_y.norm_notna],
+                                                                              "y.partial.start"=ppts$y.norm[ppts_y.norm_notna] - char.height/2,
+                                                                              "x.partial.end"=corrected.x.end[ppts_y.norm_notna],
+                                                                              "y.partial.end"=ppts$y.norm[ppts_y.norm_notna] + char.height/2));
                   } else
                   {
                     # Just the lines:
@@ -4576,10 +4599,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                               "y.region.start"=y.cur + 0.5,
                                                                               "x.region.end"=corrected.x + x.end.max,
                                                                               "y.region.end"=y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0,
-                                                                              "x.partial.start"=corrected.x.start[!is.na(ppts$y.norm)],
-                                                                              "y.partial.start"=ppts$y.norm[!is.na(ppts$y.norm)],
-                                                                              "x.partial.end"=corrected.x.end[!is.na(ppts$y.norm)],
-                                                                              "y.partial.end"=ppts$y.norm[!is.na(ppts$y.norm)]));
+                                                                              "x.partial.start"=corrected.x.start[ppts_y.norm_notna],
+                                                                              "y.partial.start"=ppts$y.norm[ppts_y.norm_notna],
+                                                                              "x.partial.end"=corrected.x.end[ppts_y.norm_notna],
+                                                                              "y.partial.end"=ppts$y.norm[ppts_y.norm_notna]));
                   }
                 }
 
@@ -4628,10 +4651,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                             "y.region.start"=.scale.y.to.SVG.plot(y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0),
                                                                             "x.region.end"=.scale.x.to.SVG.plot(corrected.x + x.end.max),
                                                                             "y.region.end"=.scale.y.to.SVG.plot(y.cur + 0.5),
-                                                                            "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[!is.na(ppts$y.norm)]),
-                                                                            "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)] - 0.2),
-                                                                            "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[!is.na(ppts$y.norm)]),
-                                                                            "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)] + 0.2)));
+                                                                            "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[ppts_y.norm_notna]),
+                                                                            "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna] - 0.2),
+                                                                            "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[ppts_y.norm_notna]),
+                                                                            "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna] + 0.2)));
                   } else if( plot.partial.CMAs.as.timeseries.interval.type == "arrows" )
                   {
                     .last.cma.plot.info$SVG$partialCMAs <- rbind(.last.cma.plot.info$SVG$partialCMAs,
@@ -4640,10 +4663,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                             "y.region.start"=.scale.y.to.SVG.plot(y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0),
                                                                             "x.region.end"=.scale.x.to.SVG.plot(corrected.x + x.end.max),
                                                                             "y.region.end"=.scale.y.to.SVG.plot(y.cur + 0.5),
-                                                                            "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[!is.na(ppts$y.norm)]),
-                                                                            "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)] - 0.2),
-                                                                            "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[!is.na(ppts$y.norm)]),
-                                                                            "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)] + 0.2)));
+                                                                            "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[ppts_y.norm_notna]),
+                                                                            "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna] - 0.2),
+                                                                            "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[ppts_y.norm_notna]),
+                                                                            "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna] + 0.2)));
                   } else # just lines
                   {
                     .last.cma.plot.info$SVG$partialCMAs <- rbind(.last.cma.plot.info$SVG$partialCMAs,
@@ -4652,10 +4675,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                             "y.region.start"=.scale.y.to.SVG.plot(y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0),
                                                                             "x.region.end"=.scale.x.to.SVG.plot(corrected.x + x.end.max),
                                                                             "y.region.end"=.scale.y.to.SVG.plot(y.cur + 0.5),
-                                                                            "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[!is.na(ppts$y.norm)]),
-                                                                            "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)]),
-                                                                            "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[!is.na(ppts$y.norm)]),
-                                                                            "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[!is.na(ppts$y.norm)])));
+                                                                            "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[ppts_y.norm_notna]),
+                                                                            "y.partial.start"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna]),
+                                                                            "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[ppts_y.norm_notna]),
+                                                                            "y.partial.end"=.scale.y.to.SVG.plot(ppts$y.norm[ppts_y.norm_notna])));
                   }
                 }
               } else if( plot.partial.CMAs.as.timeseries.interval.type == "rectangles" )
@@ -4674,9 +4697,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                             "y.region.start"=y.cur + 0.5,
                                                                             "x.region.end"=corrected.x + x.end.max,
                                                                             "y.region.end"=y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0,
-                                                                            "x.partial.start"=corrected.x.start[!is.na(ppts$y.norm)],
+                                                                            "x.partial.start"=corrected.x.start[ppts_y.norm_notna],
                                                                             "y.partial.start"=y.cur + 0.5,
-                                                                            "x.partial.end"=corrected.x.end[!is.na(ppts$y.norm)],
+                                                                            "x.partial.end"=corrected.x.end[ppts_y.norm_notna],
                                                                             "y.partial.end"=y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0));
                 }
 
@@ -4699,9 +4722,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                           "y.region.start"=.scale.y.to.SVG.plot(y.cur + 0.5),
                                                                           "x.region.end"=.scale.x.to.SVG.plot(corrected.x + x.end.max),
                                                                           "y.region.end"=.scale.y.to.SVG.plot(y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0),
-                                                                          "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[!is.na(ppts$y.norm)]),
+                                                                          "x.partial.start"=.scale.x.to.SVG.plot(corrected.x.start[ppts_y.norm_notna]),
                                                                           "y.partial.start"=.scale.y.to.SVG.plot(y.cur + 0.5),
-                                                                          "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[!is.na(ppts$y.norm)]),
+                                                                          "x.partial.end"=.scale.x.to.SVG.plot(corrected.x.end[ppts_y.norm_notna]),
                                                                           "y.partial.end"=.scale.y.to.SVG.plot(y.cur + plot.partial.CMAs.as.timeseries.vspace - 1.0)));
                 }
               }
@@ -4722,7 +4745,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                   .SVG.lines(x=.scale.x.to.SVG.plot(corrected.x.text), y=.scale.y.to.SVG.plot(ppts$y.norm),
                              connected=TRUE,
                              stroke=plot.partial.CMAs.as.timeseries.col.dot, lty="solid",
-                             class="partial_cma_timeseries_connecting_lines", suppress.warnings=suppress.warnings);
+                             class="partial_cma_timeseries_connecting_lines", suppress.warnings=(suppress.warnings || length(ppts$y.norm) == 1)); # avoid useless warning when only 1
                 svg.str[[length(svg.str)+1]] <-
                   # The points:
                   .SVG.points(x=.scale.x.to.SVG.plot(corrected.x.text), y=.scale.y.to.SVG.plot(ppts$y.norm),
@@ -5115,7 +5138,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           # Try to load the given template:
           if( length(export.formats.html.css) != 1 || !file.exists(as.character(export.formats.html.css)) )
           {
-            if( !suppress.warnings ) .report.ewms("The given CSS template '",as.character(export.formats.html.css),"' does not seem to exist: falling back to the default one!\n", "warning", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("The given CSS template '",as.character(export.formats.html.css),"' does not seem to exist: falling back to the default one!\n", "warning", ".plot.CMAs", "AdhereRFork");
             export.formats.html.css <- NULL;
           } else
           {
@@ -5128,9 +5151,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           css.template.path <- system.file('html-templates/css-template.css', package='AdhereRFork');
           if( is.null(css.template.path) || css.template.path=="" )
           {
-            if( !suppress.warnings ) .report.ewms("Cannot load the CSS template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("Cannot load the CSS template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereRFork");
             .last.cma.plot.info$SVG <- NULL;
-            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
             plot.CMA.error(export.formats=export.formats,
                            export.formats.fileprefix=export.formats.fileprefix,
                            export.formats.directory=export.formats.directory,
@@ -5145,7 +5168,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           # Try to load the given template:
           if( length(export.formats.html.javascript) != 1 || !file.exists(as.character(export.formats.html.javascript)) )
           {
-            if( !suppress.warnings ) .report.ewms("The given JavaScript template '",as.character(export.formats.html.javascript),"' does not seem to exist: falling back to the default one!\n", "warning", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("The given JavaScript template '",as.character(export.formats.html.javascript),"' does not seem to exist: falling back to the default one!\n", "warning", ".plot.CMAs", "AdhereRFork");
             export.formats.html.javascript <- NULL;
           } else
           {
@@ -5158,9 +5181,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           js.template.path <- system.file('html-templates/javascript-template.js', package='AdhereRFork');
           if( is.null(js.template.path) || js.template.path=="" )
           {
-            if( !suppress.warnings ) .report.ewms("Cannot load the JavaScript template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("Cannot load the JavaScript template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereRFork");
             .last.cma.plot.info$SVG <- NULL;
-            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
             plot.CMA.error(export.formats=export.formats,
                            export.formats.fileprefix=export.formats.fileprefix,
                            export.formats.directory=export.formats.directory,
@@ -5211,7 +5234,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           if( !requireNamespace("base64", quietly=TRUE) )
           {
             # Does not seem to:
-            if( !suppress.warnings ) .report.ewms("Package 'base64' required for emedding images in HTML documents does not seem to exist: we'll store the images outside the HTML document!\n", "warning", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("Package 'base64' required for emedding images in HTML documents does not seem to exist: we'll store the images outside the HTML document!\n", "warning", ".plot.CMAs", "AdhereRFork");
             export.formats.svg.placeholder.embed <- FALSE;
           }
 
@@ -5229,7 +5252,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             # The SVG placeholder must be embedded in base_64 encoded-form into en <img> tag:
             if( !(export.formats.svg.placeholder.type %in% c("jpg", "png")) )
             {
-              if( !suppress.warnings ) .report.ewms("Can only embed a JPEG or PNG image as a placeholder for the SVG image: defaulting to JPEG!\n", "warning", ".plot.CMAs", "AdhereR");
+              if( !suppress.warnings ) .report.ewms("Can only embed a JPEG or PNG image as a placeholder for the SVG image: defaulting to JPEG!\n", "warning", ".plot.CMAs", "AdhereRFork");
               export.formats.svg.placeholder.type <- "jpg";
             }
 
@@ -5266,7 +5289,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             svg.placeholder.end64 <- try(readLines(svg.placeholder.end64.tmpfile), silent=TRUE);
             if( inherits(svg.placeholder.end64, "try-error") )
             {
-              if( !suppress.warnings ) .report.ewms("Failed embedding an image in the HTML document: reverting to having it as an external file!\n", "warning", ".plot.CMAs", "AdhereR");
+              if( !suppress.warnings ) .report.ewms("Failed embedding an image in the HTML document: reverting to having it as an external file!\n", "warning", ".plot.CMAs", "AdhereRFork");
               export.formats.svg.placeholder.embed <- FALSE;
               try(unlink(c(svg.placeholder.tmpfile, svg.placeholder.end64.tmpfile)), silent=TRUE); # clean up the temp files
 
@@ -5297,7 +5320,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           # Try to load the given template:
           if( length(export.formats.html.template) != 1 || !file.exists(as.character(export.formats.html.template)) )
           {
-            if( !suppress.warnings ) .report.ewms("The given HTML template '",as.character(export.formats.html.template),"' does not seem to exist: falling back to the default one!\n", "warning", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("The given HTML template '",as.character(export.formats.html.template),"' does not seem to exist: falling back to the default one!\n", "warning", ".plot.CMAs", "AdhereRFork");
             export.formats.html.template <- NULL;
           } else
           {
@@ -5310,9 +5333,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           html.template.path <- system.file('html-templates/html-template.html', package='AdhereRFork');
           if( is.null(html.template.path) || html.template.path=="" )
           {
-            if( !suppress.warnings ) .report.ewms("Cannot load the HTML template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("Cannot load the HTML template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereRFork");
             .last.cma.plot.info$SVG <- NULL;
-            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot info into the environment
+            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot info into the environment
             plot.CMA.error(export.formats=export.formats,
                            export.formats.fileprefix=export.formats.fileprefix,
                            export.formats.directory=export.formats.directory,
@@ -5334,9 +5357,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         {
           if( length(grep('<script type="text/javascript" src="PATH-TO-JS">', html.template, fixed=TRUE)) != 1 )
           {
-            if( !suppress.warnings ) .report.ewms("The HTML template seems corrupted: there should 1 and only 1 '<script type=\"text/javascript\" src=\"PATH-TO-JS\">'!\n", "error", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("The HTML template seems corrupted: there should 1 and only 1 '<script type=\"text/javascript\" src=\"PATH-TO-JS\">'!\n", "error", ".plot.CMAs", "AdhereRFork");
             .last.cma.plot.info$SVG <- NULL;
-            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
             plot.CMA.error(export.formats=export.formats,
                            export.formats.fileprefix=export.formats.fileprefix,
                            export.formats.directory=export.formats.directory,
@@ -5345,9 +5368,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           }
           if( length(grep('<link rel="stylesheet" href="PATH-TO-CSS">', html.template, fixed=TRUE)) != 1 )
           {
-            if( !suppress.warnings ) .report.ewms("The HTML template seems corrupted: there should 1 and only 1 '<link rel=\"stylesheet\" href=\"PATH-TO-CSS\">'!\n", "error", ".plot.CMAs", "AdhereR");
+            if( !suppress.warnings ) .report.ewms("The HTML template seems corrupted: there should 1 and only 1 '<link rel=\"stylesheet\" href=\"PATH-TO-CSS\">'!\n", "error", ".plot.CMAs", "AdhereRFork");
             .last.cma.plot.info$SVG <- NULL;
-            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+            assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
             plot.CMA.error(export.formats=export.formats,
                            export.formats.fileprefix=export.formats.fileprefix,
                            export.formats.directory=export.formats.directory,
@@ -5414,9 +5437,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         # SVG:
         if( length(grep('<object id="adherence_plot" data="PATH-TO-IMAGE" type="image/svg+xml">Please use a modern browser!</object>', html.template, fixed=TRUE)) != 1 && html.plot.number==1)
         {
-          if( !suppress.warnings ) .report.ewms("The HTML template seems corrupted: there should 1 and only 1 '<object id=\"adherence_plot\" data=\"PATH-TO-IMAGE\" type=\"image/svg+xml\">Please use a modern browser!</object>'!\n", "error", ".plot.CMAs", "AdhereR");
+          if( !suppress.warnings ) .report.ewms("The HTML template seems corrupted: there should 1 and only 1 '<object id=\"adherence_plot\" data=\"PATH-TO-IMAGE\" type=\"image/svg+xml\">Please use a modern browser!</object>'!\n", "error", ".plot.CMAs", "AdhereRFork");
           .last.cma.plot.info$SVG <- NULL;
-          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
           plot.CMA.error(export.formats=export.formats,
                          export.formats.fileprefix=export.formats.fileprefix,
                          export.formats.directory=export.formats.directory,
@@ -5568,7 +5591,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
 
 
   ## Save plot info into the external environment ####
-  assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env);
+  assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env);
 
 
   # Return value:
@@ -5648,9 +5671,9 @@ plot.CMA.error <- function(cma=NA, patients.to.plot=NULL,
         css.template.path <- system.file('html-templates/css-template.css', package='AdhereRFork');
         if( is.null(css.template.path) || css.template.path=="" )
         {
-          if( !suppress.warnings ) .report.ewms("Cannot load the CSS template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
+          if( !suppress.warnings ) .report.ewms("Cannot load the CSS template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereRFork");
           .last.cma.plot.info$SVG <- NULL;
-          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
           plot.CMA.error(export.formats=export.formats,
                          export.formats.fileprefix=export.formats.fileprefix,
                          export.formats.directory=export.formats.directory,
@@ -5660,9 +5683,9 @@ plot.CMA.error <- function(cma=NA, patients.to.plot=NULL,
         js.template.path <- system.file('html-templates/javascript-template.js', package='AdhereRFork');
         if( is.null(js.template.path) || js.template.path=="" )
         {
-          if( !suppress.warnings ) .report.ewms("Cannot load the JavaScript template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
+          if( !suppress.warnings ) .report.ewms("Cannot load the JavaScript template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereRFork");
           .last.cma.plot.info$SVG <- NULL;
-          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
           plot.CMA.error(export.formats=export.formats,
                          export.formats.fileprefix=export.formats.fileprefix,
                          export.formats.directory=export.formats.directory,
@@ -5676,9 +5699,9 @@ plot.CMA.error <- function(cma=NA, patients.to.plot=NULL,
         html.template.path <- system.file('html-templates/html-template.html', package='AdhereRFork');
         if( is.null(html.template.path) || html.template.path=="" )
         {
-          if( !suppress.warnings ) .report.ewms("Cannot load the HTML template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereR");
+          if( !suppress.warnings ) .report.ewms("Cannot load the HTML template -- please reinstall the AdhereR package!\n", "error", ".plot.CMAs", "AdhereRFork");
           .last.cma.plot.info$SVG <- NULL;
-          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adherer.env); # save the plot infor into the environment
+          assign(".last.cma.plot.info", .last.cma.plot.info, envir=.adhererfork.env); # save the plot infor into the environment
           plot.CMA.error(export.formats=export.formats,
                          export.formats.fileprefix=export.formats.fileprefix,
                          export.formats.directory=export.formats.directory,
@@ -5780,7 +5803,7 @@ plot.CMA.error <- function(cma=NA, patients.to.plot=NULL,
   }
 
   # No last plot (really)...
-  assign(".last.cma.plot.info", NULL, envir=.adherer.env);
+  assign(".last.cma.plot.info", NULL, envir=.adhererfork.env);
 
   # Return value:
   return (invisible(exported.file.names));

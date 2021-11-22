@@ -305,6 +305,9 @@ use for the implicit \code{__ALL_OTHERS__} medication group (defaults to "*").}
 \item{lty.event, lwd.event, pch.start.event, pch.end.event}{The style of the
 event (line style, width, and start and end symbols).}
 
+\item{show.event.intervals}{\emph{Logical}, should the actual event intervals
+be shown?}
+
 \item{plot.events.vertically.displaced}{Should consecutive events be plotted
 on separate rows (i.e., separated vertically, the default) or on the same row?}
 

@@ -39,26 +39,26 @@ globalVariables(c(".OBS.START.DATE", ".OBS.START.DATE.PRECOMPUTED", ".OBS.START.
 ## Package private info ####
 # Store various info relevant to the package (such as info about the last plot or the last error).
 # As this is inside a package and we must avoid locking, we ned to use an environment (see, e.g. https://www.r-bloggers.com/package-wide-variablescache-in-r-packages/)
-.adherer.env <- new.env();
+.adhererfork.env <- new.env();
 
 # Info about the last plot (initially, none):
-assign(".last.cma.plot.info", NULL, envir=.adherer.env);
+assign(".last.cma.plot.info", NULL, envir=.adhererfork.env);
 
 # Info about errors, warnings and messages (initially, none):
-assign(".ewms", NULL, envir=.adherer.env);
-assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record the errors, warnings and message, but just display them
+assign(".ewms", NULL, envir=.adhererfork.env);
+assign(".record.ewms", FALSE, envir=.adhererfork.env); # initially, do not record the errors, warnings and message, but just display them
 
 # Clear the info about errors, warnings and messages:
-.clear.ewms <- function() { assign(".ewms", NULL, envir=.adherer.env); }
+.clear.ewms <- function() { assign(".ewms", NULL, envir=.adhererfork.env); }
 
 # Get the info about errors, warnings and messages (basically, a data.frame contaning all the important info, one thing per row):
-.get.ewms <- function() { return (get(".ewms", envir=.adherer.env)); }
+.get.ewms <- function() { return (get(".ewms", envir=.adhererfork.env)); }
 
 # Are we recording the errors, warnings and messages?
-.is.recording.ewms <- function() { return (!is.null(.record.ewms <- get(".record.ewms", envir=.adherer.env)) && .record.ewms); }
+.is.recording.ewms <- function() { return (!is.null(.record.ewms <- get(".record.ewms", envir=.adhererfork.env)) && .record.ewms); }
 
 # Start/stop recording the errors, warnings and messages:
-.record.ewms <- function(record=TRUE) { .clear.ewms(); assign(".record.ewms", record, envir=.adherer.env); }
+.record.ewms <- function(record=TRUE) { .clear.ewms(); assign(".record.ewms", record, envir=.adhererfork.env); }
 
 # Reporting an error, warning or message:
 .report.ewms <- function(text, # the text
@@ -78,7 +78,7 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
     assign(".ewms",
            rbind(.get.ewms(),
                  data.frame("text"=text, "type"=type, "function"=fnc.name, "package"=pkg.name, "exception.was.thrown"=generate.exception)),
-           envir=.adherer.env);
+           envir=.adhererfork.env);
   }
 
   # Throw an exception (if the case):
@@ -165,14 +165,14 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
   # Basic checks:
   if( is.null(data) || !inherits(data, "data.frame") || nrow(data) == 0 )
   {
-    if( !suppress.warnings ) .report.ewms("The data must be a non-emtpy data.frame (or derived) object!\n", "error", ".apply.medication.groups", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("The data must be a non-emtpy data.frame (or derived) object!\n", "error", ".apply.medication.groups", "AdhereRFork");
     return (NULL);
   }
   data <- as.data.frame(data); # make sure we convert it to a data.frame
 
   if( !(is.character(medication.groups) || is.factor(medication.groups)) )
   {
-    if( !suppress.warnings ) .report.ewms("The medication groups must be a vector of characters!\n", "error", ".apply.medication.groups", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("The medication groups must be a vector of characters!\n", "error", ".apply.medication.groups", "AdhereRFork");
     return (NULL);
   }
 
@@ -182,7 +182,7 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
     mg.vals <- unique(data[,medication.groups]); mg.vals <- mg.vals[!is.na(mg.vals)]; # the unique non-NA values
     if( is.null(mg.vals) || length(mg.vals) == 0 )
     {
-      if( !suppress.warnings ) .report.ewms("The column '",medication.groups,"' in the data must contain at least one non-missing value!\n", "error", ".apply.medication.groups", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("The column '",medication.groups,"' in the data must contain at least one non-missing value!\n", "error", ".apply.medication.groups", "AdhereRFork");
       return (NULL);
     }
     mg.vals <- sort(mg.vals); # makes it easier to view if ordered
@@ -192,7 +192,7 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
 
   if( length(names(medication.groups)) != length(medication.groups) || any(duplicated(names(medication.groups))) || ("" %in% names(medication.groups)) )
   {
-    if( !suppress.warnings ) .report.ewms("The medication groups must be a named list with unique and non-empty names!\n", "error", ".apply.medication.groups", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("The medication groups must be a named list with unique and non-empty names!\n", "error", ".apply.medication.groups", "AdhereRFork");
     return (NULL);
   }
 
@@ -228,7 +228,7 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
     if( is.na(s) || is.null(s) || s == "" )
     {
       # Empty definition!
-      if( !suppress.warnings ) .report.ewms(paste0("Error parsing the medication class definition '",mg$name[i],"': this definition is empty!\n"), "error", ".apply.medication.groups", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Error parsing the medication class definition '",mg$name[i],"': this definition is empty!\n"), "error", ".apply.medication.groups", "AdhereRFork");
       return (NULL);
     }
 
@@ -242,7 +242,7 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
       {
         if( length(ii <- which(mg$name == substr(x, 2, nchar(x)-1))) != 1 )
         {
-          if( !suppress.warnings ) .report.ewms(paste0("Error parsing the medication class definition '",mg$name[i],"': there is a call to the undefined medication class '",substr(x, 2, nchar(x)-1),"'!\n"), "error", ".apply.medication.groups", "AdhereR");
+          if( !suppress.warnings ) .report.ewms(paste0("Error parsing the medication class definition '",mg$name[i],"': there is a call to the undefined medication class '",substr(x, 2, nchar(x)-1),"'!\n"), "error", ".apply.medication.groups", "AdhereRFork");
           return (NA);
         } else
         {
@@ -290,7 +290,7 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
     try(s_parsed <- parse(text=s_fnc), silent=TRUE);
     if( is.null(s_parsed) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Error parsing the medication class definition '",mg$name[i],"'!\n"), "error", ".apply.medication.groups", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Error parsing the medication class definition '",mg$name[i],"'!\n"), "error", ".apply.medication.groups", "AdhereRFork");
       return (NULL);
     }
 
@@ -314,7 +314,7 @@ assign(".record.ewms", FALSE, envir=.adherer.env); # initially, do not record th
         err_msgs$error <- vapply(err_msgs$error, function(s) trimws(strsplit(s,":",fixed=TRUE)[[1]][2]), character(1));
         err_msgs$fnc <- vapply(err_msgs$fnc, function(s) mg$name[ mg$fnc_name == s ], character(1));
         ss <- gregexpr(".mg_fnc_",err_msgs$error); regmatches(err_msgs$error, ss) <- "";
-        if( !suppress.warnings ) .report.ewms(paste0("Error(s) during the evaluation of medication class(es): ",paste0("'",err_msgs$error," (for ",err_msgs$fnc,")'",colapse=", "),"!\n"), "warning", ".apply.medication.groups", "AdhereR");
+        if( !suppress.warnings ) .report.ewms(paste0("Error(s) during the evaluation of medication class(es): ",paste0("'",err_msgs$error," (for ",err_msgs$fnc,")'",colapse=", "),"!\n"), "warning", ".apply.medication.groups", "AdhereRFork");
       }
       return (NULL);
     }
@@ -548,65 +548,65 @@ CMA0 <- function(data=NULL, # the data used to compute the CMA on
     if( inherits(data, "matrix") || inherits(data, "tbl") || inherits(data, "data.table") ) data <- as.data.frame(data); # convert various things to data.frame
     if( !inherits(data, "data.frame") )
     {
-      if( !suppress.warnings ) .report.ewms("The 'data' for a CMA must be of type 'data.frame'!\n", "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("The 'data' for a CMA must be of type 'data.frame'!\n", "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( nrow(data) < 1 )
     {
-      if( !suppress.warnings ) .report.ewms("The 'data' for a CMA must have at least one row!\n", "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("The 'data' for a CMA must have at least one row!\n", "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     # the column names must exist in data:
     if( !is.na(ID.colname) && !(ID.colname %in% names(data)) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Column ID.colname='",ID.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Column ID.colname='",ID.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( !is.na(event.date.colname) && !(event.date.colname %in% names(data)) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Column event.date.colname='",event.date.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Column event.date.colname='",event.date.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( !is.na(event.duration.colname) && !(event.duration.colname %in% names(data)) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Column event.duration.colname='",event.duration.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Column event.duration.colname='",event.duration.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( !is.na(event.daily.dose.colname) && !(event.daily.dose.colname %in% names(data)) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Column event.daily.dose.colname='",event.daily.dose.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Column event.daily.dose.colname='",event.daily.dose.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( !is.na(medication.class.colname) && !(medication.class.colname %in% names(data)) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Column medication.class.colname='",medication.class.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Column medication.class.colname='",medication.class.colname,"' must appear in the 'data'!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     # carry-over conditions:
     if( !is.na(carryover.within.obs.window) && !is.logical(carryover.within.obs.window) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'carryover.within.obs.window' must be logical!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'carryover.within.obs.window' must be logical!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( !is.na(carryover.into.obs.window) && !is.logical(carryover.into.obs.window) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'carryover.into.obs.window' must be logical!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'carryover.into.obs.window' must be logical!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( !is.na(carry.only.for.same.medication) && !is.logical(carry.only.for.same.medication) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'carry.only.for.same.medication' must be logical!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'carry.only.for.same.medication' must be logical!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( !is.na(consider.dosage.change) && !is.logical(consider.dosage.change) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'consider.dosage.change' must be logical!\n"), "error", "CMA0", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Parameter 'consider.dosage.change' must be logical!\n"), "error", "CMA0", "AdhereRFork");
       return (NULL);
     }
     if( (!is.na(carryover.within.obs.window) && !is.na(carryover.into.obs.window) && !is.na(carry.only.for.same.medication)) &&
           (!carryover.within.obs.window && !carryover.into.obs.window && carry.only.for.same.medication) )
     {
-      if( !suppress.warnings ) .report.ewms("Cannot carry over only for same medication when no carry over at all is considered!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("Cannot carry over only for same medication when no carry over at all is considered!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     }
     # the follow-up window:
@@ -618,33 +618,33 @@ CMA0 <- function(data=NULL, # the data used to compute the CMA on
         # Ok, it was apparently successfully converted to Date: nothing else to do...
       } else
       {
-        if( !suppress.warnings ) .report.ewms("The follow-up window start must be either a number, a Date, or a valid column name in 'data'!\n", "error", "CMA0", "AdhereR")
+        if( !suppress.warnings ) .report.ewms("The follow-up window start must be either a number, a Date, or a valid column name in 'data'!\n", "error", "CMA0", "AdhereRFork")
         return (NULL);
       }
     }
     if( !inherits(followup.window.start,"Date") && !is.na(followup.window.start.unit) && !(followup.window.start.unit %in% c("days", "weeks", "months", "years") ) )
     {
-      if( !suppress.warnings ) .report.ewms("The follow-up window start unit is not recognized!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The follow-up window start unit is not recognized!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     }
     if( !is.na(followup.window.duration) && is.numeric(followup.window.duration) && followup.window.duration < 0 )
     {
-      if( !suppress.warnings ) .report.ewms("The follow-up window duration must be a positive number of time units after the first event!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The follow-up window duration must be a positive number of time units after the first event!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     } else if( !is.na(followup.window.duration) && !is.numeric(followup.window.duration) && !(followup.window.duration %in% names(data)) )
     {
-      if( !suppress.warnings ) .report.ewms("The follow-up window duration must be either a positive number or a valid column name in 'data'!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The follow-up window duration must be either a positive number or a valid column name in 'data'!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     }
     if( !is.na(followup.window.duration.unit) && !(followup.window.duration.unit %in% c("days", "weeks", "months", "years") ) )
     {
-      if( !suppress.warnings ) .report.ewms("The follow-up window duration unit is not recognized!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The follow-up window duration unit is not recognized!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     }
     # the observation window:
     if( !is.na(observation.window.start) && is.numeric(observation.window.start) && observation.window.start < 0 )
     {
-      if( !suppress.warnings ) .report.ewms("The observation window start must be a positive number of time units after the first event!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The observation window start must be a positive number of time units after the first event!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     } else if( !is.na(observation.window.start) && !inherits(observation.window.start,"Date") && !is.numeric(observation.window.start) && !(observation.window.start %in% names(data)) )
     {
@@ -654,27 +654,27 @@ CMA0 <- function(data=NULL, # the data used to compute the CMA on
         # Ok, it was apparently successfully converted to Date: nothing else to do...
       } else
       {
-        if( !suppress.warnings ) .report.ewms("The observation window start must be either a positive number, a Date, or a valid column name in 'data'!\n", "error", "CMA0", "AdhereR")
+        if( !suppress.warnings ) .report.ewms("The observation window start must be either a positive number, a Date, or a valid column name in 'data'!\n", "error", "CMA0", "AdhereRFork")
         return (NULL);
       }
     }
     if( !inherits(observation.window.start,"Date") && !is.na(observation.window.start.unit) && !(observation.window.start.unit %in% c("days", "weeks", "months", "years") ) )
     {
-      if( !suppress.warnings ) .report.ewms("The observation window start unit is not recognized!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The observation window start unit is not recognized!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     }
     if( !is.na(observation.window.duration) && is.numeric(observation.window.duration) && observation.window.duration < 0 )
     {
-      if( !suppress.warnings ) .report.ewms("The observation window duration must be a positive number of time units after the first event!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The observation window duration must be a positive number of time units after the first event!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     } else if( !is.na(observation.window.duration) && !is.numeric(observation.window.duration) && !(observation.window.duration %in% names(data)) )
     {
-      if( !suppress.warnings ) .report.ewms("The observation window duration must be either a positive number or a valid column name in 'data'!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The observation window duration must be either a positive number or a valid column name in 'data'!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     }
     if( !is.na(observation.window.duration.unit) && !(observation.window.duration.unit %in% c("days", "weeks", "months", "years") ) )
     {
-      if( !suppress.warnings ) .report.ewms("The observation window duration unit is not recognized!\n", "error", "CMA0", "AdhereR")
+      if( !suppress.warnings ) .report.ewms("The observation window duration unit is not recognized!\n", "error", "CMA0", "AdhereRFork")
       return (NULL);
     }
 
@@ -688,7 +688,7 @@ CMA0 <- function(data=NULL, # the data used to compute the CMA on
       {
         for( i in which(args.mathing) )
         {
-          .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA0", "AdhereR");
+          .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA0", "AdhereRFork");
         }
       }
     }
@@ -865,7 +865,7 @@ print.CMA0 <- function(x,                                                  # the
                ifelse(print.data && !is.null(cma$data),paste0(" (on ",nrow(cma$data)," rows x ",ncol(cma$data)," columns",", ",length(unique(cma$data[,cma$ID.colname]))," patients",")"),"")));
   } else
   {
-    .report.ewms("Unknown format for printing!\n", "error", "print.CMA0", "AdhereR");
+    .report.ewms("Unknown format for printing!\n", "error", "print.CMA0", "AdhereRFork");
     return (invisible(NULL));
   }
 }
@@ -1363,10 +1363,10 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
   }
   if( length(patients.to.keep) == 0 )
   {
-    if( !suppress.warnings ) .report.ewms("No patients to subset on!\n", "error", "subsetCMA.CMA0", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("No patients to subset on!\n", "error", "subsetCMA.CMA0", "AdhereRFork");
     return (NULL);
   }
-  if( length(patients.to.keep) < length(patients) && !suppress.warnings ) .report.ewms("Some patients in the subsetting set are not in the CMA itself and are ignored!\n", "warning", "subsetCMA.CMA0", "AdhereR");
+  if( length(patients.to.keep) < length(patients) && !suppress.warnings ) .report.ewms("Some patients in the subsetting set are not in the CMA itself and are ignored!\n", "warning", "subsetCMA.CMA0", "AdhereRFork");
 
   ret.val <- cma;
   ret.val$data <- ret.val$data[ ret.val$data[,ret.val$ID.colname] %in% patients.to.keep, ];
@@ -1404,7 +1404,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
   # Checks
   if( !inherits(start.date,"Date") )
   {
-    if( !suppress.warnings ) .report.ewms("Parameter start.date of .add.time.interval.to.date() must be a Date() object.\n", "error", ".add.time.interval.to.date", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Parameter start.date of .add.time.interval.to.date() must be a Date() object.\n", "error", ".add.time.interval.to.date", "AdhereRFork");
     return (NA);
   }
   if( !is.numeric(time.interval) )
@@ -1422,14 +1422,14 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
         time.interval <- switch( as.character(unit),
                                  "days"  = time.interval,
                                  "weeks" = time.interval/7,
-                                 "months" = {if( !suppress.warnings ) .report.ewms("Converting to months assuming a 30-days month!", "warning", ".add.time.interval.to.date", "AdhereR"); time.interval/30;},
-                                 "years"  = {if( !suppress.warnings ) .report.ewms("Converting to years assuming a 365-days year!", "warning", ".add.time.interval.to.date", "AdhereR"); time.interval/365;},
-                                 {if( !suppress.warnings ) .report.ewms(paste0("Unknown unit '",unit,"' to '.add.time.interval.to.date'.\n"), "error", ".add.time.interval.to.date", "AdhereR"); return(NA);} # default
+                                 "months" = {if( !suppress.warnings ) .report.ewms("Converting to months assuming a 30-days month!", "warning", ".add.time.interval.to.date", "AdhereRFork"); time.interval/30;},
+                                 "years"  = {if( !suppress.warnings ) .report.ewms("Converting to years assuming a 365-days year!", "warning", ".add.time.interval.to.date", "AdhereRFork"); time.interval/365;},
+                                 {if( !suppress.warnings ) .report.ewms(paste0("Unknown unit '",unit,"' to '.add.time.interval.to.date'.\n"), "error", ".add.time.interval.to.date", "AdhereRFork"); return(NA);} # default
         );
       }
     } else
     {
-      if( !suppress.warnings ) .report.ewms("Parameter start.date of .add.time.interval.to.date() must be a number.\n", "error", ".add.time.interval.to.date", "AdhereR");
+      if( !suppress.warnings ) .report.ewms("Parameter start.date of .add.time.interval.to.date() must be a number.\n", "error", ".add.time.interval.to.date", "AdhereRFork");
       return (NA);
     }
   }
@@ -1459,7 +1459,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
                             "years"  = lubridate::add_with_rollback(start.date,
                                                                     lubridate::period(round(time.interval),"years"),
                                                                     roll_to_first=TRUE), # take care of cases such as 2000/02/29 + 1 year
-                            {if( !suppress.warnings ) .report.ewms(paste0("Unknown unit '",unit,"' to '.add.time.interval.to.date'.\n"), "error", ".add.time.interval.to.date", "AdhereR"); NA;} # default
+                            {if( !suppress.warnings ) .report.ewms(paste0("Unknown unit '",unit,"' to '.add.time.interval.to.date'.\n"), "error", ".add.time.interval.to.date", "AdhereRFork"); NA;} # default
   ));
 }
 
@@ -1471,7 +1471,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
   # Checks
   if( !inherits(start.dates,"Date") || !inherits(end.dates,"Date") )
   {
-    if( !suppress.warnings ) .report.ewms("start.dates and end.dates to '.difftime.Dates.as.days' must be a Date() objects.\n", "error", ".difftime.Dates.as.days", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("start.dates and end.dates to '.difftime.Dates.as.days' must be a Date() objects.\n", "error", ".difftime.Dates.as.days", "AdhereRFork");
     return (NA);
   }
   return (unclass(start.dates) - unclass(end.dates)); # the difference between the raw internal representations of Date objects is in days
@@ -1549,7 +1549,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
     if( .Platform$OS.type == "windows" )
     {
       # Can't do multicore on Windows!
-      if( !suppress.warnings ) .report.ewms(paste0("Parallel processing backend \"multicore\" is not currently supported on Windows: will use SNOW instead.\n"), "warning", ".compute.function", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Parallel processing backend \"multicore\" is not currently supported on Windows: will use SNOW instead.\n"), "warning", ".compute.function", "AdhereRFork");
       parallel.backend <- "snow"; # try to do SNOW...
     } else
     {
@@ -1561,7 +1561,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
         parallel.threads <- getOption("mc.cores", 2L);
       } else if( is.na(parallel.threads) || !is.numeric(parallel.threads) || (parallel.threads < 1) || (parallel.threads %% 1 != 0) )
       {
-        if( !suppress.warnings ) .report.ewms(paste0("Number of parallel processing threads \"",parallel.threads,"\" must be either \"auto\" or a positive integer; forcing \"auto\".\n"), "warning", ".compute.function", "AdhereR");
+        if( !suppress.warnings ) .report.ewms(paste0("Number of parallel processing threads \"",parallel.threads,"\" must be either \"auto\" or a positive integer; forcing \"auto\".\n"), "warning", ".compute.function", "AdhereRFork");
         parallel.threads <- getOption("mc.cores", 2L);
       }
 
@@ -1624,7 +1624,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
                         );
   if( is.na(cluster.type) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("Unknown parallel processing backend \"",parallel.backend,"\": will force sequential (\"none\").\n"), "warning", ".compute.function", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("Unknown parallel processing backend \"",parallel.backend,"\": will force sequential (\"none\").\n"), "warning", ".compute.function", "AdhereRFork");
     # Force single threaded: simply call the function with the given data:
     return (fnc(data=data,
                 ID.colname=ID.colname,
@@ -1663,7 +1663,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
       parallel.threads <- 2L;
     } else if( is.na(parallel.threads) || (is.numeric(parallel.threads) && ((parallel.threads < 1) || (parallel.threads %% 1 != 0))) )
     {
-      if( !suppress.warnings ) .report.ewms(paste0("Number of parallel processing threads \"",parallel.threads,"\", if numeric, must be either a positive integer; forcing \"auto\".\n"), "warning", ".compute.function", "AdhereR");
+      if( !suppress.warnings ) .report.ewms(paste0("Number of parallel processing threads \"",parallel.threads,"\", if numeric, must be either a positive integer; forcing \"auto\".\n"), "warning", ".compute.function", "AdhereRFork");
       parallel.threads <- 2L;
     }
     if( is.numeric(parallel.threads) ) parallel.threads <- min(parallel.threads, length(patids)); # make sure we're not starting more threads than patients
@@ -1674,7 +1674,7 @@ subsetCMA.CMA0 <- function(cma, patients, suppress.warnings=FALSE)
                                    type = cluster.type);
   if( is.null(cluster) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("Failed to create the cluster \"",parallel.backend,"\" with parallel.threads \"",parallel.threads,"\": will force sequential (\"none\").\n"), "warning", ".compute.function", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("Failed to create the cluster \"",parallel.backend,"\" with parallel.threads \"",parallel.threads,"\": will force sequential (\"none\").\n"), "warning", ".compute.function", "AdhereRFork");
     # Force single threaded: simply call the function with the given data:
     return (fnc(data=data,
                 ID.colname=ID.colname,
@@ -1922,7 +1922,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
   # preconditions concerning column names:
   if( is.null(data) || !inherits(data,"data.frame") || nrow(data) < 1 )
   {
-    if( !suppress.warnings ) .report.ewms("Event data must be a non-empty data frame!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("Event data must be a non-empty data frame!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   data.names <- names(data); # cache names(data) as it is used a lot
@@ -1933,7 +1933,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
       !(ID.colname %in% data.names)                                                         # make sure it's a valid column name
       )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The patient ID column \"",ID.colname,"\" cannot be empty, must be a single value, and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms(paste0("The patient ID column \"",ID.colname,"\" cannot be empty, must be a single value, and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.null(event.date.colname) || is.na(event.date.colname) ||                                                   # avoid empty stuff
@@ -1943,7 +1943,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
       !(event.date.colname %in% data.names)                                                                         # make sure it's a valid column name
       )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The event date column \"",event.date.colname,"\" cannot be empty, must be a single value, and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms(paste0("The event date column \"",event.date.colname,"\" cannot be empty, must be a single value, and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.null(event.duration.colname) || is.na(event.duration.colname) ||                                                       # avoid empty stuff
@@ -1953,7 +1953,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
       !(event.duration.colname %in% data.names)                                                                                 # make sure it's a valid column name
       )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The event duration column \"",event.duration.colname,"\" cannot be empty, must be a single value, and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms(paste0("The event duration column \"",event.duration.colname,"\" cannot be empty, must be a single value, and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( (!is.null(event.daily.dose.colname) && !is.na(event.daily.dose.colname)) &&                                                      # if actually given:
@@ -1963,7 +1963,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
        !(event.daily.dose.colname %in% data.names))                                                                                    # make sure it's a valid column name
       )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("If given, the event daily dose column \"",event.daily.dose.colname,"\" must be a single value and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms(paste0("If given, the event daily dose column \"",event.daily.dose.colname,"\" must be a single value and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( (!is.null(medication.class.colname) && !is.na(medication.class.colname)) &&                                                      # if actually given:
@@ -1973,7 +1973,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
        !(medication.class.colname %in% data.names))                                                                                    # make sure it's a valid column name
       )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("If given, the event type column \"",medication.class.colname,"\" must be a single value and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms(paste0("If given, the event type column \"",medication.class.colname,"\" must be a single value and must be present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
 
@@ -1982,19 +1982,19 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
       !is.logical(carryover.into.obs.window)      || is.na(carryover.into.obs.window)      || length(carryover.into.obs.window) != 1      ||
       !is.logical(carry.only.for.same.medication) || is.na(carry.only.for.same.medication) || length(carry.only.for.same.medication) != 1 )
   {
-    if( !suppress.warnings ) .report.ewms("Carry over arguments must be single value logicals!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("Carry over arguments must be single value logicals!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( !carryover.within.obs.window && !carryover.into.obs.window && carry.only.for.same.medication )
   {
-    if( !suppress.warnings ) .report.ewms("Cannot carry over only for same medication when no carry over at all is considered!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("Cannot carry over only for same medication when no carry over at all is considered!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
 
   # preconditions concerning dosage change:
   if( !is.logical(consider.dosage.change) || is.na(consider.dosage.change) || length(consider.dosage.change) != 1 )
   {
-    if( !suppress.warnings ) .report.ewms("Consider dosage change must be single value logical!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("Consider dosage change must be single value logical!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
 
@@ -2005,7 +2005,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
              (is.factor(followup.window.start) && is.character(followup.window.start <- as.character(followup.window.start)))) || # ...or a factor (forced to character)
            !(followup.window.start %in% data.names))) )                                                                           # make sure it's a valid column name
   {
-    if( !suppress.warnings ) .report.ewms("The follow-up window start must be a single value, either a number, a Date object, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The follow-up window start must be a single value, either a number, a Date object, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.null(followup.window.start.unit) ||
@@ -2013,7 +2013,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
       length(followup.window.start.unit) != 1 ||
       ((is.factor(followup.window.start.unit) || is.character(followup.window.start.unit)) && !(followup.window.start.unit %in% c("days", "weeks", "months", "years"))) )
   {
-    if( !suppress.warnings ) .report.ewms("The follow-up window start unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The follow-up window start unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.numeric(followup.window.duration) && (followup.window.duration <= 0 || length(followup.window.duration) != 1) ||               # cannot be missing or have more than one values
@@ -2022,14 +2022,14 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
           (is.factor(followup.window.duration) && is.character(followup.window.duration <- as.character(followup.window.duration)))) || # ...or a factor (forced to character)
         !(followup.window.duration %in% data.names))))                                                                                  # make sure it's a valid column name
   {
-    if( !suppress.warnings ) .report.ewms("The follow-up window duration must be a single value, either a positive number, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The follow-up window duration must be a single value, either a positive number, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.null(followup.window.duration.unit) || is.na(followup.window.duration.unit) ||
       length(followup.window.duration.unit) != 1 ||
       !(followup.window.duration.unit %in% c("days", "weeks", "months", "years") ) )
   {
-    if( !suppress.warnings ) .report.ewms("The follow-up window duration unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The follow-up window duration unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
 
@@ -2041,7 +2041,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
              (is.factor(observation.window.start) && is.character(observation.window.start <- as.character(observation.window.start)))) || # ...or a factor (forced to character)
            !(observation.window.start %in% data.names))) )                                                                                 # make sure it's a valid column name
   {
-    if( !suppress.warnings ) .report.ewms("The observation window start must be a single value, either a positive number, a Date object, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The observation window start must be a single value, either a positive number, a Date object, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.null(observation.window.start.unit) ||
@@ -2049,7 +2049,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
       length(observation.window.start.unit) != 1 ||
       ((is.factor(observation.window.start.unit) || is.character(observation.window.start.unit)) && !(observation.window.start.unit %in% c("days", "weeks", "months", "years"))) )
   {
-    if( !suppress.warnings ) .report.ewms("The observation window start unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The observation window start unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.numeric(observation.window.duration) && (observation.window.duration <= 0 || length(observation.window.duration) != 1) ||               # cannot be missing or have more than one values
@@ -2058,33 +2058,33 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
           (is.factor(observation.window.duration) && is.character(observation.window.duration <- as.character(observation.window.duration)))) || # ...or a factor (forced to character)
         !(observation.window.duration %in% data.names))))                                                                                        # make sure it's a valid column name
   {
-    if( !suppress.warnings ) .report.ewms("The observation window duration must be a single value, either a positive number, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The observation window duration must be a single value, either a positive number, or a string giving a column name in the data!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
   if( is.null(observation.window.duration.unit) || is.na(observation.window.duration.unit) ||
       length(observation.window.duration.unit) != 1 ||
       !(observation.window.duration.unit %in% c("days", "weeks", "months", "years") ) )
   {
-    if( !suppress.warnings ) .report.ewms("The observation window duration unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The observation window duration unit must be a single value, one of \"days\", \"weeks\", \"months\" or \"years\"!\n", "error", "compute.event.int.gaps", "AdhereRFork")
     return (NULL);
   }
 
   # Check the patient IDs:
   if( anyNA(data[,ID.colname]) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The patient unique identifiers in the \"",ID.colname,"\" column must not contain NAs; the first occurs on row ",min(which(is.na(data[,ID.colname]))),"!\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("The patient unique identifiers in the \"",ID.colname,"\" column must not contain NAs; the first occurs on row ",min(which(is.na(data[,ID.colname]))),"!\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
 
   # Check the date format (and save the conversion to Date() for later use):
   if( is.na(date.format) || is.null(date.format) || length(date.format) != 1 || !is.character(date.format) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The date format must be a single string!\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("The date format must be a single string!\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
   if( anyNA(Date.converted.to.DATE <- as.Date(data[,event.date.colname],format=date.format)) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("Not all entries in the event date \"",event.date.colname,"\" column are valid dates or conform to the date format \"",date.format,"\"; first issue occurs on row ",min(which(is.na(Date.converted.to.DATE))),"!\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("Not all entries in the event date \"",event.date.colname,"\" column are valid dates or conform to the date format \"",date.format,"\"; first issue occurs on row ",min(which(is.na(Date.converted.to.DATE))),"!\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
 
@@ -2092,7 +2092,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
   tmp <- data[,event.duration.colname]; # caching for speed
   if( !is.numeric(tmp) || any(is.na(tmp) | tmp <= 0) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The event durations in the \"",event.duration.colname,"\" column must be non-missing strictly positive numbers!\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("The event durations in the \"",event.duration.colname,"\" column must be non-missing strictly positive numbers!\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
 
@@ -2100,19 +2100,19 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
   if( !is.na(event.daily.dose.colname) && !is.null(event.daily.dose.colname) &&             # if actually given:
       (!is.numeric(tmp <- data[,event.daily.dose.colname]) || any(is.na(tmp) | tmp <= 0)) ) # must be a non-missing strictly positive number (and cache it for speed)
   {
-    if( !suppress.warnings ) .report.ewms(paste0("If given, the event daily dose in the \"",event.daily.dose.colname,"\" column must be a non-missing strictly positive numbers!\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("If given, the event daily dose in the \"",event.daily.dose.colname,"\" column must be a non-missing strictly positive numbers!\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
 
   # Check the newly created columns:
   if( is.na(event.interval.colname) || is.null(event.interval.colname) || !is.character(event.interval.colname) || (event.interval.colname %in% data.names) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The column name where the event interval will be stored \"",event.interval.colname,"\" cannot be missing nor already present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("The column name where the event interval will be stored \"",event.interval.colname,"\" cannot be missing nor already present in the event data!\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
   if( is.na(gap.days.colname) || is.null(gap.days.colname) || !is.character(gap.days.colname) || (gap.days.colname %in% data.names) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The column name where the gap days will be stored \"",gap.days.colname,"\" cannot be mising nor already present in the event data.\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("The column name where the gap days will be stored \"",gap.days.colname,"\" cannot be mising nor already present in the event data.\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
 
@@ -2527,12 +2527,12 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
 
   if( is.null(ret.val) || nrow(ret.val) < 1 )
   {
-    if( !suppress.warnings ) .report.ewms("Computing event intervals and gap days failed!\n", "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("Computing event intervals and gap days failed!\n", "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
   if( any(!ret.val$.OBS.WITHIN.FU) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("The observation window is not within the follow-up window for participant(s) ",paste0(unique(ret.val[!ret.val$.OBS.WITHIN.FU,get(ID.colname)]),collapse=", ")," !\n"), "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("The observation window is not within the follow-up window for participant(s) ",paste0(unique(ret.val[!ret.val$.OBS.WITHIN.FU,get(ID.colname)]),collapse=", ")," !\n"), "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
 
@@ -2544,7 +2544,7 @@ compute.event.int.gaps <- function(data, # this is a per-event data.frame with c
   # If the results are empty return NULL:
   if( is.null(ret.val) || nrow(ret.val) < 1 )
   {
-    if( !suppress.warnings ) .report.ewms("No observations fall within the follow-up and observation windows!\n", "error", "compute.event.int.gaps", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("No observations fall within the follow-up and observation windows!\n", "error", "compute.event.int.gaps", "AdhereRFork");
     return (NULL);
   }
 
@@ -2797,12 +2797,12 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
   # Episode-specific stuff:
   if( is.na(medication.class.colname) && medication.change.means.new.treatment.episode )
   {
-    if( !suppress.warnings ) .report.ewms("When 'medication.class.colname' is NA, 'medication.change.means.new.treatment.episode' must be FALSE!\n", "error", "compute.treatment.episodes", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("When 'medication.class.colname' is NA, 'medication.change.means.new.treatment.episode' must be FALSE!\n", "error", "compute.treatment.episodes", "AdhereRFork");
     return (NULL);
   }
   if( is.na(event.daily.dose.colname) && dosage.change.means.new.treatment.episode )
   {
-    if( !suppress.warnings ) .report.ewms("When 'event.daily.dose.colname' is NA, 'dosage.change.means.new.treatment.episode' must be FALSE!\n", "error", "compute.treatment.episodes", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("When 'event.daily.dose.colname' is NA, 'dosage.change.means.new.treatment.episode' must be FALSE!\n", "error", "compute.treatment.episodes", "AdhereRFork");
     return (NULL);
   }
 
@@ -2814,7 +2814,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
                                     "months" = maximum.permissible.gap * 30,
                                     "years" = maximum.permissible.gap * 365,
                                     "percent" = {maximum.permissible.gap.as.percent <- TRUE; maximum.permissible.gap / 100;}, # transform it into a proportion for faster computation
-                                    {if(!suppress.warnings) .report.ewms(paste0("Unknown maximum.permissible.gap.unit '",maximum.permissible.gap.unit,"': assuming you meant 'days'."), "warning", "compute.treatment.episodes", "AdhereR");  maximum.permissible.gap;} # otherwise force it to "days"
+                                    {if(!suppress.warnings) .report.ewms(paste0("Unknown maximum.permissible.gap.unit '",maximum.permissible.gap.unit,"': assuming you meant 'days'."), "warning", "compute.treatment.episodes", "AdhereRFork");  maximum.permissible.gap;} # otherwise force it to "days"
                                    );
   if( maximum.permissible.gap < 0 ) maximum.permissible.gap <- 0; # make sure this is positive
 
@@ -2822,7 +2822,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
   if( !is.numeric(maximum.permissible.gap.append.to.episode.proportion) || length(maximum.permissible.gap.append.to.episode.proportion) != 1 ||
       maximum.permissible.gap.append.to.episode.proportion < 0.0 || maximum.permissible.gap.append.to.episode.proportion > 1.0 )
   {
-    if( !suppress.warnings ) .report.ewms("'maximum.permissible.gap.append.to.episode.proportion' must be a number between 0.0 and 1.0!\n", "error", "compute.treatment.episodes", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("'maximum.permissible.gap.append.to.episode.proportion' must be a number between 0.0 and 1.0!\n", "error", "compute.treatment.episodes", "AdhereRFork");
     return (NULL);
   }
 
@@ -3116,7 +3116,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
     if( sum(mg.to.eval) == 0 )
     {
       # None selects not even one observation!
-      .report.ewms(paste0("None of the medication classes (included __ALL_OTHERS__) selects any observation!\n"), "warning", cma.class.name, "AdhereR");
+      .report.ewms(paste0("None of the medication classes (included __ALL_OTHERS__) selects any observation!\n"), "warning", cma.class.name, "AdhereRFork");
       return (NULL);
     }
     mb.obs <- mb.obs[,mg.to.eval]; # keep only the non-trivial ones
@@ -3715,7 +3715,7 @@ CMA1 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA1", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA1", "AdhereRFork");
       }
     }
   }
@@ -4474,7 +4474,7 @@ CMA2 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA2", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA2", "AdhereRFork");
       }
     }
   }
@@ -4683,7 +4683,7 @@ CMA3 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA3", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA3", "AdhereRFork");
       }
     }
   }
@@ -4802,7 +4802,7 @@ CMA4 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA4", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA4", "AdhereRFork");
       }
     }
   }
@@ -5145,7 +5145,7 @@ CMA5 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA5", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA5", "AdhereRFork");
       }
     }
   }
@@ -5585,7 +5585,7 @@ CMA6 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA6", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA6", "AdhereRFork");
       }
     }
   }
@@ -6029,7 +6029,7 @@ CMA7 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA7", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA7", "AdhereRFork");
       }
     }
   }
@@ -6526,7 +6526,7 @@ CMA8 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA8", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA8", "AdhereRFork");
       }
     }
   }
@@ -7028,7 +7028,7 @@ CMA9 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA9", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA9", "AdhereRFork");
       }
     }
   }
@@ -7521,7 +7521,7 @@ CMA10 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA10", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA10", "AdhereRFork");
       }
     }
   }
@@ -8115,7 +8115,7 @@ CMA11 <- function( data=NULL, # the data used to compute the CMA on
     {
       for( i in which(args.mathing) )
       {
-        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA7", "AdhereR");
+        .report.ewms(paste0("Please note that '",args.list[[1]],"' overrides argument '",names(arguments.that.should.not.be.defined)[i],"' with value '",arguments.that.should.not.be.defined[i],"'!\n"), "warning", "CMA11", "AdhereRFork");
       }
     }
   }
@@ -8667,7 +8667,7 @@ CMA_per_episode <- function( CMA.to.apply,  # the name of the CMA function (e.g.
   # Get the CMA function corresponding to the name:
   if( !(is.character(CMA.to.apply) || is.factor(CMA.to.apply)) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("'CMA.to.apply' must be a string contining the name of the simple CMA to apply!\n)"), "error", "CMA_per_episode", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("'CMA.to.apply' must be a string contining the name of the simple CMA to apply!\n)"), "error", "CMA_per_episode", "AdhereRFork");
     return (NULL);
   }
   CMA.FNC <- switch(as.character(CMA.to.apply), # if factor, force it to string
@@ -8680,16 +8680,16 @@ CMA_per_episode <- function( CMA.to.apply,  # the name of the CMA function (e.g.
                     "CMA7" = CMA7,
                     "CMA8" = CMA8,
                     "CMA9" = CMA9,
-                    {if( !suppress.warnings ) .report.ewms(paste0("Unknown 'CMA.to.apply' '",CMA.to.apply,"': defaulting to CMA0!\n)"), "warning", "CMA_per_episode", "AdhereR"); CMA0;}); # by default, fall back to CMA0
+                    {if( !suppress.warnings ) .report.ewms(paste0("Unknown 'CMA.to.apply' '",CMA.to.apply,"': defaulting to CMA0!\n)"), "warning", "CMA_per_episode", "AdhereRFork"); CMA0;}); # by default, fall back to CMA0
 
   # Default argument values and overrides:
   def.vals <- formals(CMA.FNC);
   if( CMA.to.apply %in% c("CMA1", "CMA2", "CMA3", "CMA4") )
   {
     carryover.into.obs.window <- carryover.within.obs.window <- FALSE;
-    if( !is.na(carry.only.for.same.medication) && carry.only.for.same.medication && !suppress.warnings ) .report.ewms("'carry.only.for.same.medication' cannot be defined for CMAs 1-4!\n", "warning", "CMA_per_episode", "AdhereR");
+    if( !is.na(carry.only.for.same.medication) && carry.only.for.same.medication && !suppress.warnings ) .report.ewms("'carry.only.for.same.medication' cannot be defined for CMAs 1-4!\n", "warning", "CMA_per_episode", "AdhereRFork");
     carry.only.for.same.medication <- FALSE;
-    if( !is.na(consider.dosage.change) && consider.dosage.change && !suppress.warnings ) .report.ewms("'consider.dosage.change' cannot be defined for CMAs 1-4!\n", "warning", "CMA_per_episode", "AdhereR");
+    if( !is.na(consider.dosage.change) && consider.dosage.change && !suppress.warnings ) .report.ewms("'consider.dosage.change' cannot be defined for CMAs 1-4!\n", "warning", "CMA_per_episode", "AdhereRFork");
     consider.dosage.change <- FALSE;
   } else if( CMA.to.apply %in% c("CMA5", "CMA6") )
   {
@@ -8704,7 +8704,7 @@ CMA_per_episode <- function( CMA.to.apply,  # the name of the CMA function (e.g.
     if( is.na(consider.dosage.change) ) consider.dosage.change <- def.vals[["consider.dosage.change"]]; # use the default value from CMA
   } else
   {
-    if( !suppress.warnings ) .report.ewms("I know how to do CMA per episodes only for CMAs 1 to 9!\n", "error", "CMA_per_episode", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("I know how to do CMA per episodes only for CMAs 1 to 9!\n", "error", "CMA_per_episode", "AdhereRFork");
     return (NULL);
   }
 
@@ -9009,7 +9009,7 @@ CMA_per_episode <- function( CMA.to.apply,  # the name of the CMA function (e.g.
     if( sum(mg.to.eval) == 0 )
     {
       # None selects not even one observation!
-      .report.ewms(paste0("None of the medication classes (included __ALL_OTHERS__) selects any observation!\n"), "warning", "CMA1", "AdhereR");
+      .report.ewms(paste0("None of the medication classes (included __ALL_OTHERS__) selects any observation!\n"), "warning", "CMA1", "AdhereRFork");
       return (NULL);
     }
     mb.obs <- mb.obs[,mg.to.eval]; # keep only the non-trivial ones
@@ -9187,10 +9187,10 @@ subsetCMA.CMA_per_episode <- function(cma, patients, suppress.warnings=FALSE)
   }
   if( length(patients.to.keep) == 0 )
   {
-    if( !suppress.warnings ) .report.ewms("No patients to subset on!\n", "error", "subsetCMA.CMA_per_episode", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("No patients to subset on!\n", "error", "subsetCMA.CMA_per_episode", "AdhereRFork");
     return (NULL);
   }
-  if( length(patients.to.keep) < length(patients) && !suppress.warnings ) .report.ewms("Some patients in the subsetting set are not in the CMA itself and are ignored!\n", "warning", "subsetCMA.CMA_per_episode", "AdhereR");
+  if( length(patients.to.keep) < length(patients) && !suppress.warnings ) .report.ewms("Some patients in the subsetting set are not in the CMA itself and are ignored!\n", "warning", "subsetCMA.CMA_per_episode", "AdhereRFork");
 
   ret.val <- cma;
   ret.val$data <- ret.val$data[ ret.val$data[,ret.val$ID.colname] %in% patients.to.keep, ];
@@ -9295,7 +9295,7 @@ print.CMA_per_episode <- function(x,                                     # the C
                ifelse(print.data && !is.null(cma$data),paste0(" (on ",nrow(cma$data)," rows x ",ncol(cma$data)," columns",", ",length(unique(cma$data[,cma$ID.colname]))," patients",")"),"")));
   } else
   {
-    .report.ewms("Unknown format for printing!\n", "error", "print.CMA_per_episode", "AdhereR");
+    .report.ewms("Unknown format for printing!\n", "error", "print.CMA_per_episode", "AdhereRFork");
     return (invisible(NULL));
   }
 }
@@ -9404,6 +9404,8 @@ print.CMA_per_episode <- function(x,                                     # the C
 #' use for the implicit \code{__ALL_OTHERS__} medication group (defaults to "*").
 #' @param lty.event,lwd.event,pch.start.event,pch.end.event The style of the
 #' event (line style, width, and start and end symbols).
+#' @param show.event.intervals \emph{Logical}, should the actual event intervals
+#' be shown?
 #' @param plot.events.vertically.displaced Should consecutive events be plotted
 #' on separate rows (i.e., separated vertically, the default) or on the same row?
 #' @param print.dose,cex.dose,print.dose.outline.col,print.dose.centered Print daily
@@ -10030,56 +10032,56 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
 {
   # Preconditions:
   # CMA10 trims final event and makes the assumption carryover is overuse, not suitable for sliding windows > 1
-  if( CMA.to.apply == "CMA10" && (sliding.window.no.steps > 1 || sliding.window.step.duration/sliding.window.duration > 1) )
+  if( CMA.to.apply %in% c("CMA10", "CMA11") && (sliding.window.no.steps > 1 || sliding.window.step.duration/sliding.window.duration > 1) )
   {
-    if (!suppress.warnings ) .report.ewms("CMA10 is not suitable for more than 1 sliding window as output will be misleading. If you think this error is a mistake please try using the same UOM for sliding.window.duration and sliding.window.step.duration", "error", "CMA_sliding_window", "AdhereR")
+    if (!suppress.warnings ) .report.ewms("CMA10 is not suitable for more than 1 sliding window as output will be misleading. If you think this error is a mistake please try using the same UOM for sliding.window.duration and sliding.window.step.duration", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL)
   }
   if( is.numeric(sliding.window.start) && sliding.window.start < 0 )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window must start a positive number of time units after the start of the observation window!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window must start a positive number of time units after the start of the observation window!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
   if( !inherits(sliding.window.start,"Date") && !is.numeric(sliding.window.start) && !(sliding.window.start %in% names(data)) )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window start must be a valid column name!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window start must be a valid column name!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
   if( !(sliding.window.start.unit %in% c("days", "weeks", "months", "years") ) )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window start unit is not recognized!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window start unit is not recognized!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
   if( !is.numeric(sliding.window.duration) || sliding.window.duration <= 0 )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window duration must be greater than 0!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window duration must be greater than 0!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
   if( !(sliding.window.duration.unit %in% c("days", "weeks", "months", "years") ) )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window duration unit is not recognized!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window duration unit is not recognized!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
   if( is.numeric(sliding.window.step.duration) && sliding.window.step.duration < 1 )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window's step duration must be at least 1 unit!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window's step duration must be at least 1 unit!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
   if( !(sliding.window.step.unit %in% c("days", "weeks", "months", "years") ) )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window's step duration unit is not recognized!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window's step duration unit is not recognized!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
   if( is.numeric(sliding.window.no.steps) && sliding.window.no.steps < 1 )
   {
-    if( !suppress.warnings ) .report.ewms("The sliding window must move at least once!\n", "error", "CMA_sliding_window", "AdhereR")
+    if( !suppress.warnings ) .report.ewms("The sliding window must move at least once!\n", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL);
   }
 
   # Get the CMA function corresponding to the name:
   if( !(is.character(CMA.to.apply) || is.factor(CMA.to.apply)) )
   {
-    if( !suppress.warnings ) .report.ewms(paste0("'CMA.to.apply' must be a string contining the name of the simple CMA to apply!\n)"), "error", "CMA_sliding_window", "AdhereR");
+    if( !suppress.warnings ) .report.ewms(paste0("'CMA.to.apply' must be a string contining the name of the simple CMA to apply!\n)"), "error", "CMA_sliding_window", "AdhereRFork");
     return (NULL);
   }
   CMA.FNC <- switch(as.character(CMA.to.apply), # if factor, force it to string
@@ -10094,16 +10096,16 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
                     "CMA9" = CMA9,
                     "CMA10" = CMA10,
                     "CMA11" = CMA11,
-                    {if( !suppress.warnings ) .report.ewms(paste0("Unknown 'CMA.to.apply' '",CMA.to.apply,"': defaulting to CMA0!\n)"), "warning", "CMA_sliding_window", "AdhereR"); CMA0;}); # by default, fall back to CMA0
+                    {if( !suppress.warnings ) .report.ewms(paste0("Unknown 'CMA.to.apply' '",CMA.to.apply,"': defaulting to CMA0!\n)"), "warning", "CMA_sliding_window", "AdhereRFork"); CMA0;}); # by default, fall back to CMA0
 
   # Default argument values and overrides:
   def.vals <- formals(CMA.FNC);
   if( CMA.to.apply %in% c("CMA1", "CMA2", "CMA3", "CMA4") )
   {
     carryover.into.obs.window <- carryover.within.obs.window <- FALSE;
-    if( !is.na(carry.only.for.same.medication) && carry.only.for.same.medication && !suppress.warnings ) .report.ewms("'carry.only.for.same.medication' cannot be defined for CMAs 1-4!\n", "warning", "CMA_sliding_window", "AdhereR");
+    if( !is.na(carry.only.for.same.medication) && carry.only.for.same.medication && !suppress.warnings ) .report.ewms("'carry.only.for.same.medication' cannot be defined for CMAs 1-4!\n", "warning", "CMA_sliding_window", "AdhereRFork");
     carry.only.for.same.medication <- FALSE;
-    if( !is.na(consider.dosage.change) && consider.dosage.change && !suppress.warnings ) .report.ewms("'consider.dosage.change' cannot be defined for CMAs 1-4!\n", "warning", "CMA_sliding_window", "AdhereR");
+    if( !is.na(consider.dosage.change) && consider.dosage.change && !suppress.warnings ) .report.ewms("'consider.dosage.change' cannot be defined for CMAs 1-4!\n", "warning", "CMA_sliding_window", "AdhereRFork");
     consider.dosage.change <- FALSE;
   } else if( CMA.to.apply %in% c("CMA5", "CMA6") )
   {
@@ -10120,13 +10122,13 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
   {
     carryover.into.obs.window <- carryover.within.obs.window <- TRUE;
     # fixing to appropriate cma10 use case.
-    if( !is.na(carry.only.for.same.medication) && carry.only.for.same.medication && !suppress.warnings ) .report.ewms("'carry.only.for.same.medication' cannot be defined for CMA 10!\n", "warning", "CMA_sliding_window", "AdhereR");
+    if( !is.na(carry.only.for.same.medication) && carry.only.for.same.medication && !suppress.warnings ) .report.ewms("'carry.only.for.same.medication' cannot be defined for CMA 10!\n", "warning", "CMA_sliding_window", "AdhereRFork");
     carry.only.for.same.medication <- FALSE;
-    if( !is.na(consider.dosage.change) && consider.dosage.change && !suppress.warnings ) .report.ewms("'consider.dosage.change' cannot be defined for CMA 10!\n", "warning", "CMA_sliding_window", "AdhereR");
+    if( !is.na(consider.dosage.change) && consider.dosage.change && !suppress.warnings ) .report.ewms("'consider.dosage.change' cannot be defined for CMA 10!\n", "warning", "CMA_sliding_window", "AdhereRFork");
     consider.dosage.change <- FALSE;
   } else
   {
-    if( !suppress.warnings ) .report.ewms("I know how to do CMA sliding windows only for CMAs 1 to 11!\n", "error", "CMA_sliding_window", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("I know how to do CMA sliding windows only for CMAs 1 to 11!\n", "error", "CMA_sliding_window", "AdhereRFork");
     return (NULL);
   }
 
@@ -10223,6 +10225,7 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
                                                           origin=lubridate::origin),
                                                       each=n.events),
                             ".WND.DURATION"  =sliding.window.duration.in.days);
+
       setkeyv(data4ID.wnds, ".WND.ID");
 
       # Apply the desired CMA to all the windows:
@@ -10409,7 +10412,7 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
     if( sum(mg.to.eval) == 0 )
     {
       # None selects not even one observation!
-      .report.ewms(paste0("None of the medication classes (included __ALL_OTHERS__) selects any observation!\n"), "warning", "CMA1", "AdhereR");
+      .report.ewms(paste0("None of the medication classes (included __ALL_OTHERS__) selects any observation!\n"), "warning", "CMA1", "AdhereRFork");
       return (NULL);
     }
     mb.obs <- mb.obs[,mg.to.eval]; # keep only the non-trivial ones
@@ -10588,10 +10591,10 @@ subsetCMA.CMA_sliding_window <- function(cma, patients, suppress.warnings=FALSE)
   patients.to.keep <- intersect(patients, unique(cma$data[,cma$ID.colname]));
   if( length(patients.to.keep) == 0 )
   {
-    if( !suppress.warnings ) .report.ewms("No patients to subset on!\n", "error", "subsetCMA.CMA_sliding_window", "AdhereR");
+    if( !suppress.warnings ) .report.ewms("No patients to subset on!\n", "error", "subsetCMA.CMA_sliding_window", "AdhereRFork");
     return (NULL);
   }
-  if( length(patients.to.keep) < length(patients) && !suppress.warnings ) .report.ewms("Some patients in the subsetting set are not in the CMA itsefl and are ignored!\n", "warning", "subsetCMA.CMA_sliding_window", "AdhereR");
+  if( length(patients.to.keep) < length(patients) && !suppress.warnings ) .report.ewms("Some patients in the subsetting set are not in the CMA itsefl and are ignored!\n", "warning", "subsetCMA.CMA_sliding_window", "AdhereRFork");
 
   ret.val <- cma;
   ret.val$data <- ret.val$data[ ret.val$data[,ret.val$ID.colname] %in% patients.to.keep, ];
@@ -10663,7 +10666,7 @@ plot_interactive_cma <- function(...)
     # Pass the parameters to AdhereRViz:
     AdhereRViz::plot_interactive_cma(...);
   } else {
-    .report.ewms("Package 'AdhereRViz' must be installed for the interactive plotting to work! Please either install it or use the 'normal' plotting functions provided by 'AdhereR'...\n", "error", "plot_interactive_cma", "AdhereR");
+    .report.ewms("Package 'AdhereRViz' must be installed for the interactive plotting to work! Please either install it or use the 'normal' plotting functions provided by 'AdhereR'...\n", "error", "plot_interactive_cma", "AdhereRFork");
     if( interactive() )
     {
       if( menu(c("Yes", "No"), graphics=FALSE, title="Do you want to install 'AdhereRViz' now?") == 1 )
@@ -10676,7 +10679,7 @@ plot_interactive_cma <- function(...)
           AdhereRViz::plot_interactive_cma(...);
         } else
         {
-          .report.ewms("Failed to install 'AdhereRViz'!\n", "error", "plot_interactive_cma", "AdhereR");
+          .report.ewms("Failed to install 'AdhereRViz'!\n", "error", "plot_interactive_cma", "AdhereRFork");
           return (invisible(NULL));
         }
       } else

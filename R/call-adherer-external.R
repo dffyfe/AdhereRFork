@@ -100,7 +100,7 @@ callAdhereR <- function(shared.data.directory) # the directory where the shared 
 
   # The errors/warnings/messages file:
   msg.file <- file(paste0(shared.data.directory,"/Adherer-results.txt"), "wt");
-  cat(paste0("AdhereR ",packageVersion("AdhereR")," on R ",getRversion()," started at ",Sys.time(),":\n"), file=msg.file, append=FALSE); # initial message
+  cat(paste0("AdhereR ",packageVersion("AdhereRFork")," on R ",getRversion()," started at ",Sys.time(),":\n"), file=msg.file, append=FALSE); # initial message
 
   # Check to see if the directory contains the "parameters.log" file:
   parameters.file <- paste0(shared.data.directory,"/parameters.log");

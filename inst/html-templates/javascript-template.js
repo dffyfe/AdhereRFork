@@ -1517,7 +1517,11 @@ for (i = 0; i < list_items.length; i++) {
 
   
 }
-  document.querySelectorAll(".wrapper .sidebar ul li a")[2].click();
+
+var event_intervals = document.querySelectorAll(".event-interval-covered, .event-interval-not-covered");  
+adh_svg.show_svg_element(event_intervals, false);
+document.querySelectorAll(".wrapper .sidebar ul li a")[2].click();
+
 }
 
 
