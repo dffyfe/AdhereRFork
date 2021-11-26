@@ -3915,7 +3915,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       if (.do.R) evinfo <- .last.cma.plot.info$baseR$cma$event.info.cma;
     }
 
-    if( show.event.intervals && !is.null(evinfo) && !is.na(evinfo$event.interval[i]) )
+    if( show.event.intervals && !is.null(evinfo)) #&& !is.na(evinfo$event.interval[i]) )
     {
       # The end of the prescription:
       end.pi <- start + evinfo$event.interval[i] - evinfo$gap.days[i];
@@ -3950,38 +3950,78 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
 
       if( .do.SVG ) # SVG:
       {
-        # Save the info:
-        .last.cma.plot.info$SVG$cma$data[i,".X.EVC.START"] <- .scale.x.to.SVG.plot(adh.plot.space[2] + start + correct.earliest.followup.window);
-        .last.cma.plot.info$SVG$cma$data[i,".Y.EVC.START"] <- .scale.y.to.SVG.plot(y.cur) - dims.event.y/2;
-        .last.cma.plot.info$SVG$cma$data[i,".X.EVC.END"]   <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi + correct.earliest.followup.window);
-        .last.cma.plot.info$SVG$cma$data[i,".Y.EVC.END"]   <- .last.cma.plot.info$SVG$cma$data[i,".Y.EVC.START"] + dims.event.y;
+        # Adding an event interval between the start of observation window and first event where appropriate
+        if (!is.na(.last.cma.plot.info$SVG$cma$data[(i+1),col.patid]) && .last.cma.plot.info$SVG$cma$data[i,col.patid] == .last.cma.plot.info$SVG$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]))
+        {
+          start0 <- as.numeric(evinfo[(i),".OBS.START.DATE"] - earliest.date);
+          end.pi0 <- start0 + as.numeric(evinfo$.DATE.as.Date[i+1] - evinfo$.OBS.START.DATE[(i)]) - evinfo$gap.days[(i)];
+          .X.EVC.START0 <- .scale.x.to.SVG.plot(adh.plot.space[2] + start0 + correct.earliest.followup.window);
+          .Y.EVC.START0 <- .scale.y.to.SVG.plot(y.cur) - dims.event.y/2;
+          .X.EVC.END0 <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi0 + correct.earliest.followup.window);
+          .Y.EVC.END0 <- .Y.EVC.START0 + dims.event.y;
 
-        # Draw:
-        svg.str[[length(svg.str)+1]] <-
-          .SVG.rect(x=.last.cma.plot.info$SVG$cma$data[i,".X.EVC.START"],
-                    y=.last.cma.plot.info$SVG$cma$data[i,".Y.EVC.START"],
-                    xend=.last.cma.plot.info$SVG$cma$data[i,".X.EVC.END"],
-                    height=dims.event.y,
-                    stroke=col, fill=col, fill_opacity=0.2,
-                    class=paste0("event-interval-covered",if(!is.na(med.class.svg)) paste0("-",med.class.svg)),
-                    js_tooltip=med.class.svg.name);
-        if( evinfo$gap.days[i] > 0 )
+          svg.str[[length(svg.str)+1]] <-
+            .SVG.rect(x=.X.EVC.START0,
+                      y=.Y.EVC.START0,
+                      xend=.X.EVC.END0,
+                      height=dims.event.y,
+                      stroke=col, fill=col, fill_opacity=0.2,
+                      class=paste0("event-interval-covered",if(!is.na(med.class.svg)) paste0(" event-interval-covered-",med.class.svg)),
+                      js_tooltip=med.class.svg.name);
+
+          if( evinfo$gap.days[i] > 0 )
+          {
+            .X.EVNC.START0 <- .scale.x.to.SVG.plot(adh.plot.space[2] + max(end.pi0, start0) + correct.earliest.followup.window);
+            .Y.EVNC.START0 <- .scale.y.to.SVG.plot(y.cur) - dims.event.y/2;
+            .X.EVNC.END0 <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi0 + evinfo$gap.days[i] + correct.earliest.followup.window);
+            .Y.EVNC.END0 <- .Y.EVNC.START0 + dims.event.y;
+
+            svg.str[[length(svg.str)+1]] <-
+              .SVG.rect(x=.X.EVNC.START0,
+                        y=.Y.EVNC.START0,
+                        xend=.X.EVNC.END0,
+                        height=dims.event.y,
+                        stroke=col, fill="none",
+                        class=paste0("event-interval-not-covered",if(!is.na(med.class.svg)) paste0(" event-interval-not-covered-",med.class.svg)),
+                        js_tooltip=med.class.svg.name);
+          }
+        }
+
+        if ( !is.na(evinfo$event.interval[i]) )
         {
           # Save the info:
-          .last.cma.plot.info$SVG$cma$data[i,".X.EVNC.START"] <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi + correct.earliest.followup.window);
-          .last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.START"] <- .scale.y.to.SVG.plot(y.cur) - dims.event.y/2;
-          .last.cma.plot.info$SVG$cma$data[i,".X.EVNC.END"]   <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi + evinfo$gap.days[i] + correct.earliest.followup.window);
-          .last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.END"]   <- .last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.START"] + dims.event.y;
+          .last.cma.plot.info$SVG$cma$data[i,".X.EVC.START"] <- .scale.x.to.SVG.plot(adh.plot.space[2] + start + correct.earliest.followup.window);
+          .last.cma.plot.info$SVG$cma$data[i,".Y.EVC.START"] <- .scale.y.to.SVG.plot(y.cur) - dims.event.y/2;
+          .last.cma.plot.info$SVG$cma$data[i,".X.EVC.END"]   <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi + correct.earliest.followup.window);
+          .last.cma.plot.info$SVG$cma$data[i,".Y.EVC.END"]   <- .last.cma.plot.info$SVG$cma$data[i,".Y.EVC.START"] + dims.event.y;
 
           # Draw:
           svg.str[[length(svg.str)+1]] <-
-            .SVG.rect(x=.last.cma.plot.info$SVG$cma$data[i,".X.EVNC.START"],
-                      y=.last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.START"],
-                      xend=.last.cma.plot.info$SVG$cma$data[i,".X.EVNC.END"],
+            .SVG.rect(x=.last.cma.plot.info$SVG$cma$data[i,".X.EVC.START"],
+                      y=.last.cma.plot.info$SVG$cma$data[i,".Y.EVC.START"],
+                      xend=.last.cma.plot.info$SVG$cma$data[i,".X.EVC.END"],
                       height=dims.event.y,
-                      stroke=col, fill="none",
-                      class=paste0("event-interval-not-covered",if(!is.na(med.class.svg)) paste0("-",med.class.svg)),
+                      stroke=col, fill=col, fill_opacity=0.2,
+                      class=paste0("event-interval-covered",if(!is.na(med.class.svg)) paste0(" event-interval-covered-",med.class.svg)),
                       js_tooltip=med.class.svg.name);
+          if( evinfo$gap.days[i] > 0 )
+          {
+            # Save the info:
+            .last.cma.plot.info$SVG$cma$data[i,".X.EVNC.START"] <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi + correct.earliest.followup.window);
+            .last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.START"] <- .scale.y.to.SVG.plot(y.cur) - dims.event.y/2;
+            .last.cma.plot.info$SVG$cma$data[i,".X.EVNC.END"]   <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi + evinfo$gap.days[i] + correct.earliest.followup.window);
+            .last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.END"]   <- .last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.START"] + dims.event.y;
+
+            # Draw:
+            svg.str[[length(svg.str)+1]] <-
+              .SVG.rect(x=.last.cma.plot.info$SVG$cma$data[i,".X.EVNC.START"],
+                        y=.last.cma.plot.info$SVG$cma$data[i,".Y.EVNC.START"],
+                        xend=.last.cma.plot.info$SVG$cma$data[i,".X.EVNC.END"],
+                        height=dims.event.y,
+                        stroke=col, fill="none",
+                        class=paste0("event-interval-not-covered",if(!is.na(med.class.svg)) paste0(" event-interval-not-covere-",med.class.svg)),
+                        js_tooltip=med.class.svg.name);
+          }
         }
       }
     }
@@ -5228,7 +5268,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         }
 
 
-        if( export.formats.save.svg.placeholder && html.plot.number==1 )
+        if( export.formats.save.svg.placeholder )#&& html.plot.number==1 )
         {
           # Check that base64 exists:
           if( !requireNamespace("base64", quietly=TRUE) )
@@ -5244,10 +5284,13 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             svg.placeholder.filename <- ifelse( is.na(export.formats.directory),
                                                 tempfile(paste0(export.formats.fileprefix,"-svg-placeholder"), fileext=paste0(".",export.formats.svg.placeholder.type)),
                                                 file.path(export.formats.directory, paste0(paste0(export.formats.fileprefix,"-svg-placeholder"),paste0(".",export.formats.svg.placeholder.type))) );
-            js.template <- c(js.template,
+            if( html.plot.number == 1 )
+            {
+              js.template <- c(js.template,
                              "// The SVG placeholder's filename:",
                              paste0('adh_svg["svg_placeholder_file_name"] = "',basename(svg.placeholder.filename),'";\n'));
-          } else
+            }
+          } else if ( export.formats.svg.placeholder.embed && html.plot.number == 1 )
           {
             # The SVG placeholder must be embedded in base_64 encoded-form into en <img> tag:
             if( !(export.formats.svg.placeholder.type %in% c("jpg", "png")) )
@@ -5311,6 +5354,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
               # Clean up the temp files
               try(unlink(c(svg.placeholder.tmpfile, svg.placeholder.end64.tmpfile)), silent=TRUE);
             }
+          } else
+          {
+            if( !suppress.warnings ) .report.ewms("Can only embed a JPEG or PNG image as a placeholder for the SVG image on html.plot.number == 1\n", "warning", ".plot.CMAs", "AdhereRFork");
           }
         }
 
@@ -5490,7 +5536,6 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           # bitmap <- rsvg::rsvg(file.svg,
           #                      height=if(!is.na(export.formats.height)) export.formats.height else dims.total.height * 2, # prepare for high DPI/quality
           #                      width =if(!is.na(export.formats.width))  export.formats.width  else NULL);
-
           if( export.formats.save.svg.placeholder && !is.null(svg.placeholder.filename) )
           {
             # The SVG placeholder:
