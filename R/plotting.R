@@ -3922,37 +3922,75 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
 
       if( .do.R ) # Rplot:
       {
-        # Save the info:
-        .last.cma.plot.info$baseR$cma$data[i,".X.EVC.START"] <- (adh.plot.space[2] + start  + correct.earliest.followup.window);
-        .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.START"] <- (y.cur - char.height/2);
-        .last.cma.plot.info$baseR$cma$data[i,".X.EVC.END"]   <- (adh.plot.space[2] + end.pi + correct.earliest.followup.window);
-        .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.END"]   <- (y.cur + char.height/2);
+        # Adding an event interval between the start of observation window and first event where appropriate
+        if (!is.na(.last.cma.plot.info$baseR$cma$data[(i+1),col.patid]) && .last.cma.plot.info$baseR$cma$data[i,col.patid] ==
+            .last.cma.plot.info$baseR$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]) &&
+            (.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
+        {
+          # Save the info
+          start0 <- as.numeric(evinfo[(i),".OBS.START.DATE"] - earliest.date);
+          end.pi0 <- start0 + as.numeric(evinfo$.DATE.as.Date[i+1] - evinfo$.OBS.START.DATE[(i)]) - evinfo$gap.days[(i)];
+          .X.EVC.START0 <- (adh.plot.space[2] + start0  + correct.earliest.followup.window);
+          .Y.EVC.START0 <- (y.cur - char.height/2);
+          .X.EVC.END0 <- (adh.plot.space[2] + end.pi0 + correct.earliest.followup.window);
+          .Y.EVC.END0 <- (y.cur + char.height/2);
 
-        # Draw:
-        rect(.last.cma.plot.info$baseR$cma$data[i,".X.EVC.START"], .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.START"],
-             .last.cma.plot.info$baseR$cma$data[i,".X.EVC.END"],   .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.END"],
-             col=adjustcolor(col,alpha.f=0.2), border=col);
-        if( evinfo$gap.days[i] > 0 )
+          # Draw if anything is covered:
+          if( .X.EVC.END0 >= .X.EVC.START0)
+          {
+            rect(.X.EVC.START0, .Y.EVC.START0, .X.EVC.END0, .Y.EVC.END0, col=adjustcolor(col,alpha.f=0.2), border=col);
+          }
+
+          if( evinfo$gap.days[i] > 0 )
+          {
+            .X.EVNC.START0 <- (adh.plot.space[2] + max(end.pi0, start0) + correct.earliest.followup.window);
+            .Y.EVNC.START0 <- (y.cur - char.height/2);
+            .X.EVNC.END0 <- (adh.plot.space[2] + end.pi0 + evinfo$gap.days[i] + correct.earliest.followup.window);
+            .Y.EVNC.END0 <- (y.cur + char.height/2);
+
+            # Draw:
+            rect(.X.EVNC.START0, .Y.EVNC.START0, .X.EVNC.END0, .Y.EVNC.END0, col=NA, border=col);
+          }
+        }
+
+        if ( !is.na(evinfo$event.interval[i]) )
         {
           # Save the info:
-          .last.cma.plot.info$baseR$cma$data[i,".X.EVNC.START"] <- (adh.plot.space[2] + end.pi + correct.earliest.followup.window);
-          .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.START"] <- (y.cur - char.height/2);
-          .last.cma.plot.info$baseR$cma$data[i,".X.EVNC.END"]   <- (adh.plot.space[2] + end.pi + evinfo$gap.days[i] + correct.earliest.followup.window);
-          .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.END"]   <- (y.cur + char.height/2);
+          .last.cma.plot.info$baseR$cma$data[i,".X.EVC.START"] <- (adh.plot.space[2] + start  + correct.earliest.followup.window);
+          .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.START"] <- (y.cur - char.height/2);
+          .last.cma.plot.info$baseR$cma$data[i,".X.EVC.END"]   <- (adh.plot.space[2] + end.pi + correct.earliest.followup.window);
+          .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.END"]   <- (y.cur + char.height/2);
 
           # Draw:
-          rect(.last.cma.plot.info$baseR$cma$data[i,".X.EVNC.START"], .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.START"],
-               .last.cma.plot.info$baseR$cma$data[i,".X.EVNC.END"],   .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.END"],
-               #density=25, col=adjustcolor(col,alpha.f=0.5),
-               col=NA, border=col);
+          rect(.last.cma.plot.info$baseR$cma$data[i,".X.EVC.START"], .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.START"],
+               .last.cma.plot.info$baseR$cma$data[i,".X.EVC.END"],   .last.cma.plot.info$baseR$cma$data[i,".Y.EVC.END"],
+               col=adjustcolor(col,alpha.f=0.2), border=col);
+
+          if( evinfo$gap.days[i] > 0 )
+          {
+            # Save the info:
+            .last.cma.plot.info$baseR$cma$data[i,".X.EVNC.START"] <- (adh.plot.space[2] + end.pi + correct.earliest.followup.window);
+            .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.START"] <- (y.cur - char.height/2);
+            .last.cma.plot.info$baseR$cma$data[i,".X.EVNC.END"]   <- (adh.plot.space[2] + end.pi + evinfo$gap.days[i] + correct.earliest.followup.window);
+            .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.END"]   <- (y.cur + char.height/2);
+
+            # Draw:
+            rect(.last.cma.plot.info$baseR$cma$data[i,".X.EVNC.START"], .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.START"],
+                 .last.cma.plot.info$baseR$cma$data[i,".X.EVNC.END"],   .last.cma.plot.info$baseR$cma$data[i,".Y.EVNC.END"],
+                 #density=25, col=adjustcolor(col,alpha.f=0.5),
+                 col=NA, border=col);
+          }
         }
       }
 
       if( .do.SVG ) # SVG:
       {
         # Adding an event interval between the start of observation window and first event where appropriate
-        if (!is.na(.last.cma.plot.info$SVG$cma$data[(i+1),col.patid]) && .last.cma.plot.info$SVG$cma$data[i,col.patid] == .last.cma.plot.info$SVG$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]))
+        if (!is.na(.last.cma.plot.info$SVG$cma$data[(i+1),col.patid]) && .last.cma.plot.info$SVG$cma$data[i,col.patid] ==
+            .last.cma.plot.info$SVG$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]) &&
+            (.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
         {
+          # Save the info
           start0 <- as.numeric(evinfo[(i),".OBS.START.DATE"] - earliest.date);
           end.pi0 <- start0 + as.numeric(evinfo$.DATE.as.Date[i+1] - evinfo$.OBS.START.DATE[(i)]) - evinfo$gap.days[(i)];
           .X.EVC.START0 <- .scale.x.to.SVG.plot(adh.plot.space[2] + start0 + correct.earliest.followup.window);
@@ -3960,14 +3998,18 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
           .X.EVC.END0 <- .scale.x.to.SVG.plot(adh.plot.space[2] + end.pi0 + correct.earliest.followup.window);
           .Y.EVC.END0 <- .Y.EVC.START0 + dims.event.y;
 
-          svg.str[[length(svg.str)+1]] <-
-            .SVG.rect(x=.X.EVC.START0,
-                      y=.Y.EVC.START0,
-                      xend=.X.EVC.END0,
-                      height=dims.event.y,
-                      stroke=col, fill=col, fill_opacity=0.2,
-                      class=paste0("event-interval-covered",if(!is.na(med.class.svg)) paste0(" event-interval-covered-",med.class.svg)),
-                      js_tooltip=med.class.svg.name);
+          # Draw if anything is covered:
+          if( .X.EVC.END0 >= .X.EVC.START0)
+          {
+            svg.str[[length(svg.str)+1]] <-
+              .SVG.rect(x=.X.EVC.START0,
+                        y=.Y.EVC.START0,
+                        xend=.X.EVC.END0,
+                        height=dims.event.y,
+                        stroke=col, fill=col, fill_opacity=0.2,
+                        class=paste0("event-interval-covered",if(!is.na(med.class.svg)) paste0(" event-interval-covered-",med.class.svg)),
+                        js_tooltip=med.class.svg.name);
+          }
 
           if( evinfo$gap.days[i] > 0 )
           {
@@ -4019,7 +4061,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                         xend=.last.cma.plot.info$SVG$cma$data[i,".X.EVNC.END"],
                         height=dims.event.y,
                         stroke=col, fill="none",
-                        class=paste0("event-interval-not-covered",if(!is.na(med.class.svg)) paste0(" event-interval-not-covere-",med.class.svg)),
+                        class=paste0("event-interval-not-covered",if(!is.na(med.class.svg)) paste0(" event-interval-not-covered-",med.class.svg)),
                         js_tooltip=med.class.svg.name);
           }
         }

@@ -482,7 +482,11 @@ var adh_svg = { // begin namespace
   is_visible_event_intervals : function() {
     x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
     if(!x || x.length < 1) return undefined;
-    return adh_svg.is_visible_svg_element(x);
+    for (var i = 0; i < x.length; i++ ) {
+      if (x[i].getAttribute("visibility") === "visible") return true;
+    };
+    return false;
+    //return adh_svg.is_visible_svg_element(x);
   },
 
   /**
@@ -491,8 +495,18 @@ var adh_svg = { // begin namespace
    * @return {None}
    */
   show_event_intervals : function(show) {
-    x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
-    if(x) adh_svg.show_svg_element(x, show);
+    //adh_svg.get_id_for_medication_class
+    if ( adh_svg.are_medication_classes_defined()) {
+      var med_classes = Object.keys(adh_svg["medication_classes_Graph" + (GraphIndex-1)]);
+      for (var i = 0; i < med_classes.length; i++ ) {
+        if ( document.querySelector('#button_toggle_class_' + adh_svg.get_id_for_medication_class(med_classes[i])).checked === true) {
+          x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered-' + adh_svg.get_id_for_medication_class(med_classes[i]) + ', .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered-' + adh_svg.get_id_for_medication_class(med_classes[i]));
+          if(x) adh_svg.show_svg_element(x, show);
+        }
+      }
+    };
+    // x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
+    // if(x) adh_svg.show_svg_element(x, show);
   },
 
   /**
@@ -844,10 +858,14 @@ var adh_svg = { // begin namespace
       x_legend_text = adh_svg._getElementsByClassName(svg, "legend-medication-class-label-" + m_id);
     }
 
+    var interval_check = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .button_toggle_event_intervals');
+    var interval_show = show;
+    if ( show && interval_check.checked === false ) interval_show = false;
+
     adh_svg.show_svg_element(x_start, show);
     adh_svg.show_svg_element(x_end, show);
-    adh_svg.show_svg_element(x_covered, show);
-    adh_svg.show_svg_element(x_notcovered, show);
+    adh_svg.show_svg_element(x_covered, interval_show);
+    adh_svg.show_svg_element(x_notcovered, interval_show);
     adh_svg.show_svg_element(x_segment, show);
     adh_svg.show_svg_element(x_dose, show);
     adh_svg.show_svg_element(x_continuation, show);
@@ -883,7 +901,8 @@ var adh_svg = { // begin namespace
         // Add the HTML elements as well:
         node = document.createElement('span'); // the contaning <span>
         node.title = "Show/hide " + m[i]; // the tooltip (title)
-        node.innerHTML = '<label id="label_toggle_class_' + adh_svg.get_id_for_medication_class(m[i]) + '"><input id="button_toggle_class_' + adh_svg.get_id_for_medication_class(m[i]) + '" type="checkbox" onclick=\'adh_svg.show_medication_class("' + m[i] + '", !adh_svg.is_visible_medication_class("' + m[i] + '"))\' checked="checked">' + m[i] + '</label> &nbsp;'; // the HTML content
+        var is_checked = adh_svg.is_visible_medication_class(m[i]) ? "checked": "unchecked";
+        node.innerHTML = '<label id="label_toggle_class_' + adh_svg.get_id_for_medication_class(m[i]) + '"><input id="button_toggle_class_' + adh_svg.get_id_for_medication_class(m[i]) + '" type="checkbox" onclick=\'adh_svg.show_medication_class("' + m[i] + '", !adh_svg.is_visible_medication_class("' + m[i] + '"))\' ' + is_checked + '>' + m[i] + '</label> &nbsp;'; // the HTML content
         tmp.appendChild(node); // ad it to the document
       }
       }
