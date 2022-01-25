@@ -5275,16 +5275,18 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         }
 
         if(html.plot.number==1) {
-        # Read the templates:
-        css.template <- readLines(css.template.path);
-        js.template  <- readLines(js.template.path);
+          # Read the templates:
+          css.template <- readLines(css.template.path);
+          js.template  <- readLines(js.template.path);
 
-        # Add the medication categories to class names mapping as a dictionary:
-        js.template <- c(js.template,
-                         '// Mapping between medication categories and -med-class-X class names',
-                         paste0('adh_svg["medication_classes_Graph',html.plot.number,'"] = {\n'),
-                         paste0('  "',names(categories.to.classes),'" : "',categories.to.classes,'"',collapse=",\n"),
-                         '\n};\n');
+          # Add the medication categories to class names mapping as a dictionary:
+          if (!is.na(cma$medication.class.colname)) {
+            js.template <- c(js.template,
+                             '// Mapping between medication categories and -med-class-X class names',
+                             paste0('adh_svg["medication_classes_Graph',html.plot.number,'"] = {\n'),
+                             paste0('  "',names(categories.to.classes),'" : "',categories.to.classes,'"',collapse=",\n"),
+                             '\n};\n');
+          }
         }
 
         # sub in user defined logo from local file location, if not "AdhereR"
@@ -5494,7 +5496,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                html.template, fixed=TRUE); # Add users own logo instead of base AdhereR logo
           }
 
-        } else if (html.plot.number > 1) {
+        } else if (html.plot.number > 1 && !is.na(cma$medication.class.colname)) {
           html.template <- sub(paste0('//<!--Med Groups ',html.plot.number,' placeholder-->'), #sub the medication classes for this plot number
                                paste0('adh_svg["medication_classes_Graph',html.plot.number,'"] = {\n',
                                paste0('  "',names(categories.to.classes),'" : "',categories.to.classes,'"',collapse=",\n"),

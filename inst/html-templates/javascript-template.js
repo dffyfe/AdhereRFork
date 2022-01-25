@@ -499,14 +499,15 @@ var adh_svg = { // begin namespace
     if ( adh_svg.are_medication_classes_defined()) {
       var med_classes = Object.keys(adh_svg["medication_classes_Graph" + (GraphIndex-1)]);
       for (var i = 0; i < med_classes.length; i++ ) {
-        if ( document.querySelector('#button_toggle_class_' + adh_svg.get_id_for_medication_class(med_classes[i])).checked === true) {
+        if (med_classes.length === 1 || document.querySelector('#button_toggle_class_' + adh_svg.get_id_for_medication_class(med_classes[i])).checked === true) {
           x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered-' + adh_svg.get_id_for_medication_class(med_classes[i]) + ', .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered-' + adh_svg.get_id_for_medication_class(med_classes[i]));
           if(x) adh_svg.show_svg_element(x, show);
         }
       }
-    };
-    // x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
-    // if(x) adh_svg.show_svg_element(x, show);
+    } else {
+     x = document.querySelectorAll('.tabcontent.graph.index' + GraphIndex + ' .event-interval-covered, .tabcontent.graph.index' + GraphIndex + ' .event-interval-not-covered');
+     if(x) adh_svg.show_svg_element(x, show);
+    }
   },
 
   /**
@@ -875,6 +876,7 @@ var adh_svg = { // begin namespace
   },
 
   repopulate_medication_classes : function() {
+    if (adh_svg.are_medication_classes_defined()) {
     svg = document.querySelector('.adherence_plot.index' + GraphIndex);
     m = adh_svg.get_medication_classes();
     if(m.length > 1) {
@@ -911,6 +913,7 @@ var adh_svg = { // begin namespace
       // Hide the medication classes controls:
       tmp = document.querySelector('.tabcontent.graph.index' + GraphIndex + ' .medication_classes_div'); if(tmp) { tmp.style.display = 'none'; }
     };
+    }
   },
   
   show_all_medication_classes : function() {
