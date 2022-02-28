@@ -3925,7 +3925,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
         # Adding an event interval between the start of observation window and first event where appropriate
         if (!is.na(.last.cma.plot.info$baseR$cma$data[(i+1),col.patid]) && .last.cma.plot.info$baseR$cma$data[i,col.patid] ==
             .last.cma.plot.info$baseR$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]) &&
-            (.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
+            (.last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
         {
           # Save the info
           start0 <- as.numeric(evinfo[(i),".OBS.START.DATE"] - earliest.date);
