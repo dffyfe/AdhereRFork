@@ -85,7 +85,8 @@
   html.plot.colnames = NA,
   logo.to.use = "AdhereR",
   custom.logo.width = 100,
-  custom.logo.height = 70
+  custom.logo.height = 70,
+  descending.order = FALSE
 )
 }
 \arguments{
@@ -271,6 +272,9 @@ directory.}
 
 \item{generate.R.plot}{a \emph{logical}, if \code{TRUE} (the default),
 generate the standard (base \code{R}) plot for plotting within \code{R}.}
+
+\item{descending.order}{a \emph{boolean}, should the y-axis by displayed in descending
+alphabetical order.}
 }
 \description{
 Plots the events (prescribing or dispensing) data encapsulated in a basic

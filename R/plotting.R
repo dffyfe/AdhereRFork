@@ -1066,9 +1066,44 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                        logo.to.use = "AdhereR",         # path to logo to use or if left as "AdhereR" adhereR logo
                        custom.logo.width = 100,         # CSS style width for custom logo in pixels
                        custom.logo.height = 70,         # CSS style height for custom logo in pixels
+                       descending.order = FALSE,        # should y-axis be displayed in descending order
                        ...
 )
 {
+  # Reversing all the data tables is the imput is descending.order TRUE
+  if( (inherits(cma, "CMA_per_episode") || inherits(cma, "CMA_sliding_window")) && descending.order ) {
+    #setorderv(cma$event.info, cma$ID.colname, -1)
+    cma$event.info <- cma$event.info[order(cma$event.info[,cma$ID.colname], decreasing = TRUE),]
+    #setorderv(cma$CMA, cma$ID.colname, -1)
+    cma$CMA <- cma$CMA[order(cma$CMA[,cma$ID.colname], decreasing = TRUE),]
+    #setorderv(cma$event.info.cma, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
+    cma$event.info.cma <- cma$event.info.cma[order(cma$event.info.cma[,cma$ID.colname], cma$event.info.cma[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+    #setorderv(cma$data, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
+    cma$data <- cma$data[order(cma$data[,cma$ID.colname], cma$data[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+  } else if( descending.order) {
+    #setorderv(cma$event.info, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
+    cma$event.info <- cma$event.info[order(cma$event.info[,cma$ID.colname], cma$event.info[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+    #setorderv(cma$CMA, cma$ID.colname, -1)
+    cma$CMA <- cma$CMA[order(cma$CMA[,cma$ID.colname], decreasing = TRUE),]
+    #setorderv(cma$data, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
+    cma$data <- cma$data[order(cma$data[,cma$ID.colname], cma$data[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+  }
+
+  if( !is.null(cma$Leftover) && descending.order ) {
+    #setorderv(cma$Leftover, cma$ID.colname, -1)
+    cma$Leftover <- cma$Leftover[order(cma$Leftover[,cma$ID.colname], decreasing = TRUE),]
+  }
+
+  if( !is.null(cma$Gaps) && descending.order ) {
+    #setorderv(cma$Gaps, cma$ID.colname, -1)
+    cma$Gaps <- cma$Gaps[order(cma$Gaps[,cma$ID.colname], decreasing = TRUE),]
+  }
+
+  if( !is.null(cma$real.obs.window) && descending.order ) {
+    #setorderv(cma$real.obs.window, cma$ID.colname, -1)
+    cma$real.obs.window <- cma$real.obs.window[order(cma$real.obs.window[,cma$ID.colname], decreasing = TRUE),]
+  }
+
   # What sorts of plots to generate (use short names for short if statements):
   .do.R <- generate.R.plot; .do.SVG <- (!is.null(export.formats) && any(c("svg", "html", "jpg", "png", "webp", "ps", "pdf") %in% export.formats));
   if( !.do.R && !.do.SVG )
@@ -2512,24 +2547,42 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     cma$data$.DATE.as.Date <- cma$data[,cma$event.date.colname];
   }
 
-  # Make sure the patients are ordered by ID, medication group (if the case), and date:
-  patids <- patids[ order(patids) ];
-  if( !cma.mg )
-  {
-    cma$data <- cma$data[ order( cma$data[,col.patid], cma$data$.DATE.as.Date), ];
-  } else
-  {
-    cma$data <- cma$data[ order( cma$data[,col.patid], cma$data[,col.mg], cma$data$.DATE.as.Date), ];
-    patmgids <- patmgids[ order( patmgids[,col.patid], patmgids[,col.mg]), ];
+  # Make sure the patients are ordered correctly (ascending if descending.order = FALSE) by ID, medication group (if the case), and date:
+  if ( descending.order ) {
+    patids <- patids[ rev(order(patids)) ];
+    if( !cma.mg )
+    {
+      cma$data <- cma$data[ order( cma$data[,col.patid], cma$data$.DATE.as.Date, decreasing = c(TRUE,FALSE), method = "radix"), ];
+    } else
+    {
+      cma$data <- cma$data[ order( cma$data[,col.patid], cma$data[,col.mg], cma$data$.DATE.as.Date, decreasing = c(TRUE,FALSE,FALSE), method = "radix"), ];
+      patmgids <- patmgids[ order( patmgids[,col.patid], patmgids[,col.mg], decreasing = c(TRUE,FALSE), method = "radix"), ];
+    }
+    if( all(c("WND.ID","start") %in% names(cmas)) )
+    {
+      cmas <- cmas[ order( cmas[,col.patid], cmas$WND.ID, cmas$start, decreasing = c(TRUE,FALSE,FALSE), method = "radix"), ];
+    } else
+    {
+      cmas <- cmas[ order( cmas[,col.patid], decreasing = TRUE), ];
+    }
+  } else {
+    patids <- patids[ order(patids) ];
+    if( !cma.mg )
+    {
+      cma$data <- cma$data[ order( cma$data[,col.patid], cma$data$.DATE.as.Date), ];
+    } else
+    {
+      cma$data <- cma$data[ order( cma$data[,col.patid], cma$data[,col.mg], cma$data$.DATE.as.Date), ];
+      patmgids <- patmgids[ order( patmgids[,col.patid], patmgids[,col.mg]), ];
+    }
+    if( all(c("WND.ID","start") %in% names(cmas)) )
+    {
+      cmas <- cmas[ order( cmas[,col.patid], cmas$WND.ID, cmas$start), ];
+    } else
+    {
+      cmas <- cmas[ order( cmas[,col.patid]), ];
+    }
   }
-  if( all(c("WND.ID","start") %in% names(cmas)) )
-  {
-    cmas <- cmas[ order( cmas[,col.patid], cmas$WND.ID, cmas$start), ];
-  } else
-  {
-    cmas <- cmas[ order( cmas[,col.patid]), ];
-  }
-
 
   #
   # Colors for plotting ####
@@ -4258,7 +4311,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                              "text" =if(is.null(cmas$Gaps) && is.null(cmas$Leftover)) {
                                         ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?");
                                      } else if (is.null(cmas$Leftover)) {
-                                        paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Gaps[s.cmas]), " gaps)");
+                                        paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Gaps[s.cmas]), " gap days)");
                                      } else {
                                         paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Leftover[s.cmas]), " days supply at end of OW)");
                                      }

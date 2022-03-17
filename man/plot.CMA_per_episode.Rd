@@ -113,6 +113,7 @@
   logo.to.use = "AdhereR",
   custom.logo.width = 100,
   custom.logo.height = 70,
+  descending.order = FALSE,
   ...
 )
 
@@ -224,6 +225,7 @@
   logo.to.use = "AdhereR",
   custom.logo.width = 100,
   custom.logo.height = 70,
+  descending.order = FALSE,
   ...
 )
 }
@@ -457,6 +459,9 @@ in html output.}
 
 \item{custom.logo.height}{a \emph{double}, height of custom logo to be used
 in html output.}
+
+\item{descending.order}{a \emph{boolean}, should the y-axis by displayed in descending
+alphabetical order.}
 
 \item{...}{other parameters (to be passed to the estimation and plotting of
 the simple CMA)}

@@ -1030,6 +1030,8 @@ print.CMA0 <- function(x,                                                  # the
 #' directory.
 #' @param generate.R.plot a \emph{logical}, if \code{TRUE} (the default),
 #' generate the standard (base \code{R}) plot for plotting within \code{R}.
+#' @param descending.order a \emph{boolean}, should the y-axis by displayed in descending
+#' alphabetical order.
 #' @param ... other possible parameters
 #' @examples
 #' cma0 <- CMA0(data=med.events,
@@ -1097,7 +1099,8 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
                       html.plot.colnames=NA, # Vector of column names to be displayed in an html table in the html output (if any)
                       logo.to.use = "AdhereR",  # path to logo to use or if left as "AdhereR" adhereR logo
                       custom.logo.width = 100,         # CSS style width for custom logo in pixels
-                      custom.logo.height = 70          # CSS style height for custom logo in pixels
+                      custom.logo.height = 70,          # CSS style height for custom logo in pixels
+                      descending.order = FALSE         # should y-axis be displayed in descending order
 
 
 )
@@ -1183,7 +1186,8 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
              html.plot.colnames=html.plot.colnames,
              logo.to.use=logo.to.use,
              custom.logo.width=custom.logo.width,
-             custom.logo.height=custom.logo.height);
+             custom.logo.height=custom.logo.height,
+             descending.order=descending.order);
 }
 
 
@@ -3361,6 +3365,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
                            logo.to.use = "AdhereR", # path to logo to use or if left as "AdhereR" adhereR logo
                            custom.logo.width = 100,         # CSS style width for custom logo in pixels
                            custom.logo.height = 70,          # CSS style height for custom logo in pixels
+                           descending.order = FALSE,        # should y-axis be displayed in descending order
                            ...
 )
 {
@@ -3451,7 +3456,8 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
              html.plot.colnames=html.plot.colnames,
              logo.to.use=logo.to.use,
              custom.logo.width=custom.logo.width,
-             custom.logo.height=custom.logo.height);
+             custom.logo.height=custom.logo.height,
+             descending.order=descending.order);
 }
 
 
@@ -4066,6 +4072,8 @@ print.CMA1 <- function(...) print.CMA0(...)
 #' in html output.
 #' @param custom.logo.height a \emph{double}, height of custom logo to be used
 #' in html output.
+#' @param descending.order a \emph{boolean}, should the y-axis by displayed in descending
+#' alphabetical order.
 #' @param ... other possible parameters
 #'
 #' @examples
@@ -4128,7 +4136,8 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                       html.plot.colnames=NA, # Vector of column names to be displayed in an html table in the html output (if any)
                       logo.to.use = "AdhereR", # path to logo to use or if left as "AdhereR" adhereR logo
                       custom.logo.width = 100,         # CSS style width for custom logo in pixels
-                      custom.logo.height = 70          # CSS style height for custom logo in pixels
+                      custom.logo.height = 70,          # CSS style height for custom logo in pixels
+                      descending.order = FALSE          # should y-axis be displayed in descending order
 
 )
 {
@@ -4213,6 +4222,7 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                  logo.to.use=logo.to.use,
                  custom.logo.width=custom.logo.width,
                  custom.logo.height=custom.logo.height,
+                 descending.order=descending.order,
                  ...)
 }
 
@@ -9521,6 +9531,8 @@ print.CMA_per_episode <- function(x,                                     # the C
 #' in html output.
 #' @param custom.logo.height a \emph{double}, height of custom logo to be used
 #' in html output.
+#' @param descending.order a \emph{boolean}, should the y-axis by displayed in descending
+#' alphabetical order.
 #' @param ... other parameters (to be passed to the estimation and plotting of
 #' the simple CMA)
 #'
@@ -9633,6 +9645,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
                                  logo.to.use = "AdhereR", # path to logo to use or if left as "AdhereR" adhereR logo
                                  custom.logo.width = 100,         # CSS style width for custom logo in pixels
                                  custom.logo.height = 70,          # CSS style height for custom logo in pixels
+                                 descending.order = FALSE,        # should y-axis be displayed in descending order
                                  ...
 )
 {
@@ -9735,7 +9748,8 @@ plot.CMA_per_episode <- function(x,                                     # the CM
              html.plot.colnames=html.plot.colnames,
              logo.to.use=logo.to.use,
              custom.logo.width=custom.logo.width,
-             custom.logo.height=custom.logo.height);
+             custom.logo.height=custom.logo.height,
+             descending.order=descending.order);
 }
 
 
