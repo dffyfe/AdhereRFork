@@ -1077,16 +1077,16 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     #setorderv(cma$CMA, cma$ID.colname, -1)
     cma$CMA <- cma$CMA[order(cma$CMA[,cma$ID.colname], decreasing = TRUE),]
     #setorderv(cma$event.info.cma, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
-    cma$event.info.cma <- cma$event.info.cma[order(cma$event.info.cma[,cma$ID.colname], cma$event.info.cma[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+    cma$event.info.cma <- cma$event.info.cma[order(cma$event.info.cma[,cma$ID.colname], as.numeric(cma$event.info.cma[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
     #setorderv(cma$data, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
-    cma$data <- cma$data[order(cma$data[,cma$ID.colname], cma$data[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+    cma$data <- cma$data[order(cma$data[,cma$ID.colname], as.numeric(cma$data[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
   } else if( descending.order) {
     #setorderv(cma$event.info, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
-    cma$event.info <- cma$event.info[order(cma$event.info[,cma$ID.colname], cma$event.info[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+    cma$event.info <- cma$event.info[order(cma$event.info[,cma$ID.colname], as.numeric(cma$event.info[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
     #setorderv(cma$CMA, cma$ID.colname, -1)
     cma$CMA <- cma$CMA[order(cma$CMA[,cma$ID.colname], decreasing = TRUE),]
     #setorderv(cma$data, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
-    cma$data <- cma$data[order(cma$data[,cma$ID.colname], cma$data[,cma$event.date.colname], decreasing = c(TRUE, FALSE), method="radix"),]
+    cma$data <- cma$data[order(cma$data[,cma$ID.colname], as.numeric(cma$data[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
   }
 
   if( !is.null(cma$Leftover) && descending.order ) {
@@ -2552,15 +2552,15 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     patids <- patids[ rev(order(patids)) ];
     if( !cma.mg )
     {
-      cma$data <- cma$data[ order( cma$data[,col.patid], cma$data$.DATE.as.Date, decreasing = c(TRUE,FALSE), method = "radix"), ];
+      cma$data <- cma$data[ order( cma$data[,col.patid], as.numeric(cma$data$.DATE.as.Date), decreasing = c(TRUE,FALSE), method = "radix"), ];
     } else
     {
-      cma$data <- cma$data[ order( cma$data[,col.patid], cma$data[,col.mg], cma$data$.DATE.as.Date, decreasing = c(TRUE,FALSE,FALSE), method = "radix"), ];
+      cma$data <- cma$data[ order( cma$data[,col.patid], cma$data[,col.mg], as.numeric(cma$data$.DATE.as.Date), decreasing = c(TRUE,FALSE,FALSE), method = "radix"), ];
       patmgids <- patmgids[ order( patmgids[,col.patid], patmgids[,col.mg], decreasing = c(TRUE,FALSE), method = "radix"), ];
     }
     if( all(c("WND.ID","start") %in% names(cmas)) )
     {
-      cmas <- cmas[ order( cmas[,col.patid], cmas$WND.ID, cmas$start, decreasing = c(TRUE,FALSE,FALSE), method = "radix"), ];
+      cmas <- cmas[ order( cmas[,col.patid], cmas$WND.ID, as.numeric(cmas$start), decreasing = c(TRUE,FALSE,FALSE), method = "radix"), ];
     } else
     {
       cmas <- cmas[ order( cmas[,col.patid], decreasing = TRUE), ];
