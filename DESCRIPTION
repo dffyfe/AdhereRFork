@@ -43,7 +43,6 @@ Imports:
     htmltools
 Depends: R (>= 3.0)
 Suggests: rmarkdown (>= 1.1), knitr (>= 1.20), R.rsp (>= 0.40), AdhereRViz (>= 0.2), base64(>= 2.0)
-VignetteBuilder: knitr, R.rsp
 Encoding: UTF-8
 NeedsCompilation: no
 Packaged: 2021-04-19 17:11:50 UTC; ddediu
