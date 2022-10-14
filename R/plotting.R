@@ -3642,9 +3642,6 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             if( .do.SVG ) # SVG:
             {
               # Save the info:
-              cat(paste0("real.obs.window.start ", real.obs.window.start, "\n"))
-              cat(paste0("earliest.date ", earliest.date, "\n"))
-              cat(paste0("correct.earliest.followup.window ", correct.earliest.followup.window, "\n"))
               .last.cma.plot.info$SVG$cma$data[s.events,".X.ROW.START"] <- .scale.x.to.SVG.plot(adh.plot.space[2] + as.numeric(real.obs.window.start - earliest.date) + correct.earliest.followup.window);
               .last.cma.plot.info$SVG$cma$data[s.events,".Y.ROW.START"] <- .scale.y.to.SVG.plot(y.cur + vspace.needed.events - 0.5);
               .last.cma.plot.info$SVG$cma$data[s.events,".X.ROW.END"]   <- .scale.x.to.SVG.plot(adh.plot.space[2] + as.numeric(real.obs.window.start - earliest.date) + correct.earliest.followup.window);
