@@ -3642,6 +3642,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
             if( .do.SVG ) # SVG:
             {
               # Save the info:
+              cat(paste0("real.obs.window.start ", real.obs.window.start, "\n"))
+              cat(paste0("earliest.date ", earliest.date, "\n"))
+              cat(paste0("correct.earliest.followup.window ", correct.earliest.followup.window, "\n"))
               .last.cma.plot.info$SVG$cma$data[s.events,".X.ROW.START"] <- .scale.x.to.SVG.plot(adh.plot.space[2] + as.numeric(real.obs.window.start - earliest.date) + correct.earliest.followup.window);
               .last.cma.plot.info$SVG$cma$data[s.events,".Y.ROW.START"] <- .scale.y.to.SVG.plot(y.cur + vspace.needed.events - 0.5);
               .last.cma.plot.info$SVG$cma$data[s.events,".X.ROW.END"]   <- .scale.x.to.SVG.plot(adh.plot.space[2] + as.numeric(real.obs.window.start - earliest.date) + correct.earliest.followup.window);
@@ -3973,12 +3976,23 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       # The end of the prescription:
       end.pi <- start + evinfo$event.interval[i] - evinfo$gap.days[i];
 
+      #Added this because if you check inherits cma and computed cma one will throw NA and break the function depending on whether using sliding window or not
+      if(is.cma.TS.or.SW)
+      {
+        event.interval.cma.check.baseR <- .last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11")
+        event.interval.cma.check.SVG <- .last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11")
+      } else
+      {
+        event.interval.cma.check.baseR <- inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))
+        event.interval.cma.check.SVG <- inherits(.last.cma.plot.info$SVG$cma, c("CMA7", "CMA10", "CMA11"))
+      }
+
       if( .do.R ) # Rplot:
       {
         # Adding an event interval between the start of observation window and first event where appropriate
         if (!is.na(.last.cma.plot.info$baseR$cma$data[(i+1),col.patid]) && .last.cma.plot.info$baseR$cma$data[i,col.patid] ==
-            .last.cma.plot.info$baseR$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]) &&
-            (.last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
+            .last.cma.plot.info$baseR$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]) && event.interval.cma.check.baseR)
+            #(.last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
         {
           # Save the info
           start0 <- as.numeric(evinfo[(i),".OBS.START.DATE"] - earliest.date);
@@ -4039,9 +4053,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       if( .do.SVG ) # SVG:
       {
         # Adding an event interval between the start of observation window and first event where appropriate
-        if (!is.na(.last.cma.plot.info$SVG$cma$data[(i+1),col.patid]) && .last.cma.plot.info$SVG$cma$data[i,col.patid] ==
-            .last.cma.plot.info$SVG$cma$data[(i+1),col.patid] && is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]) &&
-            (.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
+
+        if (!is.na(.last.cma.plot.info$SVG$cma$data[(i+1),col.patid]) && .last.cma.plot.info$SVG$cma$data[i,col.patid] == .last.cma.plot.info$SVG$cma$data[(i+1),col.patid] &&
+            is.na(evinfo$event.interval[(i)]) && !is.na(evinfo$event.interval[(i+1)]) && event.interval.cma.check.SVG)
+            #(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") || inherits(.last.cma.plot.info$baseR$cma, c("CMA7", "CMA10", "CMA11"))))
         {
           # Save the info
           start0 <- as.numeric(evinfo[(i),".OBS.START.DATE"] - earliest.date);

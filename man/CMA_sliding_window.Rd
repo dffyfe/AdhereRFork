@@ -27,6 +27,7 @@ CMA_sliding_window(
   observation.window.start.unit = c("days", "weeks", "months", "years")[1],
   observation.window.duration = 365 * 2,
   observation.window.duration.unit = c("days", "weeks", "months", "years")[1],
+  observation.window.first.event = FALSE,
   sliding.window.start = 0,
   sliding.window.start.unit = c("days", "weeks", "months", "years")[1],
   sliding.window.duration = 90,
@@ -141,6 +142,11 @@ defined.}
 
 \item{observation.window.start, observation.window.start.unit, observation.window.duration, observation.window.duration.unit}{the definition of the observation window
 (see the follow-up window parameters above for details).}
+
+\item{observation.window.first.event}{\emph{Logical}, if \code{FALSE} (the default)
+then the observation window will be defined as normal, if \code{TRUE} the \code{observation.window.start}
+will be changed to the date of the first event as long as this doesn't reduce the \code{observation.window.duration}
+to less than 180 days and the first event in OW is the first event.}
 
 \item{sliding.window.start, sliding.window.start.unit, sliding.window.duration, sliding.window.duration.unit}{the definition of the first sliding window
 (see the follow-up window parameters above for details).}
