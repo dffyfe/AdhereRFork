@@ -10033,7 +10033,7 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
                                 observation.window.start.unit=c("days", "weeks", "months", "years")[1], # the time units; can be "days", "weeks", "months" or "years" (if months or years, using an actual calendar!) (NA = undefined)
                                 observation.window.duration=365*2, # the duration of the observation window in time units (NA = undefined)
                                 observation.window.duration.unit=c("days", "weeks", "months", "years")[1], # the time units; can be "days", "weeks", "months" or "years" (if months or years, using an actual calendar!) (NA = undefined)
-                                observation.window.first.event=FALSE, # move the start of the OW to the first event in OW. Only 1 step and only cma11
+                                observation.window.first.event=FALSE, # move the start of the OW to the first event in OW. Only 1 step and only cma10/cma11
                                 # Sliding window:
                                 sliding.window.start=0, # if a number is the earliest event per participant date + number of units, or a Date object, or a column name in data (NA = undefined)
                                 sliding.window.start.unit=c("days", "weeks", "months", "years")[1], # the time units; can be "days", "weeks", "months" or "years" (if months or years, using an actual calendar!) (NA = undefined)
@@ -10068,9 +10068,9 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
     return (NULL)
   }
   # For STUMedView use on CMA11, strict use criteria for it to definitely work
-  if( observation.window.first.event && !(sliding.window.no.steps == 1 && sliding.window.step.duration/sliding.window.duration == 1 && CMA.to.apply == "CMA11" && sliding.window.start == 0))
+  if( observation.window.first.event && !(sliding.window.no.steps == 1 && sliding.window.step.duration/sliding.window.duration == 1 && CMA.to.apply %in% c("CMA10", "CMA11") && sliding.window.start == 0))
   {
-    if (!suppress.warnings ) .report.ewms("First event OW window if only for use on a single step window on CMA11 starting at start of OW (STUMedView tweak as oppose to full feature).", "error", "CMA_sliding_window", "AdhereRFork")
+    if (!suppress.warnings ) .report.ewms("First event OW window if only for use on a single step window on CMA10/CMA11 starting at start of OW (STUMedView tweak as oppose to full feature).", "error", "CMA_sliding_window", "AdhereRFork")
     return (NULL)
   }
   if( is.numeric(sliding.window.start) && sliding.window.start < 0 )
@@ -10232,8 +10232,8 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
       if( n.events < 1 ) return (NULL);
 
       # Compute the sliding windows for this patient:
-      # Redefining OW for observation.window.first.event == TRUE. STUMedView use only to be used on CMA11 and doesn't allow OW to go less than 180 days.
-      if( observation.window.first.event && sliding.window.no.steps == 1 && sliding.window.step.duration/sliding.window.duration == 1 && CMA.to.apply == "CMA11" && sliding.window.start == 0) #added 1010
+      # Redefining OW for observation.window.first.event == TRUE. STUMedView use only to be used on CMA10/CMA11 and doesn't allow OW to go less than 180 days.
+      if( observation.window.first.event && sliding.window.no.steps == 1 && sliding.window.step.duration/sliding.window.duration == 1 && CMA.to.apply %in% c("CMA10", "CMA11") && sliding.window.start == 0) #added 1010
       {
         s <- which(!(data4ID$.OBS.START.DATE > data4ID$.DATE.as.Date) & !(data4ID$.OBS.END.DATE < data4ID$.DATE.as.Date));
         s1 <- s[1];
@@ -10381,7 +10381,7 @@ CMA_sliding_window <- function( CMA.to.apply,  # the name of the CMA function (e
     event.info.cma <- data[, .process.patient(.SD)$event.info.cma, by=ID.colname]
 
     # redefining window dates for plots for observation.window.first.event == TRUE and suitable use case criteria.
-    if ( observation.window.first.event && sliding.window.no.steps == 1 && sliding.window.step.duration/sliding.window.duration == 1 && CMA.to.apply == "CMA11" && sliding.window.start == 0 ) #added 1010
+    if ( observation.window.first.event && sliding.window.no.steps == 1 && sliding.window.step.duration/sliding.window.duration == 1 && CMA.to.apply %in% c("CMA10", "CMA11") && sliding.window.start == 0 ) #added 1010
     {
         event.info2 <- unique(event.info.cma[,c(ID.colname, ".FU.START.DATE", ".FU.END.DATE", ".OBS.START.DATE", ".OBS.END.DATE"), with=FALSE])
     };
