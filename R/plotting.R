@@ -4323,7 +4323,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                              "text" =if(is.null(cmas$Gaps) && is.null(cmas$Leftover)) {
                                         ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?");
                                      } else if (is.null(cmas$Leftover)) {
-                                        paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Gaps[s.cmas]), " gap days)");
+                                        paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Gaps[s.cmas]), " gap days in ",as.numeric(cmas$.OBS.END.DATE[s.cmas] - cmas$.OBS.START.DATE[s.cmas]) ," days)");
                                      } else {
                                         paste0(ifelse(!is.na(cmas$CMA[s.cmas]), sprintf("%.0f%%", 100*cmas$CMA[s.cmas]), "?"), " (", sprintf("%.0f",cmas$Leftover[s.cmas]), " days supply at end of OW)");
                                      }
