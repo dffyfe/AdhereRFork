@@ -114,6 +114,7 @@
   custom.logo.width = 100,
   custom.logo.height = 70,
   descending.order = FALSE,
+  modify.continuation.line = FALSE,
   ...
 )
 
@@ -226,6 +227,7 @@
   custom.logo.width = 100,
   custom.logo.height = 70,
   descending.order = FALSE,
+  modify.continuation.line = FALSE,
   ...
 )
 }
@@ -462,6 +464,9 @@ in html output.}
 
 \item{descending.order}{a \emph{boolean}, should the y-axis by displayed in descending
 alphabetical order.}
+
+\item{modify.continuation.line}{a \emph{boolean}, Should continuation line be solid & black where there
+are gap days, solid & grey when there are not.}
 
 \item{...}{other parameters (to be passed to the estimation and plotting of
 the simple CMA)}

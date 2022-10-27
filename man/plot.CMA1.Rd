@@ -99,7 +99,8 @@
   logo.to.use = "AdhereR",
   custom.logo.width = 100,
   custom.logo.height = 70,
-  descending.order = FALSE
+  descending.order = FALSE,
+  modify.continuation.line = FALSE
 )
 
 \method{plot}{CMA2}(...)

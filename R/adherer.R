@@ -1032,6 +1032,8 @@ print.CMA0 <- function(x,                                                  # the
 #' generate the standard (base \code{R}) plot for plotting within \code{R}.
 #' @param descending.order a \emph{boolean}, should the y-axis by displayed in descending
 #' alphabetical order.
+#' @param modify.continuation.line a \emph{boolean}, Should continuation line be solid & black where there
+#' are gap days, solid & grey when there are not.
 #' @param ... other possible parameters
 #' @examples
 #' cma0 <- CMA0(data=med.events,
@@ -1100,8 +1102,8 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
                       logo.to.use = "AdhereR",  # path to logo to use or if left as "AdhereR" adhereR logo
                       custom.logo.width = 100,         # CSS style width for custom logo in pixels
                       custom.logo.height = 70,          # CSS style height for custom logo in pixels
-                      descending.order = FALSE         # should y-axis be displayed in descending order
-
+                      descending.order = FALSE,         # should y-axis be displayed in descending order
+                      modify.continuation.line = FALSE # should continuation line in svg show black only when there are gaps and grey all other times.
 
 )
 {
@@ -1187,7 +1189,8 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
              logo.to.use=logo.to.use,
              custom.logo.width=custom.logo.width,
              custom.logo.height=custom.logo.height,
-             descending.order=descending.order);
+             descending.order=descending.order,
+             modify.continuation.line=modify.continuation.line)
 }
 
 
@@ -3366,6 +3369,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
                            custom.logo.width = 100,         # CSS style width for custom logo in pixels
                            custom.logo.height = 70,          # CSS style height for custom logo in pixels
                            descending.order = FALSE,        # should y-axis be displayed in descending order
+                           modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
                            ...
 )
 {
@@ -3457,7 +3461,8 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
              logo.to.use=logo.to.use,
              custom.logo.width=custom.logo.width,
              custom.logo.height=custom.logo.height,
-             descending.order=descending.order);
+             descending.order=descending.order,
+             modify.continuation.line=modify.continuation.line);
 }
 
 
@@ -4137,8 +4142,8 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                       logo.to.use = "AdhereR", # path to logo to use or if left as "AdhereR" adhereR logo
                       custom.logo.width = 100,         # CSS style width for custom logo in pixels
                       custom.logo.height = 70,          # CSS style height for custom logo in pixels
-                      descending.order = FALSE          # should y-axis be displayed in descending order
-
+                      descending.order = FALSE,          # should y-axis be displayed in descending order
+                      modify.continuation.line = FALSE # should continuation line in svg show black only when there are gaps and grey all other times.
 )
 {
   .plot.CMA1plus(cma=x,
@@ -4223,6 +4228,7 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                  custom.logo.width=custom.logo.width,
                  custom.logo.height=custom.logo.height,
                  descending.order=descending.order,
+                 modify.continuation.line=modify.continuation.line,
                  ...)
 }
 
@@ -9544,6 +9550,8 @@ print.CMA_per_episode <- function(x,                                     # the C
 #' in html output.
 #' @param descending.order a \emph{boolean}, should the y-axis by displayed in descending
 #' alphabetical order.
+#' @param modify.continuation.line a \emph{boolean}, Should continuation line be solid & black where there
+#' are gap days, solid & grey when there are not.
 #' @param ... other parameters (to be passed to the estimation and plotting of
 #' the simple CMA)
 #'
@@ -9657,6 +9665,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
                                  custom.logo.width = 100,         # CSS style width for custom logo in pixels
                                  custom.logo.height = 70,          # CSS style height for custom logo in pixels
                                  descending.order = FALSE,        # should y-axis be displayed in descending order
+                                 modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
                                  ...
 )
 {
@@ -9760,7 +9769,8 @@ plot.CMA_per_episode <- function(x,                                     # the CM
              logo.to.use=logo.to.use,
              custom.logo.width=custom.logo.width,
              custom.logo.height=custom.logo.height,
-             descending.order=descending.order);
+             descending.order=descending.order,
+             modify.continuation.line=modify.continuation.line);
 }
 
 

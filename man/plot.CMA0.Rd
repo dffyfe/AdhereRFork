@@ -86,7 +86,8 @@
   logo.to.use = "AdhereR",
   custom.logo.width = 100,
   custom.logo.height = 70,
-  descending.order = FALSE
+  descending.order = FALSE,
+  modify.continuation.line = FALSE
 )
 }
 \arguments{
@@ -275,6 +276,9 @@ generate the standard (base \code{R}) plot for plotting within \code{R}.}
 
 \item{descending.order}{a \emph{boolean}, should the y-axis by displayed in descending
 alphabetical order.}
+
+\item{modify.continuation.line}{a \emph{boolean}, Should continuation line be solid & black where there
+are gap days, solid & grey when there are not.}
 }
 \description{
 Plots the events (prescribing or dispensing) data encapsulated in a basic
