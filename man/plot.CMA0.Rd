@@ -87,7 +87,8 @@
   custom.logo.width = 100,
   custom.logo.height = 70,
   descending.order = FALSE,
-  modify.continuation.line = FALSE
+  modify.continuation.line = FALSE,
+  horizontal.yaxis = FALSE
 )
 }
 \arguments{
@@ -279,6 +280,9 @@ alphabetical order.}
 
 \item{modify.continuation.line}{a \emph{boolean}, Should continuation line be solid & black where there
 are gap days, solid & grey when there are not.}
+
+\item{horizontal.yaxis}{a \emph{boolean}, Should text on yaxis be horizontal? If \code{TRUE} text enclosed between
+tspanstart and tspanend will be on a second line. Distances from edge of plot are calculated using line 1.}
 }
 \description{
 Plots the events (prescribing or dispensing) data encapsulated in a basic

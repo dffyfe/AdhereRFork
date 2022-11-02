@@ -100,7 +100,8 @@
   custom.logo.width = 100,
   custom.logo.height = 70,
   descending.order = FALSE,
-  modify.continuation.line = FALSE
+  modify.continuation.line = FALSE,
+  horizontal.yaxis = FALSE
 )
 
 \method{plot}{CMA2}(...)

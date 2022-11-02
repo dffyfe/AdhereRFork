@@ -1034,6 +1034,8 @@ print.CMA0 <- function(x,                                                  # the
 #' alphabetical order.
 #' @param modify.continuation.line a \emph{boolean}, Should continuation line be solid & black where there
 #' are gap days, solid & grey when there are not.
+#' @param horizontal.yaxis a \emph{boolean}, Should text on yaxis be horizontal? If \code{TRUE} text enclosed between
+#' tspanstart and tspanend will be on a second line. Distances from edge of plot are calculated using line 1.
 #' @param ... other possible parameters
 #' @examples
 #' cma0 <- CMA0(data=med.events,
@@ -1103,7 +1105,8 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
                       custom.logo.width = 100,         # CSS style width for custom logo in pixels
                       custom.logo.height = 70,          # CSS style height for custom logo in pixels
                       descending.order = FALSE,         # should y-axis be displayed in descending order
-                      modify.continuation.line = FALSE # should continuation line in svg show black only when there are gaps and grey all other times.
+                      modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
+                      horizontal.yaxis = FALSE        # Should y-axis be displayed horizontally? If TRUE tstart and tend in the text will take a new line for the text in between
 
 )
 {
@@ -1190,7 +1193,8 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
              custom.logo.width=custom.logo.width,
              custom.logo.height=custom.logo.height,
              descending.order=descending.order,
-             modify.continuation.line=modify.continuation.line)
+             modify.continuation.line=modify.continuation.line,
+             horizontal.yaxis=horizontal.yaxis)
 }
 
 
@@ -3370,6 +3374,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
                            custom.logo.height = 70,          # CSS style height for custom logo in pixels
                            descending.order = FALSE,        # should y-axis be displayed in descending order
                            modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
+                           horizontal.yaxis = FALSE,        # Should y-axis be displayed horizontally? If TRUE tstart and tend in the text will take a new line for the text in between
                            ...
 )
 {
@@ -3462,7 +3467,8 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
              custom.logo.width=custom.logo.width,
              custom.logo.height=custom.logo.height,
              descending.order=descending.order,
-             modify.continuation.line=modify.continuation.line);
+             modify.continuation.line=modify.continuation.line,
+             horizontal.yaxis=horizontal.yaxis);
 }
 
 
@@ -4143,7 +4149,8 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                       custom.logo.width = 100,         # CSS style width for custom logo in pixels
                       custom.logo.height = 70,          # CSS style height for custom logo in pixels
                       descending.order = FALSE,          # should y-axis be displayed in descending order
-                      modify.continuation.line = FALSE # should continuation line in svg show black only when there are gaps and grey all other times.
+                      modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
+                      horizontal.yaxis = FALSE        # Should y-axis be displayed horizontally? If TRUE tstart and tend in the text will take a new line for the text in between
 )
 {
   .plot.CMA1plus(cma=x,
@@ -4229,6 +4236,7 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                  custom.logo.height=custom.logo.height,
                  descending.order=descending.order,
                  modify.continuation.line=modify.continuation.line,
+                 horizontal.yaxis=horizontal.yaxis,
                  ...)
 }
 
@@ -9552,6 +9560,8 @@ print.CMA_per_episode <- function(x,                                     # the C
 #' alphabetical order.
 #' @param modify.continuation.line a \emph{boolean}, Should continuation line be solid & black where there
 #' are gap days, solid & grey when there are not.
+#' @param horizontal.yaxis a \emph{boolean}, Should text on yaxis be horizontal? If \code{TRUE} text enclosed between
+#' tspanstart and tspanend will be on a second line. Distances from edge of plot are calculated using line 1.
 #' @param ... other parameters (to be passed to the estimation and plotting of
 #' the simple CMA)
 #'
@@ -9666,6 +9676,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
                                  custom.logo.height = 70,          # CSS style height for custom logo in pixels
                                  descending.order = FALSE,        # should y-axis be displayed in descending order
                                  modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
+                                 horizontal.yaxis = FALSE,        # Should y-axis be displayed horizontally? If TRUE tstart and tend in the text will take a new line for the text in between
                                  ...
 )
 {
@@ -9770,7 +9781,8 @@ plot.CMA_per_episode <- function(x,                                     # the CM
              custom.logo.width=custom.logo.width,
              custom.logo.height=custom.logo.height,
              descending.order=descending.order,
-             modify.continuation.line=modify.continuation.line);
+             modify.continuation.line=modify.continuation.line,
+             horizontal.yaxis=horizontal.yaxis);
 }
 
 

@@ -410,6 +410,10 @@
                       id=NA, class=NA, comment=NA, tooltip=NA, js_tooltip=NA, # ID, comment and tooltip
                       newline=TRUE, # should a newline be added at the end?
                       return_string=FALSE, # return a singe string or a vector of strings to be concatenated later?
+                      yaxis.text=FALSE, # to be used with horizontal.yaxis, will stop < being changed to &lt etc.
+                      horizontal.yaxis=FALSE,
+                      dims.plot.x=NA, # to be used with horizontal.yaxis
+                      dims.chr.axis=NA, # to be used with horizontal.yaxis
                       suppress.warnings=FALSE
 )
 {
@@ -477,7 +481,11 @@
         '> ',
 
         # The text:
-        as.character(.SVG.specialchars.2.XMLentities(text[i])),
+        if ( horizontal.yaxis & yaxis.text & !is.na(dims.plot.x) & !is.na(dims.chr.axis) ) {
+          gsub("tspanend",'</tspan>',gsub("tspanstart",paste0('<tspan x="',(dims.plot.x - dims.chr.axis),'" dy="1em">'),as.character(.SVG.specialchars.2.XMLentities(text[i]))))
+        } else {
+          as.character(.SVG.specialchars.2.XMLentities(text[i]))
+        },
 
         # Add optional tooltip:
         if(!is.na(tooltip) && is.na(js_tooltip)) c(' <title>', tooltip, '</title>'), # the tooltip title must be first child
@@ -1068,6 +1076,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                        custom.logo.height = 70,         # CSS style height for custom logo in pixels
                        descending.order = FALSE,        # should y-axis be displayed in descending order
                        modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
+                       horizontal.yaxis = FALSE,        # Should y-axis be displayed horizontally? If TRUE tspanstart and tspanend in the text will take a new line for the text in between
                        ...
 )
 {
@@ -1108,6 +1117,16 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   if( modify.continuation.line ) {
     #change line type for modified continuation line from dotted to solid
     lty.continuation = "solid";
+  }
+
+  if( horizontal.yaxis ) {
+    #change rotation for y axis and for calculation of where yaxis should start
+    rotate.text.yaxis.svg <- -90
+    rotate.text.yaxis.r <- 0
+  } else
+  {
+    rotate.text.yaxis.svg <- rotate.text
+    rotate.text.yaxis.r <- rotate.text
   }
 
   # What sorts of plots to generate (use short names for short if statements):
@@ -2832,7 +2851,11 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     old.par <- par(no.readonly=TRUE);
 
     # Rotate the ID labels:
-    new.left.margin <- (y.label$height + (cos(-rotate.text*pi/180) * max(id.labels$width,na.rm=TRUE)) + strwidth("0000", units="inches", cex=cex.axis)); # ask for enough space
+    if ( horizontal.yaxis ) {
+      new.left.margin <- (y.label$height + (cos(-rotate.text.yaxis.r*pi/180) * max(strwidth(gsub("tspanstart.+tspanend", "", id.labels$string), units="inches", cex=cex.lab),na.rm=TRUE)) + strwidth("0000", units="inches", cex=cex.axis));
+    } else {
+      new.left.margin <- (y.label$height + (cos(-rotate.text.yaxis.r*pi/180) * max(id.labels$width,na.rm=TRUE)) + strwidth("0000", units="inches", cex=cex.axis));
+    }
     par(mai=c(cur.mai[1], new.left.margin, cur.mai[3], cur.mai[4]));
   }
 
@@ -2918,8 +2941,13 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     dims.day              <- ifelse(duration.total <= 90, 1, ifelse(duration.total <= 365, 7, ifelse(duration.total <= 3*365, 30, ifelse(duration.total <= 10*365, 90, 180)))); # how many days correspond to one horizontal user unit (depends on how many days there are in total)
     dims.axis.x           <- dims.chr.std + dims.chr.lab +
       (cos(-rotate.text*pi/180) * max(vapply(as.character(date.labels$string), function(s) .SVG.string.dims(s, font_size=dims.chr.axis)["width"], numeric(1)),na.rm=TRUE));
-    dims.axis.y           <- dims.chr.std + dims.chr.lab +
-      (sin(-rotate.text*pi/180) * max(vapply(as.character(id.labels$string), function(s) .SVG.string.dims(s, font_size=dims.chr.axis)["width"], numeric(1)),na.rm=TRUE));
+    if( horizontal.yaxis ){
+      dims.axis.y           <- dims.chr.std + dims.chr.lab +
+        (sin(-(rotate.text.yaxis.svg)*pi/180) * max(vapply(as.character(gsub("tspanstart.+tspanend","",id.labels$string)), function(s) .SVG.string.dims(s, font_size=dims.chr.axis)["width"], numeric(1)),na.rm=TRUE));
+    } else {
+      dims.axis.y           <- dims.chr.std + dims.chr.lab +
+        (sin(-(rotate.text.yaxis.svg)*pi/180) * max(vapply(as.character(id.labels$string), function(s) .SVG.string.dims(s, font_size=dims.chr.axis)["width"], numeric(1)),na.rm=TRUE));
+    }
     dims.plot.x           <- (dims.axis.y + dims.chr.std);
     dims.plot.y           <- (dims.chr.title + dims.chr.std);
     dims.plot.width       <- (dims.event.x * (duration.total + 10)/dims.day);
@@ -3276,6 +3304,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       "logo.to.use"=logo.to.use,
       "custom.logo.width"=custom.logo.width,
       "custom.logo.height"=custom.logo.height,
+      "horizontal.yaxis" = horizontal.yaxis,
       #"modify.continuation.line"=modify.continuation.line,
 
       # Computed things:
@@ -3676,7 +3705,8 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       y.mean <- y.cur + vspace.needed.total/2 - ifelse(plot.events.vertically.displaced, 0.0, 0.5); # vertical position of the label (centered on patient)
       if( .do.R ) # Rplot:
       {
-        text(par("usr")[1], y.mean, pid, cex=cex.axis, srt=-rotate.text, pos=2, xpd=TRUE);
+        text(par("usr")[1], y.mean, if( horizontal.yaxis ) gsub("tspanend", "", gsub("tspanstart", "\n", pid)) else pid,
+             cex=cex.axis, srt=-rotate.text.yaxis.r, pos=2, xpd=TRUE);
 
         # Save the info:
         .last.cma.plot.info$baseR$y.labels <- rbind(.last.cma.plot.info$baseR$y.labels,
@@ -3685,12 +3715,15 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                                                                "y"=y.mean,
                                                                "cex"=cex.axis));
       }
+
+
       if( .do.SVG ) # SVG:
       {
         svg.str[[length(svg.str)+1]] <-
           .SVG.text(x=(dims.plot.x - dims.chr.axis), y=.scale.y.to.SVG.plot(y.cur + vspace.needed.total/2), text=pid,
-                    font_size=dims.chr.axis, h.align="right", v.align="center", rotate=-(90+rotate.text),
-                    class="axis-labels-y", comment="The y-axis labels", suppress.warnings=suppress.warnings);
+                    font_size=dims.chr.axis, h.align="right", v.align="center", rotate=-(90+rotate.text.yaxis.svg),
+                    class="axis-labels-y", comment="The y-axis labels", yaxis.text = TRUE, horizontal.yaxis = horizontal.yaxis,
+                    dims.plot.x = dims.plot.x, dims.chr.axis = dims.chr.axis, suppress.warnings=suppress.warnings);
 
         # Save the info:
         .last.cma.plot.info$SVG$y.labels <- rbind(.last.cma.plot.info$SVG$y.labels,
