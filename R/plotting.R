@@ -4299,10 +4299,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                   .last.cma.plot.info$baseR$cma$data[i,".X.CNT.END"],   .last.cma.plot.info$baseR$cma$data[i,".Y.CNT.START"],
                   col=if(.last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW && modify.continuation.line)
                         {
-                          if(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
                         } else if ((inherits(.last.cma.plot.info$baseR$cma, "CMA7") || inherits(.last.cma.plot.info$baseR$cma, "CMA10")  || inherits(.last.cma.plot.info$baseR$cma, "CMA11")) && modify.continuation.line)
                         {
-                          if(.last.cma.plot.info$SVG$baseR$event.info[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$event.info[i,"gap.days"]) && .last.cma.plot.info$baseR$event.info[i,"gap.days"]>0) col.continuation else "gray";
                         } else
                         {
                           col.continuation
@@ -4312,10 +4312,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                   .last.cma.plot.info$baseR$cma$data[i,".X.CNT.END"], .last.cma.plot.info$baseR$cma$data[i,".Y.CNT.END"],
                   col=if(.last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW && modify.continuation.line)
                         {
-                          if(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
                         } else if ((inherits(.last.cma.plot.info$baseR$cma, "CMA7") || inherits(.last.cma.plot.info$baseR$cma, "CMA10")  || inherits(.last.cma.plot.info$baseR$cma, "CMA11")) && modify.continuation.line)
                         {
-                          if(.last.cma.plot.info$SVG$baseR$event.info[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$event.info[i,"gap.days"]) && .last.cma.plot.info$baseR$event.info[i,"gap.days"]>0) col.continuation else "gray";
                         } else
                         {
                           col.continuation
@@ -4340,31 +4340,57 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                          .last.cma.plot.info$SVG$cma$data[i,".Y.CNT.END"]),
                      connected=TRUE,
                      #stroke=if(.last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray",#col.continuation,
-                     stroke=if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW && modify.continuation.line)
-                               {
-                                 if(.last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
-                               } else if ((inherits(.last.cma.plot.info$SVG$cma, "CMA7") || inherits(.last.cma.plot.info$SVG$cma, "CMA10")  || inherits(.last.cma.plot.info$SVG$cma, "CMA11")) && modify.continuation.line)
-                               {
-                                 if(.last.cma.plot.info$SVG$cma$event.info[i,"gap.days"]>0) col.continuation else "gray";
-                               } else
-                               {
-                                 col.continuation
-                               },
+                     stroke= if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW && modify.continuation.line)
+                             {
+                               if(!is.na(.last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
+                             } else if ((inherits(.last.cma.plot.info$SVG$cma, "CMA7") || inherits(.last.cma.plot.info$SVG$cma, "CMA10")  || inherits(.last.cma.plot.info$SVG$cma, "CMA11")) && modify.continuation.line)
+                             {
+                               if(!is.na(.last.cma.plot.info$SVG$cma$event.info[i,"gap.days"]>0) && .last.cma.plot.info$SVG$cma$event.info[i,"gap.days"]>0) col.continuation else "gray";
+                             } else
+                             {
+                               col.continuation
+                             },
                      stroke_width=lwd.continuation, lty=lty.continuation,
                      class=paste0("continuation-line",if(!is.na(med.class.svg)) paste0("-",med.class.svg)),
                      #tooltip showing how much is carried over to the next event before and in the OW, carryover after the OW will show NA
-                     js_tooltip=if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW)
+                     js_tooltip= if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW)
                                   {
-                                    paste0(sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"]), " day(s) carried from last event, ",
-                                           sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i, "gap.days"]), " day(s) not covered.")
+                                    if(is.na(.last.cma.plot.info$SVG$cma$event.info.cma[i, "gap.days"]))
+                                    {
+                                      NA;
+                                    } else
+                                    {
+                                      if(is.na(.last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"]))
+                                      {
+                                        paste0(sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i, "gap.days"]), " day(s) not covered.")
+                                      } else
+                                      {
+                                        paste0(sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i+1, ".CARRY.OVER.FROM.BEFORE"]), " day(s) carried from last event, ",
+                                               sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info.cma[i, "gap.days"]), " day(s) not covered.")
+                                      }
+                                    }
+
                                   #} else if (.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10"))
                                   } else if (inherits(.last.cma.plot.info$SVG$cma, "CMA7") || inherits(.last.cma.plot.info$SVG$cma, "CMA10")  || inherits(.last.cma.plot.info$SVG$cma, "CMA11"))
                                   {
-                                    paste0(sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info[i+1, ".CARRY.OVER.FROM.BEFORE"]), " day(s) carried from last event, ",
-                                           sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info[i, "gap.days"]), " day(s) not covered.")
+                                    if(is.na(.last.cma.plot.info$SVG$cma$event.info[i, "gap.days"]))
+                                    {
+                                      NA;
+                                    } else
+                                    {
+                                      if(is.na(.last.cma.plot.info$SVG$cma$event.info[i+1, ".CARRY.OVER.FROM.BEFORE"]))
+                                      {
+                                        paste0(sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info[i, "gap.days"]), " day(s) not covered.")
+                                      } else
+                                      {
+                                        paste0(sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info[i+1, ".CARRY.OVER.FROM.BEFORE"]), " day(s) carried from last event, ",
+                                               sprintf("%.f",.last.cma.plot.info$SVG$cma$event.info[i, "gap.days"]), " day(s) not covered.")
+                                      }
+                                    }
+
                                   } else
                                   {
-                                    NA
+                                    NA;
                                   }, #is else NA needed?
                      suppress.warnings=suppress.warnings);
       }
