@@ -1074,14 +1074,14 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                        logo.to.use = "AdhereR",         # path to logo to use or if left as "AdhereR" adhereR logo
                        custom.logo.width = 100,         # CSS style width for custom logo in pixels
                        custom.logo.height = 70,         # CSS style height for custom logo in pixels
-                       descending.order = FALSE,        # should y-axis be displayed in descending order
+                       descending.order = FALSE,        # should y-axis be displayed in descending order, if patients.to.plot is not null; it takes precedence.
                        modify.continuation.line = FALSE, # should continuation line in svg show black only when there are gaps and grey all other times.
                        horizontal.yaxis = FALSE,        # Should y-axis be displayed horizontally? If TRUE tspanstart and tspanend in the text will take a new line for the text in between
                        ...
 )
 {
   # Reversing all the data tables is the imput is descending.order TRUE
-  if( (inherits(cma, "CMA_per_episode") || inherits(cma, "CMA_sliding_window")) && descending.order ) {
+  if( (inherits(cma, "CMA_per_episode") || inherits(cma, "CMA_sliding_window")) && descending.order && is.null(patients.to.plot) ) {
     #setorderv(cma$event.info, cma$ID.colname, -1)
     cma$event.info <- cma$event.info[order(cma$event.info[,cma$ID.colname], decreasing = TRUE),]
     #setorderv(cma$CMA, cma$ID.colname, -1)
@@ -1090,28 +1090,43 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     cma$event.info.cma <- cma$event.info.cma[order(cma$event.info.cma[,cma$ID.colname], as.numeric(cma$event.info.cma[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
     #setorderv(cma$data, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
     cma$data <- cma$data[order(cma$data[,cma$ID.colname], as.numeric(cma$data[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
-  } else if( descending.order) {
+  } else if( descending.order && is.null(patients.to.plot) ) {
     #setorderv(cma$event.info, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
     cma$event.info <- cma$event.info[order(cma$event.info[,cma$ID.colname], as.numeric(cma$event.info[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
     #setorderv(cma$CMA, cma$ID.colname, -1)
     cma$CMA <- cma$CMA[order(cma$CMA[,cma$ID.colname], decreasing = TRUE),]
     #setorderv(cma$data, c(cma$ID.colname, cma$event.date.colname), c(-1,1))
     cma$data <- cma$data[order(cma$data[,cma$ID.colname], as.numeric(cma$data[,cma$event.date.colname]), decreasing = c(TRUE, FALSE), method="radix"),]
+  } else if ((inherits(cma, "CMA_per_episode") || inherits(cma, "CMA_sliding_window")) && !is.null(patients.to.plot)) {
+    cma$event.info <- cma$event.info[order(factor(cma$event.info[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$event.info[,cma$ID.colname]])),]
+    cma$CMA <- cma$CMA[order(factor(cma$CMA[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$CMA[,cma$ID.colname]])),]
+    cma$event.info.cma <- cma$event.info.cma[order(factor(cma$event.info.cma[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$event.info.cma[,cma$ID.colname]]), as.numeric(cma$event.info.cma[,cma$event.date.colname])),]
+    cma$data <- cma$data[order(factor(cma$data[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$data[,cma$ID.colname]]), as.numeric(cma$data[,cma$event.date.colname])),]
+  } else if ( !is.null(patients.to.plot) ) {
+    cma$event.info <- cma$event.info[order(factor(cma$event.info[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$event.info[,cma$ID.colname]]), as.numeric(cma$event.info[,cma$event.date.colname])),]
+    cma$CMA <- cma$CMA[order(factor(cma$CMA[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$CMA[,cma$ID.colname]])),]
+    cma$data <- cma$data[order(factor(cma$data[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$data[,cma$ID.colname]]), as.numeric(cma$data[,cma$event.date.colname])),]
   }
 
-  if( !is.null(cma$Leftover) && descending.order ) {
+  if( !is.null(cma$Leftover) && descending.order && is.null(patients.to.plot) ) {
     #setorderv(cma$Leftover, cma$ID.colname, -1)
     cma$Leftover <- cma$Leftover[order(cma$Leftover[,cma$ID.colname], decreasing = TRUE),]
+  } else if ( !is.null(cma$Leftover) && !is.null(patients.to.plot) ) {
+    cma$Leftover <- cma$Leftover[order(factor(cma$Leftover[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$Leftover[,cma$ID.colname]])),]
   }
 
-  if( !is.null(cma$Gaps) && descending.order ) {
+  if( !is.null(cma$Gaps) && descending.order && is.null(patients.to.plot) ) {
     #setorderv(cma$Gaps, cma$ID.colname, -1)
     cma$Gaps <- cma$Gaps[order(cma$Gaps[,cma$ID.colname], decreasing = TRUE),]
+  } else if ( !is.null(cma$Gaps) && !is.null(patients.to.plot) ) {
+    cma$Gaps <- cma$Gaps[order(factor(cma$Gaps[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$Leftover[,cma$ID.colname]])),]
   }
 
-  if( !is.null(cma$real.obs.window) && descending.order ) {
+  if( !is.null(cma$real.obs.window) && descending.order && is.null(patients.to.plot) ) {
     #setorderv(cma$real.obs.window, cma$ID.colname, -1)
     cma$real.obs.window <- cma$real.obs.window[order(cma$real.obs.window[,cma$ID.colname], decreasing = TRUE),]
+  } else if ( !is.null(cma$real.obs.window) && !is.null(patients.to.plot) ) {
+    cma$real.obs.window <- cma$real.obs.window[order(factor(cma$real.obs.window[,cma$ID.colname], levels=patients.to.plot[patients.to.plot %in% cma$real.obs.window[,cma$ID.colname]])),]
   }
 
   if( modify.continuation.line ) {
@@ -2135,6 +2150,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   #
 
   # The patients:
+  patients.to.plot <- patients.to.plot[ !duplicated(patients.to.plot) ]; # remove duplicates keeping the order
   patids <- unique(as.character(cma$data[,col.patid])); patids <- patids[!is.na(patids)];
   if( !is.null(patients.to.plot) ) patids <- intersect(patids, as.character(patients.to.plot));
   if( length(patids) == 0 )
@@ -2573,7 +2589,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   }
 
   # Make sure the patients are ordered correctly (ascending if descending.order = FALSE) by ID, medication group (if the case), and date:
-  if ( descending.order ) {
+  if ( descending.order && is.null(patients.to.plot) ) {
     patids <- patids[ rev(order(patids)) ];
     if( !cma.mg )
     {
@@ -2591,6 +2607,13 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
       cmas <- cmas[ order( cmas[,col.patid], decreasing = TRUE), ];
     }
   } else {
+    if( !is.null(patients.to.plot) && any(patients.to.plot %in% patids) )
+    {
+      # Respect the order given in patients.to.plot by converting everything to factor with a given levels order:
+      cma$data[,col.patid] <- factor(cma$data[,col.patid], levels=patients.to.plot[patients.to.plot %in% cma$data[,col.patid]]);
+      if( cma.mg ) patmgids[,col.patid] <- factor(patmgids[,col.patid], levels=patients.to.plot[patients.to.plot %in% patmgids[,col.patid]]);
+      cmas[,col.patid] <- factor(cmas[,col.patid], levels=patients.to.plot[patients.to.plot %in% cmas[,col.patid]]);
+    }
     patids <- patids[ order(patids) ];
     if( !cma.mg )
     {
