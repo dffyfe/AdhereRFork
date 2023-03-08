@@ -18,21 +18,21 @@ color: red;
 }
 
 table {
-margin: 5px;
-border-spacing: 0px;
-border-collapse: collapse;
-border: #3c8dbc;
-border-width: 3px;
-border-style: solid;
-font-size: 16px;
-white-space: nowrap;
-}
-
-thead tr {
-  border: #3c8dbc;
+  margin: 5px;
+  border-spacing: 0px;
+  border-collapse: collapse;
+  border: #75a0e6;
   border-width: 3px;
   border-style: solid;
-  background-color: #aba3a2;
+  font-size: 16px;
+  white-space: nowrap;
+}
+  
+thead tr {
+    border: #75a0e6;
+    border-width: 3px;
+    border-style: solid;
+    background-color: #aba3a2;
 } 
 
 td {
@@ -94,25 +94,22 @@ padding: 5px;
 }
 
 .tabcontent.graph {
-display: none;
-border: solid #ccd9ff;
+  display: none;
+  border: solid rgb(117, 160, 230);
 } 
-
+  
 .tabcontent.table {
-display: none;
-border: solid #9BB4FC;
+  display: none;
+  border: solid rgb(117, 160, 230);
 } 
 
 .clear_btn {
 color: red;
 }
 
-.tablink.button_graph.active {
-background-color: #ccd9ff;
-}
-
-.tablink.button_data.active {
-background-color: #9BB4FC;
+.tablink.button_graph.active,  .tablink.button_data.active {
+  background-color: #d3368a;
+  color: rgb(255,255,255);
 }
 
 .zoomBox {
@@ -134,7 +131,21 @@ white-space: pre-wrap;
 }
 
 button {
-padding: 5px;
+  padding: 5px;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: #cacbcf;
+  border-style: solid;
+}
+
+button:hover {
+  background-color: #fa6bb8;
+  color: rgb(255,255,255);
+}
+
+button:active {
+  background-color: #fa3ea3;
+  color: rgb(255,255,255);
 }
 
 .arrow {
@@ -198,8 +209,8 @@ fill: #00b36b; /* #99ffd6; */
 }
 
 .wrapper .section .top_bar{
-  background-color: #3c8dbc;
-  height: 60px;
+  background-color: #d3368a;
+  height: 10px; /* previously 60px */
   align-items: center;
   display: flex;
   padding: 0 30px;
