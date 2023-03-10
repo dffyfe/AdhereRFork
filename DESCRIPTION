@@ -30,7 +30,7 @@ Description: Computation of adherence to medications from Electronic Health care
 URL: https://github.com/dffyfe/AdhereRFork
 License: GPL (>= 2)
 LazyData: TRUE
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     lubridate (>= 1.5),
     parallel (>= 3.0),

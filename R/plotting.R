@@ -2639,7 +2639,6 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   # Grayscale plotting:
   if( bw.plot )
   {
-      cat("bw line run");
       if( is.function(col.cats) ) col.cats <- .bw.colors else col.cats <- gray(0.1);
       followup.window.col <- "black";
       observation.window.col <- gray(0.3);

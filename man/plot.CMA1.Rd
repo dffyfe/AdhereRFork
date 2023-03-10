@@ -29,6 +29,7 @@
   legend.bkg.opacity = 0.5,
   legend.cex = 0.75,
   legend.cex.title = 1,
+  cex.title = 1.5,
   cex = 1,
   cex.axis = 0.75,
   cex.lab = 1,
@@ -164,7 +165,7 @@ drawn (or 0 for no grid).}
 \item{legend.bkg.opacity}{A \emph{number} between 0.0 and 1.0 specifying the
 opacity of the legend background.}
 
-\item{cex, cex.axis, cex.lab, legend.cex, legend.cex.title, CMA.cex}{\emph{numeric}
+\item{cex.title, cex, cex.axis, cex.lab, legend.cex, legend.cex.title, CMA.cex}{\emph{numeric}
 values specifying the \code{cex} of the various types of text.}
 
 \item{show.cma}{\emph{Logical}, should the CMA type be shown in the title?}
@@ -333,7 +334,7 @@ in html output.}
 in html output.}
 
 \item{descending.order}{a \emph{boolean}, should the y-axis by displayed in descending
-alphabetical order.}
+alphabetical order, if patients.to.plot is not null; it takes precedence.}
 }
 \description{
 Plots the event data and estimated CMA encapsulated in objects derived from

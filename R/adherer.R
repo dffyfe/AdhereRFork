@@ -922,7 +922,7 @@ print.CMA0 <- function(x,                                                  # the
 #' (default), "top", or a \emph{numeric} value.
 #' @param legend.bkg.opacity A \emph{number} between 0.0 and 1.0 specifying the
 #' opacity of the legend background.
-#' @param cex,cex.axis,cex.lab,legend.cex,legend.cex.title \emph{numeric} values
+#' @param cex.title,cex,cex.axis,cex.lab,legend.cex,legend.cex.title \emph{numeric} values
 #' specifying the cex of the various types of text.
 #' @param xlab Named vector of x-axis labels to show for the two types of periods
 #' ("days" and "dates"), or a single value for both, or \code{NULL} for nothing.
@@ -1064,7 +1064,7 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
                       show.period=c("dates","days")[2],      # draw vertical bars at regular interval as dates or days?
                       period.in.days=90,                     # the interval (in days) at which to draw veritcal lines
                       show.legend=TRUE, legend.x="right", legend.y="bottom", legend.bkg.opacity=0.5, legend.cex=0.75, legend.cex.title=1.0, # legend params and position
-                      cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
+                      cex.title=1.5, cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
                       xlab=c("dates"="Date", "days"="Days"), # Vector of x labels to show for the two types of periods, or a single value for both, or NULL for nothing
                       ylab=c("withoutCMA"="patient", "withCMA"="patient (& CMA)"), # Vector of y labels to show without and with CMA estimates, or a single value for both, or NULL ofr nonthing
                       title=c("aligned"="Event patterns (all patients aligned)", "notaligned"="Event patterns"), # Vector of titles to show for and without alignment, or a single value for both, or NULL for nonthing
@@ -1123,6 +1123,7 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
              legend.bkg.opacity=legend.bkg.opacity,
              legend.cex=legend.cex,
              legend.cex.title=legend.cex.title,
+             cex.title=cex.title,
              cex=cex,
              cex.axis=cex.axis,
              cex.lab=cex.lab,
@@ -3325,8 +3326,8 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
                            align.all.patients=FALSE, align.first.event.at.zero=TRUE, # should all patients be aligned? and, if so, place the first event as the horizintal 0?
                            show.period=c("dates","days")[2],      # draw vertical bars at regular interval as dates or days?
                            period.in.days=90,                     # the interval (in days) at which to draw veritcal lines
-                           show.legend=TRUE, legend.x="right", legend.y="bottom", legend.bkg.opacity=0.5, legend.cex=0.75, legend.cex.title=1.0, # legend params and position
-                           cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
+                           show.legend=TRUE, legend.x="right", legend.y="bottom", legend.bkg.opacity=0.5, legend.cex=0.75, legend.cex.title=1.0,  # legend params and position
+                           cex.title=1.5, cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
                            show.cma=TRUE,                         # show the CMA type
                            xlab=c("dates"="Date", "days"="Days"), # Vector of x labels to show for the two types of periods, or a single value for both, or NULL for nothing
                            ylab=c("withoutCMA"="patient", "withCMA"="patient (& CMA)"), # Vector of y labels to show without and with CMA estimates, or a single value for both, or NULL ofr nonthing
@@ -3391,6 +3392,7 @@ compute.treatment.episodes <- function( data, # this is a per-event data.frame w
              legend.bkg.opacity=legend.bkg.opacity,
              legend.cex=legend.cex,
              legend.cex.title=legend.cex.title,
+             cex.title=cex.title,
              cex=cex,
              cex.axis=cex.axis,
              cex.lab=cex.lab,
@@ -3959,7 +3961,7 @@ print.CMA1 <- function(...) print.CMA0(...)
 #' (default), "top", or a \emph{numeric} value.
 #' @param legend.bkg.opacity A \emph{number} between 0.0 and 1.0 specifying the
 #' opacity of the legend background.
-#' @param cex,cex.axis,cex.lab,legend.cex,legend.cex.title,CMA.cex \emph{numeric}
+#' @param cex.title,cex,cex.axis,cex.lab,legend.cex,legend.cex.title,CMA.cex \emph{numeric}
 #' values specifying the \code{cex} of the various types of text.
 #' @param show.cma \emph{Logical}, should the CMA type be shown in the title?
 #' @param col.cats A \emph{color} or a \emph{function} that specifies the single
@@ -4106,8 +4108,8 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                       align.all.patients=FALSE, align.first.event.at.zero=TRUE, # should all patients be aligned? and, if so, place the first event as the horizintal 0?
                       show.period=c("dates","days")[2],      # draw vertical bars at regular interval as dates or days?
                       period.in.days=90,                     # the interval (in days) at which to draw veritcal lines
-                      show.legend=TRUE, legend.x="right", legend.y="bottom", legend.bkg.opacity=0.5, legend.cex=0.75, legend.cex.title=1.0, # legend params and position
-                      cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
+                      show.legend=TRUE, legend.x="right", legend.y="bottom", legend.bkg.opacity=0.5, legend.cex=0.75, legend.cex.title=1.0,  # legend params and position
+                      cex.title=1.5, cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
                       show.cma=TRUE,                         # show the CMA type
                       col.cats=rainbow,                      # single color or a function mapping the categories to colors
                       unspecified.category.label="drug",     # the label of the unspecified category of medication
@@ -4166,6 +4168,7 @@ plot.CMA1 <- function(x,                                     # the CMA1 (or deri
                  legend.bkg.opacity=legend.bkg.opacity,
                  legend.cex=legend.cex,
                  legend.cex.title=legend.cex.title,
+                 cex.title=cex.title,
                  cex=cex,
                  cex.axis=cex.axis,
                  cex.lab=cex.lab,
@@ -9412,7 +9415,7 @@ print.CMA_per_episode <- function(x,                                     # the C
 #' @param legend.bkg.opacity A \emph{number} between 0.0 and 1.0 specifying the
 #' opacity of the legend background.
 #' @param legend.cex,legend.cex.title The legend and legend title font sizes.
-#' @param cex,cex.axis,cex.lab \emph{numeric} values specifying the cex of the
+#' @param cex.title,cex,cex.axis,cex.lab \emph{numeric} values specifying the cex of the
 #' various types of text.
 #' @param show.cma \emph{Logical}, should the CMA type be shown in the title?
 #' @param xlab Named vector of x-axis labels to show for the two types of periods
@@ -9616,7 +9619,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
                                  show.period=c("dates","days")[2],      # draw vertical bars at regular interval as dates or days?
                                  period.in.days=90,                     # the interval (in days) at which to draw veritcal lines
                                  show.legend=TRUE, legend.x="right", legend.y="bottom", legend.bkg.opacity=0.5, legend.cex=0.75, legend.cex.title=1.0, # legend params and position
-                                 cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
+                                 cex.title=1.5,cex=1.0, cex.axis=0.75, cex.lab=1.0,   # various graphical params
                                  show.cma=TRUE,                         # show the CMA type
                                  xlab=c("dates"="Date", "days"="Days"), # Vector of x labels to show for the two types of periods, or a single value for both, or NULL for nothing
                                  ylab=c("withoutCMA"="patient", "withCMA"="patient (& CMA)"), # Vector of y labels to show without and with CMA estimates, or a single value for both, or NULL ofr nonthing
@@ -9693,6 +9696,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
              legend.bkg.opacity=legend.bkg.opacity,
              legend.cex=legend.cex,
              legend.cex.title=legend.cex.title,
+             cex.title=cex.title,
              cex=cex,
              cex.axis=cex.axis,
              cex.lab=cex.lab,
