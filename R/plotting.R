@@ -140,7 +140,7 @@
   }
 
   if(!is.na(tooltip)) tooltip <- .SVG.specialchars.2.XMLentities(tooltip); # make sure special chars in tooltip are treated correctly
-  if(!is.na(js_tooltip) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
+  if(all(!is.na(js_tooltip)) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
 
   # Process lty first:
   if( !is.na(lty) )
@@ -207,7 +207,7 @@
   }
 
   if(!is.na(tooltip)) tooltip <- .SVG.specialchars.2.XMLentities(tooltip); # make sure special chars in tooltip are treated correctly
-  if(!is.na(js_tooltip) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
+  if(all(!is.na(js_tooltip)) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
 
   if(connected)
   {
@@ -307,8 +307,8 @@
           if(!is.na(stroke)) c('stroke="', .SVG.color(stroke), '" '),
           if(!is.na(stroke_width)) c('stroke-width="',stroke_width,'" '),
           if(!is.na(stroke_dasharray)) c('stroke-dasharray="',stroke_dasharray,'" '),
-          if(!is.na(js_tooltip) && length(js_tooltip)==1) c('onmousemove="adh_svg.show_tooltip(evt, \'', js_tooltip, '\');" onmouseout="adh_svg.hide_tooltip();"'),
-          if(!is.na(js_tooltip) && length(js_tooltip)==length(x)/2 && length(js_tooltip) != 1) c('onmousemove="adh_svg.show_tooltip(evt, \'', js_tooltip[(i+1)/2], '\');" onmouseout="adh_svg.hide_tooltip();"'), #accounting for doing multiple lines at once each with a different tooltip
+          if(all(!is.na(js_tooltip)) && length(js_tooltip)==1) c('onmousemove="adh_svg.show_tooltip(evt, \'', js_tooltip, '\');" onmouseout="adh_svg.hide_tooltip();"'),
+          if(all(!is.na(js_tooltip)) && length(js_tooltip)==length(x)/2 && length(js_tooltip) != 1) c('onmousemove="adh_svg.show_tooltip(evt, \'', js_tooltip[(i+1)/2], '\');" onmouseout="adh_svg.hide_tooltip();"'), #accounting for doing multiple lines at once each with a different tooltip
           # Other parameters:
           if(!is.na(other_params)) other_params,
 
@@ -340,7 +340,7 @@
   }
 
   if(!is.na(tooltip)) tooltip <- .SVG.specialchars.2.XMLentities(tooltip); # make sure special chars in tooltip are treated correctly
-  if(!is.na(js_tooltip) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
+  if(all(!is.na(js_tooltip)) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
 
   # Make sure the point attributes are correctly distributed:
   if( length(pch) != length(x) ) pch <- rep(pch[1], length(x));
@@ -425,7 +425,7 @@
   }
 
   if(!is.na(tooltip)) tooltip <- .SVG.specialchars.2.XMLentities(tooltip); # make sure special chars in tooltip are treated correctly
-  if(!is.na(js_tooltip) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
+  if(all(!is.na(js_tooltip)) && TRUE) js_tooltip <- .SVG.specialchars.2.XMLentities(js_tooltip); # make sure special chars in tooltip are treated correctly, the && TRUE is to silence the the 'the condition has length > 1...' error
 
   # Make sure the attributes are correctly distributed:
   if( length(col) != length(x) ) col <- rep(col[1], length(x));
@@ -5698,7 +5698,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                              html.template, fixed=TRUE);
 
         #Add an html table for the columns in cma$data selected
-        if (!is.na(html.plot.colnames) && html.plot.colnames %in% colnames(cma$data)) {
+        if (all(!is.na(html.plot.colnames)) && all(html.plot.colnames %in% colnames(cma$data))) {
           # prettynum to turn into clean rounded number (as string) instead of scientific notation (depending on R options)
           cma$data[html.plot.colnames] <- lapply(cma$data[html.plot.colnames], function(x) if(is.numeric(x)) {prettyNum(x)} else{x})
           html.template <- sub(paste0('<!--Table ', html.plot.number, ' placeholder-->'), # sub the table for this plot number (if requested)
