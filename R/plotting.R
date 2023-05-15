@@ -3621,7 +3621,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                       width=.scale.width.to.SVG.plot(as.numeric(cmas$.FU.END.DATE[s.cmas[1]] - cmas$.FU.START.DATE[s.cmas[1]])),
                       height=.scale.height.to.SVG.plot(vspace.needed.events),
                       stroke=followup.window.col, stroke_width=2, lty="dashed", fill="white", fill_opacity=0.0, # fully transparent but tooltips also work
-                      class="fuw", comment="The Follow-Up Window (FUW)", js_tooltip="Follow-Up Window (FUW)");
+                      class="fuw", comment="The Follow-Up Window (FUW)", js_tooltip="Review timeframe");
         }
       }
       if( highlight.observation.window )
@@ -3656,7 +3656,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                       width=.scale.width.to.SVG.plot(as.numeric(cmas$.OBS.END.DATE[s.cmas[1]] - cmas$.OBS.START.DATE[s.cmas[1]])),
                       height=.scale.height.to.SVG.plot(vspace.needed.events),
                       stroke="none", fill=observation.window.col, fill_opacity=observation.window.opacity,
-                      class="ow", comment="The Observation Window (OW)", js_tooltip="Observation Window (OW)");
+                      class="ow", comment="The Observation Window (OW)", js_tooltip="Calculation timeframe");
         }
 
         if( !is.null(cma.realOW) )
