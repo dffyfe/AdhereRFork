@@ -3621,7 +3621,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                       width=.scale.width.to.SVG.plot(as.numeric(cmas$.FU.END.DATE[s.cmas[1]] - cmas$.FU.START.DATE[s.cmas[1]])),
                       height=.scale.height.to.SVG.plot(vspace.needed.events),
                       stroke=followup.window.col, stroke_width=2, lty="dashed", fill="white", fill_opacity=0.0, # fully transparent but tooltips also work
-                      class="fuw", comment="The Follow-Up Window (FUW)", js_tooltip="Review timeframe - any additional supply from this<br>period is carried over to the adherence timeframe<br>and included in the adherence calculation.");
+                      class="fuw", comment="The Follow-Up Window (FUW)", js_tooltip="Review timeframe - any additional supply from this<br>period is carried over to the calculation timeframe<br>and included in the adherence calculation.");
         }
       }
       if( highlight.observation.window )
