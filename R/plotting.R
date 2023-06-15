@@ -1030,7 +1030,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                        print.dose=FALSE, cex.dose=0.75, print.dose.col="black", print.dose.outline.col="white", print.dose.centered=FALSE, # print daily dose
                        plot.dose=FALSE, lwd.event.max.dose=8, plot.dose.lwd.across.medication.classes=FALSE, # draw daily dose as line width
                        col.na="lightgray",                    # color for missing data
-                       col.continuation="black", lty.continuation="dotted", lwd.continuation=1, # style of the continuation lines connecting consecutive events
+                       col.continuation="#ed940e", lty.continuation="dotted", lwd.continuation=1, # style of the continuation lines connecting consecutive events
                        print.CMA=TRUE, CMA.cex=0.50, # print CMA next to the participant's ID?
                        plot.CMA=TRUE,                   # plot the CMA next to the participant ID?
                        plot.CMA.as.histogram=TRUE,      # plot CMA as a histogram or as a density plot?
@@ -2989,7 +2989,8 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
     }
 
     # Total size needed:
-    dims.total.width      <- (dims.plot.x + max(dims.plot.width,  dims.legend.width));
+    #dims.total.width      <- (dims.plot.x + max(dims.plot.width,  dims.legend.width));
+    dims.total.width      <- max(dims.plot.x + dims.plot.width,  dims.legend.width);
     dims.total.height     <- (dims.plot.y + max(dims.plot.height, dims.legend.height) + dims.axis.x);
 
     # Do we need to adjust for an extra large legend?
@@ -4321,10 +4322,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                   .last.cma.plot.info$baseR$cma$data[i,".X.CNT.END"],   .last.cma.plot.info$baseR$cma$data[i,".Y.CNT.START"],
                   col=if(.last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW && modify.continuation.line)
                         {
-                          if(!is.na(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "#4ebf5c";
                         } else if ((inherits(.last.cma.plot.info$baseR$cma, "CMA7") || inherits(.last.cma.plot.info$baseR$cma, "CMA10")  || inherits(.last.cma.plot.info$baseR$cma, "CMA11")) && modify.continuation.line)
                         {
-                          if(!is.na(.last.cma.plot.info$baseR$event.info[i,"gap.days"]) && .last.cma.plot.info$baseR$event.info[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$event.info[i,"gap.days"]) && .last.cma.plot.info$baseR$event.info[i,"gap.days"]>0) col.continuation else "#4ebf5c";
                         } else
                         {
                           col.continuation
@@ -4334,10 +4335,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                   .last.cma.plot.info$baseR$cma$data[i,".X.CNT.END"], .last.cma.plot.info$baseR$cma$data[i,".Y.CNT.END"],
                   col=if(.last.cma.plot.info$baseR$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW && modify.continuation.line)
                         {
-                          if(!is.na(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$baseR$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "#4ebf5c";
                         } else if ((inherits(.last.cma.plot.info$baseR$cma, "CMA7") || inherits(.last.cma.plot.info$baseR$cma, "CMA10")  || inherits(.last.cma.plot.info$baseR$cma, "CMA11")) && modify.continuation.line)
                         {
-                          if(!is.na(.last.cma.plot.info$baseR$event.info[i,"gap.days"]) && .last.cma.plot.info$baseR$event.info[i,"gap.days"]>0) col.continuation else "gray";
+                          if(!is.na(.last.cma.plot.info$baseR$event.info[i,"gap.days"]) && .last.cma.plot.info$baseR$event.info[i,"gap.days"]>0) col.continuation else "#4ebf5c";
                         } else
                         {
                           col.continuation
@@ -4364,10 +4365,10 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                      #stroke=if(.last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray",#col.continuation,
                      stroke= if(.last.cma.plot.info$SVG$cma$computed.CMA %in% c("CMA7", "CMA10", "CMA11") && is.cma.TS.or.SW && modify.continuation.line)
                              {
-                               if(!is.na(.last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "gray";
+                               if(!is.na(.last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]) && .last.cma.plot.info$SVG$cma$event.info.cma[i,"gap.days"]>0) col.continuation else "#4ebf5c";
                              } else if ((inherits(.last.cma.plot.info$SVG$cma, "CMA7") || inherits(.last.cma.plot.info$SVG$cma, "CMA10")  || inherits(.last.cma.plot.info$SVG$cma, "CMA11")) && modify.continuation.line)
                              {
-                               if(!is.na(.last.cma.plot.info$SVG$cma$event.info[i,"gap.days"]>0) && .last.cma.plot.info$SVG$cma$event.info[i,"gap.days"]>0) col.continuation else "gray";
+                               if(!is.na(.last.cma.plot.info$SVG$cma$event.info[i,"gap.days"]>0) && .last.cma.plot.info$SVG$cma$event.info[i,"gap.days"]>0) col.continuation else "#4ebf5c";
                              } else
                              {
                                col.continuation
@@ -4494,7 +4495,8 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
               rect(corrected.x.start, ys + 0.10, corrected.x.start + h, ys + 0.90, border=plot.partial.CMAs.as.stacked.col.border, col=plot.partial.CMAs.as.stacked.col.bars);
               if( force.draw.text || print.CMA && char.height.CMA <= 0.80 )
               {
-                text(corrected.x.text, ys + 0.5, ppts$text, cex=CMA.cex, col=plot.partial.CMAs.as.stacked.col.text);
+                text(corrected.x.text, ys + 0.5, ppts$text, font=ifelse(!is.na(cmas$CMA[s.cmas]), ifelse(cmas$CMA[s.cmas] > 1, 2, 1), 1), #font controls whether text should be bold for > 100
+                     cex=CMA.cex, col=ifelse(!is.na(cmas$CMA[s.cmas]), ifelse(cmas$CMA[s.cmas] > 1, "#fc0000", plot.partial.CMAs.as.stacked.col.text), plot.partial.CMAs.as.stacked.col.text)); #controls whether text should be red for > 100 %
               }
             }
 
@@ -4530,7 +4532,9 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                   if( force.draw.text || print.CMA && dims.chr.cma <= dims.chr.event )
                   {
                     .SVG.text(.scale.x.to.SVG.plot(corrected.x.text[j]), y=.scale.y.to.SVG.plot(ys[j] + 0.50),
-                              text=ppts$text[j], font_size=dims.chr.cma, col=plot.partial.CMAs.as.stacked.col.text,
+                              text=ppts$text[j], font_size=dims.chr.cma,
+                              col=ifelse(!is.na(cmas$CMA[s.cmas]), ifelse(cmas$CMA[s.cmas] > 1, "#fc0000", plot.partial.CMAs.as.stacked.col.text), plot.partial.CMAs.as.stacked.col.text), #controls whether text should be red for > 100%
+                              other_params=ifelse(!is.na(cmas$CMA[s.cmas]), ifelse(cmas$CMA[s.cmas] > 1, 'font-weight="bold"', ""), ""), #controls whether text should be bold for > 100%
                               h.align="center", v.align="center",
                               class="partial_cma_stacked_text_estimate", suppress.warnings=suppress.warnings)
                   }

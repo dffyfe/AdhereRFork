@@ -1077,7 +1077,7 @@ plot.CMA0 <- function(x,                                     # the CMA0 (or deri
                       plot.events.vertically.displaced=TRUE, # display the events on different lines (vertical displacement) or not (defaults to TRUE)?
                       print.dose=FALSE, cex.dose=0.75, print.dose.outline.col="white", print.dose.centered=FALSE, # print daily dose
                       plot.dose=FALSE, lwd.event.max.dose=8, plot.dose.lwd.across.medication.classes=FALSE, # draw daily dose as line width
-                      col.continuation="black", lty.continuation="dotted", lwd.continuation=1, # style of the contuniation lines connecting consecutive events
+                      col.continuation="#ed940e", lty.continuation="dotted", lwd.continuation=1, # style of the contuniation lines connecting consecutive events
                       col.na="lightgray",                    # color for missing data
                       highlight.followup.window=TRUE, followup.window.col="green",
                       highlight.observation.window=TRUE, observation.window.col="yellow", observation.window.density=35, observation.window.angle=-30, observation.window.opacity=0.3,
@@ -9635,7 +9635,7 @@ plot.CMA_per_episode <- function(x,                                     # the CM
                                  print.dose=FALSE, cex.dose=0.75, print.dose.outline.col="white", print.dose.centered=FALSE, # print daily dose
                                  plot.dose=FALSE, lwd.event.max.dose=8, plot.dose.lwd.across.medication.classes=FALSE, # draw daily dose as line width
                                  col.na="lightgray",                    # color for mising data
-                                 col.continuation="black", lty.continuation="dotted", lwd.continuation=1, # style of the contuniation lines connecting consecutive events
+                                 col.continuation="#ed940e", lty.continuation="dotted", lwd.continuation=1, # style of the contuniation lines connecting consecutive events
                                  print.CMA=TRUE, CMA.cex=0.50,    # print CMA next to the participant's ID?
                                  plot.CMA=TRUE,                   # plot the CMA next to the participant ID?
                                  plot.CMA.as.histogram=TRUE,      # plot CMA as a histogram or as a density plot?
