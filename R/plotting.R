@@ -2676,7 +2676,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
   #   .report.ewms("col.cats must be either 'Rainbow' or 'ColorBlind', if using ColorBlind there should be less than 12 categories per patient\n", "error", ".plot.CMAs", "AdhereR")
   # }
 
-  if( is.na(categories[1]) )
+  if( is.na(categories[1]) || categories[1] == "AAAAAAA" ) #AAAAAAA is in place of NA which results in an error in sliding window designed to trigger na.col colour for scaled colour chart in STUMedView
   {
     if( is.function(col.cats) ) cols <- c(col.na, col.cats(length(categories)-1)) else cols <- c(col.na, rep(col.cats,length(categories)-1));
   } else
