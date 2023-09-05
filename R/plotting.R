@@ -1030,7 +1030,7 @@ get.plotted.partial.cmas <- function(plot.type=c("baseR", "SVG")[1], suppress.wa
                        print.dose=FALSE, cex.dose=0.75, print.dose.col="black", print.dose.outline.col="white", print.dose.centered=FALSE, # print daily dose
                        plot.dose=FALSE, lwd.event.max.dose=8, plot.dose.lwd.across.medication.classes=FALSE, # draw daily dose as line width
                        col.na="lightgray",                    # color for missing data
-                       col.continuation="#ed940e", lty.continuation="dotted", lwd.continuation=1, # style of the continuation lines connecting consecutive events
+                       col.continuation="#FDB623", lty.continuation="dotted", lwd.continuation=1, # style of the continuation lines connecting consecutive events, was previously #ed940e
                        print.CMA=TRUE, CMA.cex=0.50, # print CMA next to the participant's ID?
                        plot.CMA=TRUE,                   # plot the CMA next to the participant ID?
                        plot.CMA.as.histogram=TRUE,      # plot CMA as a histogram or as a density plot?
